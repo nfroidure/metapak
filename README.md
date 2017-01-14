@@ -1,0 +1,2 @@
+# metapak
+NPM meta package

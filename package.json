@@ -1,0 +1,35 @@
+{
+  "name": "metapak",
+  "version": "0.0.0",
+  "description": "Node modules authoring made easy.",
+  "scripts": {
+    "test": "mocha src/*.mocha.js",
+    "cli": "env NODE_ENV=${NODE_ENV:-cli}"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nfroidure/metapak.git"
+  },
+  "author": "Nicolas Froidure",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nfroidure/metapak/issues"
+  },
+  "homepage": "https://github.com/nfroidure/metapak#readme",
+  "bin": {
+    "metapak": "bin/metapak.js"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "commander": "^2.9.0",
+    "debug": "^2.6.0",
+    "glob": "^7.1.1",
+    "knifecycle": "^1.1.2",
+    "sort-object": "^3.0.2",
+    "yerror": "^1.0.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.7"
+  }
+}

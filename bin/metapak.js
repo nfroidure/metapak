@@ -1,0 +1,83 @@
+#! /usr/bin/env node
+
+const Knifecycle = require('knifecycle').default;
+const debug = require('debug')('metapak');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const glob = require('glob');
+const program = require('commander');
+const Promise = require('bluebird');
+const { exec } = require('child_process');
+
+const runMetapak = require('../src/metapak');
+const initBuildPackageConf = require('../src/packageConf');
+const initBuildPackageAssets = require('../src/assets');
+const initBuildPackageGitHooks = require('../src/gitHooks');
+
+const $ = new Knifecycle();
+
+$.constant('ENV', process.env);
+$.constant('PROJECT_DIR', path.join(__dirname, '..', '..', '..'));
+
+$.service('GIT_HOOKS_DIR', $.depends(['PROJECT_DIR', 'log', 'fs'], ({PROJECT_DIR, log}) => {
+  return new Promise((resolve, reject) => {
+    exec('echo -n `git rev-parse --git-dir`/hooks', {
+      cwd: PROJECT_DIR
+    }, (err, stdout, stderr) => {
+      const GIT_HOOKS_DIR = path.join(PROJECT_DIR, stdout.toString());
+      if(err || !stdout) {
+        log('debug', 'Could not find hooks dir.', err ? err.stack : '');
+        log('debug', 'stdout:', stdout);
+        log('debug', 'stderr:', stderr);
+        resolve('');
+        return;
+      }
+      log('debug', 'Found hooks dir:', GIT_HOOKS_DIR);
+
+      // Check the dir exists in order to avoid bugs in non-git
+      // envs (docker images for instance)
+      fs.accessAsync(GIT_HOOKS_DIR, fs.constants.W_OK)
+      .then(() => {
+        log('debug', 'Hooks dir exists:', GIT_HOOKS_DIR);
+        resolve(GIT_HOOKS_DIR);
+      })
+      .catch((err) => {
+        log('debug', 'Hooks dir does not exist:', GIT_HOOKS_DIR);
+        log('debug', err.stack);
+        resolve('');
+      });
+    });
+  });
+}));
+
+$.constant('require', require);
+$.constant('exit', process.exit);
+$.constant('fs', Promise.promisifyAll(fs));
+$.constant('os', os);
+$.constant('glob', Promise.promisify(glob));
+$.constant('log', (type, ...args) => {
+  if('debug' === type || 'stack' === type) {
+    debug(...args);
+    return;
+  }
+  console[type](...args);
+});
+
+initBuildPackageConf($);
+initBuildPackageAssets($);
+initBuildPackageGitHooks($);
+
+program
+  .version(require(path.join(__dirname, '..', 'package.json')).version)
+  .parse(process.argv);
+
+$.run([
+  'ENV', 'PROJECT_DIR',
+  'log', 'fs', 'exit',
+  'buildPackageConf',
+  'buildPackageAssets',
+  'buildPackageGitHooks'
+])
+.then(runMetapak)
+.catch(console.log.bind(console));

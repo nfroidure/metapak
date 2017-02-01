@@ -84,7 +84,11 @@ function buildPackageAssets(
         const asset = path.join(dir, name);
         log('debug', 'Processing asset:', asset);
         return Promise.all([
-          fs.readFileAsync(path.join(PROJECT_DIR, name), 'utf-8'),
+          fs.readFileAsync(path.join(PROJECT_DIR, name), 'utf-8')
+          .catch((data) => {
+            log('debug', 'New asset:', asset);
+            return data || '';
+          }),
           fs.readFileAsync(asset, 'utf-8')
         ])
         .then(([originalData, assetData]) => {

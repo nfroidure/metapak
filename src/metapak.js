@@ -26,11 +26,10 @@ function runMetapak({
     );
 
     if(!metapakModulesSequence.length) {
-      log('debug', 'No metapak modules found, aborting.');
-      return Promise.resolve();
+      log('debug', 'No metapak modules found.');
+    } else {
+      log('debug', 'Resolved the metapak modules sequence:', metapakModulesSequence);
     }
-
-    log('debug', 'Resolved the metapak modules sequence:', metapakModulesSequence);
 
     return _getPackageMetapakModulesConfigs({
       PROJECT_DIR, fs, log,

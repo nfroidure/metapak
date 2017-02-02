@@ -53,7 +53,7 @@ describe('metapak', () => {
         ]]);
         assert.deepEqual(log.args, [[
           'debug',
-          'No metapak modules found, aborting.',
+          'No metapak modules found.',
         ]]);
         assert.deepEqual(exit.args, [[0]]);
       });

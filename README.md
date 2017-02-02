@@ -9,7 +9,7 @@ A meta npm package takes advantage of npm lifecycle scripts
  to allow you to manage several similar npm packages in a
  simple and versioned way.
 
-Here is a [simple deck](https://slides.com/nfroidure/deck/live#/)
+Here is a [simple deck](https://slides.com/nfroidure/meta-npm-packages/live#/)
  introducing it.
 
 ## What is it good for?

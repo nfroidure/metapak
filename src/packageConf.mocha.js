@@ -54,7 +54,12 @@ describe('buildPackageConf', () => {
         ]]);
         assert.deepEqual(writeFileStub.args, [[
           'project/dir/package.json',
-          '{\n  "private": true\n}',
+          '{\n' +
+          '  "private": true,\n' +
+          '  "scripts": {\n' +
+          '    "postinstall": "metapak"\n' +
+          '  }\n' +
+          '}',
           'utf-8',
         ]]);
         assert.deepEqual(log.args.filter(filterLogs), [[
@@ -70,7 +75,11 @@ describe('buildPackageConf', () => {
   });
 
   it('should work with no tranformations', (done) => {
-    const packageConf = {};
+    const packageConf = {
+      scripts: {
+        postinstall: 'metapak',
+      },
+    };
 
     requireStub.throws(new Error('E_ERROR'));
     writeFileStub.returns(Promise.resolve());
@@ -102,7 +111,11 @@ describe('buildPackageConf', () => {
   });
 
   it('should work with several modules and configs', (done) => {
-    const packageConf = {};
+    const packageConf = {
+      scripts: {
+        postinstall: 'metapak',
+      },
+    };
 
     requireStub.onFirstCall().returns((packageConf) => {
       packageConf.private = true;
@@ -138,7 +151,14 @@ describe('buildPackageConf', () => {
         ]]);
         assert.deepEqual(writeFileStub.args, [[
           'project/dir/package.json',
-          '{\n  "private": true,\n  "license": "MIT",\n  "author": "John Doe"\n}',
+          '{\n' +
+          '  "scripts": {\n' +
+          '    "postinstall": "metapak"\n' +
+          '  },\n' +
+          '  "private": true,\n' +
+          '  "license": "MIT",\n' +
+          '  "author": "John Doe"\n' +
+          '}',
           'utf-8',
         ]]);
         assert.deepEqual(log.args.filter(filterLogs), [[

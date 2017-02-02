@@ -49,13 +49,23 @@ function buildPackageConf(
     }
   )
   .then((packageTransformers) => {
-    packageTransformers = packageTransformers
+    const newPackageConf = packageTransformers
     .reduce(
       (newPackageConf, packageTransformer) =>
         packageTransformer(newPackageConf),
       packageConf
     );
-    return packageTransformers;
+    // Adding the `metapak` postinstall script via an idempotent way
+    packageConf.scripts = packageConf.scripts || {};
+    if(
+      (!packageConf.scripts.postinstall) ||
+      -1 === packageConf.scripts.postinstall.indexOf('metapak')
+    ) {
+      packageConf.scripts.postinstall = packageConf.scripts.postinstall ?
+        packageConf.scripts.postinstall + '; metapak' :
+        'metapak';
+    }
+    return newPackageConf;
   })
   .then((newPackageConf) => {
     const data = JSON.stringify(newPackageConf, null, 2);

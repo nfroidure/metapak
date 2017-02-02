@@ -34,20 +34,20 @@
     "bluebird": "^3.4.7",
     "commander": "^2.9.0",
     "debug": "1.0.0",
+    "deep-sort-object": "^1.0.1",
     "glob": "^7.1.1",
     "knifecycle": "^1.1.2",
-    "sort-object": "^3.0.2",
     "yerror": "^1.0.2"
   },
   "devDependencies": {
+    "coveralls": "2.11.15",
     "eslint": "3.4.0",
     "eslint-config-simplifield": "4.1.1",
-    "metapak-nfroidure": "0.0.1",
+    "istanbul": "0.4.5",
+    "metapak-nfroidure": "0.0.3",
     "mocha": "3.2.0",
-    "sinon": "^1.17.7",
     "mocha-lcov-reporter": "1.2.0",
-    "coveralls": "2.11.15",
-    "istanbul": "0.4.5"
+    "sinon": "^1.17.7"
   },
   "engines": {
     "node": ">=4.2.0"

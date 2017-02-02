@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const sortobject = require('deep-sort-object');
 const {
   buildMetapakModulePath,
   mapConfigsSequentially,
@@ -65,7 +66,7 @@ function buildPackageConf(
         packageConf.scripts.postinstall + '; metapak' :
         'metapak';
     }
-    return newPackageConf;
+    return sortobject(newPackageConf);
   })
   .then((newPackageConf) => {
     const data = JSON.stringify(newPackageConf, null, 2);

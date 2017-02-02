@@ -2,9 +2,19 @@
   "name": "metapak",
   "version": "0.0.0",
   "description": "Node modules authoring made easy.",
+  "metapak": {
+    "data": {
+      "testsFiles": "src/**/*.mocha.js",
+      "files": "src/**/*.js"
+    }
+  },
   "scripts": {
-    "test": "mocha src/*.mocha.js",
-    "cli": "env NODE_ENV=${NODE_ENV:-cli}"
+    "test": "mocha src/**/*.mocha.js",
+    "cli": "env NODE_ENV=${NODE_ENV:-cli}",
+    "preversion": "npm t && npm run lint",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- src/**/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "cover": "istanbul cover _mocha --report html -- src/**/*.mocha.js -R spec -t 5000",
+    "lint": "eslint src/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -22,14 +32,23 @@
   "dependencies": {
     "bluebird": "^3.4.7",
     "commander": "^2.9.0",
-    "debug": "^2.6.0",
+    "debug": "1.0.0",
     "glob": "^7.1.1",
     "knifecycle": "^1.1.2",
     "sort-object": "^3.0.2",
     "yerror": "^1.0.2"
   },
   "devDependencies": {
-    "mocha": "^3.2.0",
-    "sinon": "^1.17.7"
+    "eslint": "3.4.0",
+    "eslint-config-simplifield": "4.1.1",
+    "metapak-nfroidure": "0.0.0",
+    "mocha": "3.2.0",
+    "sinon": "^1.17.7",
+    "mocha-lcov-reporter": "1.2.0",
+    "coveralls": "2.11.15",
+    "istanbul": "0.4.5"
+  },
+  "engines": {
+    "node": ">=4.2.0"
   }
 }

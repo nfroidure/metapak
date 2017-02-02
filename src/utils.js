@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = {
   identity: x => x,
   buildMetapakModulePath,
-  mapConfigsSequentially
+  mapConfigsSequentially,
 };
 
 function buildMetapakModulePath(PROJECT_DIR, packageConf, metapakModuleName, ...parts) {
@@ -20,24 +20,28 @@ function buildMetapakModulePath(PROJECT_DIR, packageConf, metapakModuleName, ...
 
 function mapConfigsSequentially(metapakModulesSequence, metapakModulesConfigs, fn) {
   return Promise.resolve()
-  .then(() => {
-    return Promise.all(
-      metapakModulesSequence.map((metapakModuleName) => {
-        return Promise.all(
+  .then(() =>
+    Promise.all(
+      metapakModulesSequence.map(metapakModuleName =>
+        Promise.all(
           metapakModulesConfigs[metapakModuleName]
-          .map((metapakModuleConfig) => {
-            return fn (
+          .map(metapakModuleConfig =>
+            fn(
               metapakModuleName,
               metapakModuleConfig
-            );
-          })
-        );
-      })
+            )
+          )
+        )
+      )
     )
     .then((packageTransformers) => {
-      return packageTransformers.reduce((combined, packageTransformer) => {
-        return combined.concat(packageTransformer);
-      }, []);
-    });
-  });
+      packageTransformers = packageTransformers
+      .reduce(
+        (combined, packageTransformer) =>
+          combined.concat(packageTransformer),
+        []
+      );
+      return packageTransformers;
+    })
+  );
 }

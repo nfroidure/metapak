@@ -4,7 +4,7 @@ const path = require('path');
 const Promise = require('bluebird');
 const YError = require('yerror');
 const {
-  buildMetapakModulePath
+  buildMetapakModulePath,
 } = require('./utils');
 
 module.exports = runMetapak;
@@ -12,7 +12,7 @@ module.exports = runMetapak;
 function runMetapak({
   ENV, PROJECT_DIR,
   log, exit, fs,
-  buildPackageConf, buildPackageAssets, buildPackageGitHooks
+  buildPackageConf, buildPackageAssets, buildPackageGitHooks,
 }) {
   return _loadJSONFile({ fs }, path.join(PROJECT_DIR, 'package.json'))
   .then((packageConf) => {
@@ -25,15 +25,15 @@ function runMetapak({
       { log, exit }, packageConf
     );
 
-    if (!metapakModulesSequence.length) {
+    if(!metapakModulesSequence.length) {
       log('debug', 'No metapak modules found, aborting.');
-      return;
+      return Promise.resolve();
     }
 
     log('debug', 'Resolved the metapak modules sequence:', metapakModulesSequence);
 
     return _getPackageMetapakModulesConfigs({
-      PROJECT_DIR, fs, log
+      PROJECT_DIR, fs, log,
     }, packageConf, metapakModulesSequence, metapackConfigsSequence)
     .then((metapakModulesConfigs) => {
       const promises = [
@@ -45,25 +45,25 @@ function runMetapak({
 
       // Trick to avoid stopping the process for one failure
       return allPromise
-      .then(() => {
-        return Promise.all(promises.map(promise => promise.catch(() => {})));
-      })
-      .then(() => {
-        return allPromise;
-      });
+      .then(() => _awaitPromisesFullfil(promises))
+      .then(() => allPromise);
     })
     .then(([packageConfModified, assetsModified, gitHooksAdded]) => {
       // The CI should not modify the repo contents and should fail when the
       // package would have been modified cause it should not happen and it probably
       // is a metapak misuse.
-      if ((packageConfModified || assetsModified) && ENV.CI) {
+      if((packageConfModified || assetsModified) && ENV.CI) {
         log('error', '💀 - This commit is not valid since it do not match the meta package state.');
         exit(1);
       }
-      if (packageConfModified) {
-        log('info', '🚧 - The project package.json changed, you may want to `npm install` again to install new dependencies.');
+      if(packageConfModified) {
+        log(
+          'info',
+          '🚧 - The project package.json changed, you may want' +
+          ' to `npm install` again to install new dependencies.'
+        );
       }
-      if (assetsModified) {
+      if(assetsModified) {
         log('info', '🚧 - Some assets were added to the project, you may want to stage them.');
       }
     });
@@ -80,14 +80,14 @@ function runMetapak({
 
 function _loadJSONFile({ fs, log }, path) {
   return fs.readFileAsync(path, 'utf-8')
-  .catch(err => { throw YError.wrap(err, 'E_PACKAGE_NOT_FOUND', path); })
+  .catch((err) => { throw YError.wrap(err, 'E_PACKAGE_NOT_FOUND', path); })
   .then(_parseJSON.bind(null, { log }, path));
 }
 
 function _parseJSON({ log }, path, json) {
   return Promise.resolve(json)
   .then(JSON.parse.bind(JSON))
-  .catch(err => {
+  .catch((err) => {
     throw YError.cast(err, 'E_MALFORMED_PACKAGE', path);
   });
 }
@@ -97,19 +97,19 @@ function _getMetapakModulesSequence({ log, exit }, packageConf) {
   .filter(devDependency => devDependency.startsWith('metapak-'));
 
   // Allowing a metapak module to run on himself
-  if(packageConf.name.startsWith('metapak-')) {
+  if(packageConf.name && packageConf.name.startsWith('metapak-')) {
     metapakModulesNames.unshift(packageConf.name);
   }
 
   return _reorderMetapakModulesNames(
-    {log, exit},
+    { log, exit },
     packageConf,
     metapakModulesNames
   );
 }
 
-function _reorderMetapakModulesNames({log, exit}, packageConf, metapakModulesNames) {
-  if (packageConf.metapak && packageConf.metapak.sequence) {
+function _reorderMetapakModulesNames({ log, exit }, packageConf, metapakModulesNames) {
+  if(packageConf.metapak && packageConf.metapak.sequence) {
     if(!(packageConf.metapak.sequence instanceof Array)) {
       throw new YError(
         'E_BAD_SEQUENCE_TYPE',
@@ -119,7 +119,7 @@ function _reorderMetapakModulesNames({log, exit}, packageConf, metapakModulesNam
     }
     packageConf.metapak.sequence
     .forEach((moduleName) => {
-      if (!metapakModulesNames.includes(moduleName)) {
+      if(!metapakModulesNames.includes(moduleName)) {
         throw new YError('E_BAD_SEQUENCE_ITEM', moduleName);
       }
     });
@@ -129,8 +129,8 @@ function _reorderMetapakModulesNames({log, exit}, packageConf, metapakModulesNam
   return metapakModulesNames;
 }
 
-function _getPackageMetapakModulesConfigs ({
-  PROJECT_DIR, fs, log
+function _getPackageMetapakModulesConfigs({
+  PROJECT_DIR, fs, log,
 }, packageConf, metapakModulesSequence, metapackConfigsSequence) {
   return Promise.props(
     metapakModulesSequence
@@ -150,4 +150,10 @@ function _getPackageMetapakModulesConfigs ({
       return metapakModulesConfigs;
     }, {})
   );
+}
+
+function _awaitPromisesFullfil(promises) {
+  return Promise.all(promises.map(
+    promise => promise.catch(() => {})
+  ));
 }

@@ -9,7 +9,7 @@ const YError = require('yerror');
 describe('metapak', () => {
   const DEPENDENCIES = [
     'ENV', 'PROJECT_DIR', 'fs', 'log', 'exit',
-    'buildPackageConf', 'buildPackageAssets', 'buildPackageGitHooks'
+    'buildPackageConf', 'buildPackageAssets', 'buildPackageGitHooks',
   ];
   let $;
   let buildPackageConfStub;
@@ -38,21 +38,22 @@ describe('metapak', () => {
 
   it('should silently fail with no metapak module', (done) => {
     $.constant('fs', {
-      readFileAsync: sinon.stub().returns(Promise.resolve('{}'))
+      readFileAsync: sinon.stub().returns(Promise.resolve('{}')),
     });
 
     $.run(DEPENDENCIES)
-    .then(services => {
+    .then((services) => {
       const { exit, log, fs } = services;
+
       return metapak(services)
       .then(() => {
         assert.deepEqual(fs.readFileAsync.args, [[
           'project/dir/package.json',
-          'utf-8'
+          'utf-8',
         ]]);
         assert.deepEqual(log.args, [[
           'debug',
-          'No metapak modules found, aborting.'
+          'No metapak modules found, aborting.',
         ]]);
         assert.deepEqual(exit.args, [[0]]);
       });
@@ -63,28 +64,29 @@ describe('metapak', () => {
 
   it('should fail with a bad package.json path', (done) => {
     $.constant('fs', {
-      readFileAsync: sinon.stub().returns(Promise.reject(new YError('E_AOUCH')))
+      readFileAsync: sinon.stub().returns(Promise.reject(new YError('E_AOUCH'))),
     });
 
     $.run(DEPENDENCIES)
-    .then(services => {
+    .then((services) => {
       const { exit, log, fs } = services;
+
       return metapak(services)
       .then(() => {
         assert.deepEqual(fs.readFileAsync.args, [[
           'project/dir/package.json',
-          'utf-8'
+          'utf-8',
         ]]);
         assert.deepEqual(log.args.slice(0, -1), [[
           'error',
           '💀 - Could not run metapak script correctly:',
           'E_PACKAGE_NOT_FOUND',
           [
-            'project/dir/package.json'
-          ]
+            'project/dir/package.json',
+          ],
         ], [
           'info',
-          '💊 - Debug by running again with "DEBUG=metapak" env.'
+          '💊 - Debug by running again with "DEBUG=metapak" env.',
         ]]);
         assert.deepEqual(exit.args, [[1]]);
       });
@@ -95,17 +97,18 @@ describe('metapak', () => {
 
   it('should fail with a malformed package.json', (done) => {
     $.constant('fs', {
-      readFileAsync: sinon.stub().returns(Promise.resolve('{""}'))
+      readFileAsync: sinon.stub().returns(Promise.resolve('{""}')),
     });
 
     $.run(DEPENDENCIES)
-    .then(services => {
+    .then((services) => {
       const { exit, log, fs } = services;
+
       return metapak(services)
       .then(() => {
         assert.deepEqual(fs.readFileAsync.args, [[
           'project/dir/package.json',
-          'utf-8'
+          'utf-8',
         ]]);
         assert.deepEqual(log.args.slice(0, -1), [[
           'error',
@@ -113,11 +116,11 @@ describe('metapak', () => {
           'E_MALFORMED_PACKAGE',
           [
             'project/dir/package.json',
-            'Unexpected token } in JSON at position 3'
-          ]
+            'Unexpected token } in JSON at position 3',
+          ],
         ], [
           'info',
-          '💊 - Debug by running again with "DEBUG=metapak" env.'
+          '💊 - Debug by running again with "DEBUG=metapak" env.',
         ]]);
         assert.deepEqual(exit.args, [[1]]);
       });
@@ -130,19 +133,20 @@ describe('metapak', () => {
     $.constant('fs', {
       readFileAsync: sinon.stub().returns(Promise.resolve(JSON.stringify({
         metapak: {
-          sequence: 'unexisting_module'
-        }
-      })))
+          sequence: 'unexisting_module',
+        },
+      }))),
     });
 
     $.run(DEPENDENCIES)
-    .then(services => {
+    .then((services) => {
       const { exit, log, fs } = services;
+
       return metapak(services)
       .then(() => {
         assert.deepEqual(fs.readFileAsync.args, [[
           'project/dir/package.json',
-          'utf-8'
+          'utf-8',
         ]]);
         assert.deepEqual(log.args.slice(0, -1), [[
           'error',
@@ -150,11 +154,11 @@ describe('metapak', () => {
           'E_BAD_SEQUENCE_TYPE',
           [
             'string',
-            'unexisting_module'
-          ]
+            'unexisting_module',
+          ],
         ], [
           'info',
-          '💊 - Debug by running again with "DEBUG=metapak" env.'
+          '💊 - Debug by running again with "DEBUG=metapak" env.',
         ]]);
         assert.deepEqual(exit.args, [[1]]);
       });
@@ -167,30 +171,31 @@ describe('metapak', () => {
     $.constant('fs', {
       readFileAsync: sinon.stub().returns(Promise.resolve(JSON.stringify({
         metapak: {
-          sequence: ['unexisting_module']
-        }
-      })))
+          sequence: ['unexisting_module'],
+        },
+      }))),
     });
 
     $.run(DEPENDENCIES)
-    .then(services => {
+    .then((services) => {
       const { exit, log, fs } = services;
+
       return metapak(services)
       .then(() => {
         assert.deepEqual(fs.readFileAsync.args, [[
           'project/dir/package.json',
-          'utf-8'
+          'utf-8',
         ]]);
         assert.deepEqual(log.args.slice(0, -1), [[
           'error',
           '💀 - Could not run metapak script correctly:',
           'E_BAD_SEQUENCE_ITEM',
           [
-            'unexisting_module'
-          ]
+            'unexisting_module',
+          ],
         ], [
           'info',
-          '💊 - Debug by running again with "DEBUG=metapak" env.'
+          '💊 - Debug by running again with "DEBUG=metapak" env.',
         ]]);
         assert.deepEqual(exit.args, [[1]]);
       });
@@ -204,55 +209,56 @@ describe('metapak', () => {
     const readdirStub = sinon.stub();
     const packageConf = {
       devDependencies: {
-        'metapak-http-service': '1.0.0'
-      }
+        'metapak-http-service': '1.0.0',
+      },
     };
 
     readFileStub.onFirstCall().returns(Promise.resolve(JSON.stringify(packageConf)));
     readdirStub.returns(Promise.resolve(['_common', 'private']));
     readFileStub.onSecondCall().returns(Promise.resolve(JSON.stringify({
       dependencies: {
-        'siso': '1.0.0',
-        'strict-qs': '1.0.0'
-      }
+        siso: '1.0.0',
+        'strict-qs': '1.0.0',
+      },
     })));
     readFileStub.onThirdCall().returns(Promise.resolve(JSON.stringify({
-      private: true
+      private: true,
     })));
 
     $.constant('fs', {
       readFileAsync: readFileStub,
-      readdirAsync: readdirStub
+      readdirAsync: readdirStub,
     });
 
     $.run(DEPENDENCIES)
-    .then(services => {
+    .then((services) => {
       const {
         exit, log, fs,
-        buildPackageConf, buildPackageAssets, buildPackageGitHooks
+        buildPackageConf, buildPackageAssets, buildPackageGitHooks,
       } = services;
+
       return metapak(services)
       .then(() => {
         assert.deepEqual(fs.readFileAsync.args, [[
           'project/dir/package.json',
-          'utf-8'
+          'utf-8',
         ]]);
         assert.deepEqual(log.args, [[
           'debug',
           'Resolved the metapak modules sequence:',
-          ['metapak-http-service']
+          ['metapak-http-service'],
         ], [
           'debug',
           'Found configs for "metapak-http-service":',
-          ['_common']
+          ['_common'],
         ]]);
         assert.deepEqual(exit.args, [[0]]);
         assert.deepEqual(buildPackageConf.args, [[
           packageConf,
           ['metapak-http-service'],
           {
-            'metapak-http-service': ['_common']
-          }
+            'metapak-http-service': ['_common'],
+          },
         ]]);
         assert.deepEqual(buildPackageAssets.args, buildPackageConf.args);
         assert.deepEqual(buildPackageGitHooks.args, buildPackageConf.args);
@@ -267,58 +273,59 @@ describe('metapak', () => {
     const readdirStub = sinon.stub();
     const packageConf = {
       devDependencies: {
-        'metapak-http-service': '1.0.0'
+        'metapak-http-service': '1.0.0',
       },
       metapak: {
-        configs: ['private']
-      }
+        configs: ['private'],
+      },
     };
 
     readFileStub.onFirstCall().returns(Promise.resolve(JSON.stringify(packageConf)));
     readdirStub.returns(Promise.resolve(['_common', 'private']));
     readFileStub.onSecondCall().returns(Promise.resolve(JSON.stringify({
       dependencies: {
-        'siso': '1.0.0',
-        'strict-qs': '1.0.0'
-      }
+        siso: '1.0.0',
+        'strict-qs': '1.0.0',
+      },
     })));
     readFileStub.onThirdCall().returns(Promise.resolve(JSON.stringify({
-      private: true
+      private: true,
     })));
 
     $.constant('fs', {
       readFileAsync: readFileStub,
-      readdirAsync: readdirStub
+      readdirAsync: readdirStub,
     });
 
     $.run(DEPENDENCIES)
-    .then(services => {
+    .then((services) => {
       const {
         exit, log, fs,
-        buildPackageConf, buildPackageAssets, buildPackageGitHooks
+        buildPackageConf, buildPackageAssets, buildPackageGitHooks,
       } = services;
+
       return metapak(services)
       .then(() => {
         assert.deepEqual(fs.readFileAsync.args, [[
           'project/dir/package.json',
-          'utf-8'
+          'utf-8',
         ]]);
         assert.deepEqual(log.args, [[
           'debug',
           'Resolved the metapak modules sequence:',
-          ['metapak-http-service']
+          ['metapak-http-service'],
         ], [
           'debug',
           'Found configs for "metapak-http-service":',
-          ['_common', 'private']
+          ['_common', 'private'],
         ]]);
         assert.deepEqual(exit.args, [[0]]);
         assert.deepEqual(buildPackageConf.args, [[
           packageConf,
           ['metapak-http-service'],
           {
-            'metapak-http-service': ['_common', 'private']
-          }
+            'metapak-http-service': ['_common', 'private'],
+          },
         ]]);
         assert.deepEqual(buildPackageAssets.args, buildPackageConf.args);
         assert.deepEqual(buildPackageGitHooks.args, buildPackageConf.args);

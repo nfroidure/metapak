@@ -8,6 +8,8 @@ const {
   identity,
 } = require('./utils');
 
+const METAPAK_POST_INSTALL = 'metapak || echo \'Please `npm install --save-dev metapak`\' exit 0';
+
 module.exports = initBuildPackageConf;
 
 function initBuildPackageConf($) {
@@ -60,11 +62,11 @@ function buildPackageConf(
     packageConf.scripts = packageConf.scripts || {};
     if(
       (!packageConf.scripts.postinstall) ||
-      -1 === packageConf.scripts.postinstall.indexOf('metapak')
+      -1 === packageConf.scripts.postinstall.indexOf(METAPAK_POST_INSTALL)
     ) {
       packageConf.scripts.postinstall = packageConf.scripts.postinstall ?
-        packageConf.scripts.postinstall + '; metapak' :
-        'metapak';
+        packageConf.scripts.postinstall + '; ' + METAPAK_POST_INSTALL :
+        METAPAK_POST_INSTALL;
     }
     if(newPackageConf.dependencies) {
       newPackageConf.dependencies = sortobject(newPackageConf.dependencies);

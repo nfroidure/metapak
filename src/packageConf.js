@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const sortobject = require('sort-object');
 const {
   buildMetapakModulePath,
   mapConfigsSequentially,
@@ -64,6 +65,15 @@ function buildPackageConf(
       packageConf.scripts.postinstall = packageConf.scripts.postinstall ?
         packageConf.scripts.postinstall + '; metapak' :
         'metapak';
+    }
+    if(newPackageConf.dependencies) {
+      newPackageConf.dependencies = sortobject(newPackageConf.dependencies);
+    }
+    if(newPackageConf.devDependencies) {
+      newPackageConf.devDependencies = sortobject(newPackageConf.devDependencies);
+    }
+    if(newPackageConf.scripts) {
+      newPackageConf.scripts = sortobject(newPackageConf.scripts);
     }
     return newPackageConf;
   })

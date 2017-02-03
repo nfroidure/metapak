@@ -152,12 +152,12 @@ describe('buildPackageConf', () => {
         assert.deepEqual(writeFileStub.args, [[
           'project/dir/package.json',
           '{\n' +
-          '  "author": "John Doe",\n' +
-          '  "license": "MIT",\n' +
-          '  "private": true,\n' +
           '  "scripts": {\n' +
           '    "postinstall": "metapak"\n' +
-          '  }\n' +
+          '  },\n' +
+          '  "private": true,\n' +
+          '  "license": "MIT",\n' +
+          '  "author": "John Doe"\n' +
           '}',
           'utf-8',
         ]]);

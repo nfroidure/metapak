@@ -9,13 +9,13 @@
     }
   },
   "scripts": {
-    "test": "mocha src/**/*.mocha.js",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
-    "preversion": "npm t && npm run lint",
-    "coveralls": "istanbul cover _mocha --report lcovonly -- src/**/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cover": "istanbul cover _mocha --report html -- src/**/*.mocha.js -R spec -t 5000",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- src/**/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "lint": "eslint src/**/*.js",
-    "postinstall": "metapak"
+    "postinstall": "metapak; metapak || echo 'Please `npm install --save-dev metapak`' exit 0",
+    "preversion": "npm t && npm run lint",
+    "test": "mocha src/**/*.mocha.js"
   },
   "repository": {
     "type": "git",
@@ -40,12 +40,11 @@
     "yerror": "^1.0.2"
   },
   "devDependencies": {
-    "metapak": ".",
     "coveralls": "2.11.15",
     "eslint": "3.4.0",
     "eslint-config-simplifield": "4.1.1",
     "istanbul": "0.4.5",
-    "metapak-nfroidure": "0.0.3",
+    "metapak-nfroidure": "0.0.5",
     "mocha": "3.2.0",
     "mocha-lcov-reporter": "1.2.0",
     "sinon": "^1.17.7"

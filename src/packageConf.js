@@ -54,12 +54,8 @@ function buildPackageConf(
     }
   )
   .then((packageTransformers) => {
-    const newPackageConf = packageTransformers
-    .reduce(
-      (newPackageConf, packageTransformer) =>
-        packageTransformer(newPackageConf),
-      packageConf
-    );
+    let newPackageConf;
+
     // Adding the `metapak` postinstall script via an idempotent way
     packageConf.scripts = packageConf.scripts || {};
     packageConf.scripts.metapak = METAPAK_SCRIPT;
@@ -71,6 +67,12 @@ function buildPackageConf(
         packageConf.scripts.postinstall + '; ' + METAPAK_POST_INSTALL :
         METAPAK_POST_INSTALL;
     }
+    newPackageConf = packageTransformers
+    .reduce(
+      (newPackageConf, packageTransformer) =>
+        packageTransformer(newPackageConf),
+      packageConf
+    );
     if(newPackageConf.dependencies) {
       newPackageConf.dependencies = sortobject(newPackageConf.dependencies);
     }

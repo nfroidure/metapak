@@ -79,30 +79,32 @@ function buildPackageAssets(
       Object.keys(assetsHash)
       .map((name) => {
         const { dir, transformer } = assetsHash[name];
-        const asset = path.join(dir, name);
+        const assetPath = path.join(dir, name);
 
-        log('debug', 'Processing asset:', asset);
-        return Promise.all([
-          fs.readFileAsync(path.join(PROJECT_DIR, name), 'utf-8')
+        log('debug', 'Processing asset:', assetPath);
+        return fs.readFileAsync(assetPath, 'utf-8')
+        .then(data => ({ name, dir, data }))
+        .then((inputFile) => {
+          const newFile = transformer(inputFile, packageConf);
+
+          return fs.readFileAsync(path.join(PROJECT_DIR, newFile.name), 'utf-8')
           .catch((data) => {
-            log('debug', 'New asset:', asset);
+            log('debug', 'New asset:', path.join(dir, newFile.name));
             return data || '';
-          }),
-          fs.readFileAsync(asset, 'utf-8'),
-        ])
-        .then(([originalData, assetData]) => {
-          const newAsset = transformer({ name, dir, transformer, data: assetData }, packageConf);
-
-          if(newAsset.data === originalData) {
+          })
+          .then(data => [newFile, inputFile, { name: newFile.name, dir, data }]);
+        })
+        .then(([newFile, inputFile, originalFile]) => {
+          if(newFile.data === originalFile.data) {
             return false;
           }
 
-          if('' === newAsset.data) {
+          if('' === newFile.data) {
             return fs.unlinkAsync(path.join(PROJECT_DIR, name))
             .then(() => true);
           }
 
-          return fs.writeFileAsync(path.join(PROJECT_DIR, name), newAsset.data, 'utf-8')
+          return fs.writeFileAsync(path.join(PROJECT_DIR, newFile.name), newFile.data, 'utf-8')
           .then(() => true);
         });
       })

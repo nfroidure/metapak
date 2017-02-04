@@ -47,7 +47,7 @@ describe('buildPackageAssets', () => {
       return file;
     });
     readFileStub.onFirstCall().returns(Promise.resolve('{\n  "test": true\n}'));
-    readFileStub.onFirstCall().returns(Promise.resolve('{\n  "private": true\n}'));
+    readFileStub.onSecondCall().returns(Promise.resolve('{\n  "private": true\n}'));
     writeFileStub.returns(Promise.resolve());
     unlinkStub.returns(Promise.resolve());
     globStub.returns(Promise.resolve(['lol']));
@@ -66,14 +66,66 @@ describe('buildPackageAssets', () => {
           'project/dir/node_modules/metapak-http-server/src/_common/assets.js',
         ]]);
         assert.deepEqual(readFileStub.args, [[
-          'project/dir/lol',
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
           'utf-8',
         ], [
-          'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
+          'project/dir/lol',
           'utf-8',
         ]]);
         assert.deepEqual(writeFileStub.args, [[
           'project/dir/lol',
+          '{\n  "private": false\n}',
+          'utf-8',
+        ]]);
+        assert.deepEqual(unlinkStub.args, [], 'Deletes nothing.');
+        assert.deepEqual(log.args.filter(filterLogs), [[
+          'debug',
+          'Processing asset:',
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
+        ]]);
+        assert.equal(result, true, 'Indicates that data changed');
+      })
+    )
+    .then(done)
+    .catch(done);
+  });
+
+  it('should allow to rename assets', (done) => {
+    const packageConf = {};
+
+    requireStub.returns((file) => {
+      file.name = 'notlol';
+      file.data = '{\n  "private": false\n}';
+      return file;
+    });
+    readFileStub.onFirstCall().returns(Promise.resolve('{\n  "test": true\n}'));
+    readFileStub.onSecondCall().returns(Promise.resolve('{\n  "private": true\n}'));
+    writeFileStub.returns(Promise.resolve());
+    unlinkStub.returns(Promise.resolve());
+    globStub.returns(Promise.resolve(['lol']));
+
+    $.run(DEPENDENCIES)
+    .then(({ require, log, fs, buildPackageAssets }) =>
+      buildPackageAssets(
+        packageConf,
+        ['metapak-http-server'],
+        {
+          'metapak-http-server': ['_common'],
+        }
+      )
+      .then((result) => {
+        assert.deepEqual(require.args, [[
+          'project/dir/node_modules/metapak-http-server/src/_common/assets.js',
+        ]]);
+        assert.deepEqual(readFileStub.args, [[
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
+          'utf-8',
+        ], [
+          'project/dir/notlol',
+          'utf-8',
+        ]]);
+        assert.deepEqual(writeFileStub.args, [[
+          'project/dir/notlol',
           '{\n  "private": false\n}',
           'utf-8',
         ]]);
@@ -98,7 +150,7 @@ describe('buildPackageAssets', () => {
       return file;
     });
     readFileStub.onFirstCall().returns(Promise.resolve('{\n  "test": true\n}'));
-    readFileStub.onFirstCall().returns(Promise.resolve('{\n  "private": true\n}'));
+    readFileStub.onSecondCall().returns(Promise.resolve('{\n  "private": true\n}'));
     writeFileStub.returns(Promise.resolve());
     unlinkStub.returns(Promise.resolve());
     globStub.returns(Promise.resolve(['lol']));
@@ -117,10 +169,10 @@ describe('buildPackageAssets', () => {
           'project/dir/node_modules/metapak-http-server/src/_common/assets.js',
         ]]);
         assert.deepEqual(readFileStub.args, [[
-          'project/dir/lol',
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
           'utf-8',
         ], [
-          'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
+          'project/dir/lol',
           'utf-8',
         ]]);
         assert.deepEqual(writeFileStub.args, [], 'Writes nothing.');
@@ -145,7 +197,7 @@ describe('buildPackageAssets', () => {
       return file;
     });
     readFileStub.onFirstCall().returns(Promise.resolve('{\n  "test": true\n}'));
-    readFileStub.onFirstCall().returns(Promise.resolve('{\n  "private": true\n}'));
+    readFileStub.onSecondCall().returns(Promise.resolve('{\n  "private": true\n}'));
     writeFileStub.returns(Promise.resolve());
     unlinkStub.returns(Promise.resolve());
     globStub.returns(Promise.resolve(['lol']));
@@ -164,10 +216,10 @@ describe('buildPackageAssets', () => {
           'project/dir/node_modules/metapak-http-server/src/_common/assets.js',
         ]]);
         assert.deepEqual(readFileStub.args, [[
-          'project/dir/lol',
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
           'utf-8',
         ], [
-          'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
+          'project/dir/lol',
           'utf-8',
         ]]);
         assert.deepEqual(writeFileStub.args, [], 'Writes nothing.');

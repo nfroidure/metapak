@@ -8,7 +8,9 @@ const {
   identity,
 } = require('./utils');
 
-const METAPAK_POST_INSTALL = 'metapak || echo \'Please `npm install --save-dev metapak`\' exit 0';
+// Using an invariant post install hook to be future proof
+const METAPAK_POST_INSTALL = 'npm run metapak';
+const METAPAK_SCRIPT = 'metapak || echo \'Please `npm install --save-dev metapak`\' exit 0';
 
 module.exports = initBuildPackageConf;
 
@@ -60,6 +62,7 @@ function buildPackageConf(
     );
     // Adding the `metapak` postinstall script via an idempotent way
     packageConf.scripts = packageConf.scripts || {};
+    packageConf.scripts.metapak = METAPAK_SCRIPT;
     if(
       (!packageConf.scripts.postinstall) ||
       -1 === packageConf.scripts.postinstall.indexOf(METAPAK_POST_INSTALL)

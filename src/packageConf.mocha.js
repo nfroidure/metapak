@@ -4,7 +4,8 @@ const assert = require('assert');
 const sinon = require('sinon');
 const Knifecycle = require('knifecycle').default;
 const initBuildPackageConf = require('./packageConf');
-const METAPAK_POST_INSTALL = 'metapak || echo \'Please `npm install --save-dev metapak`\' exit 0';
+const METAPAK_SCRIPT = 'metapak || echo \'Please `npm install --save-dev metapak`\' exit 0';
+const METAPAK_POST_INSTALL = 'npm run metapak';
 
 function filterLogs(e) { return 'stack' !== e[0]; }
 
@@ -58,6 +59,7 @@ describe('buildPackageConf', () => {
           '{\n' +
           '  "private": true,\n' +
           '  "scripts": {\n' +
+          '    "metapak": "' + METAPAK_SCRIPT + '",\n' +
           '    "postinstall": "' + METAPAK_POST_INSTALL + '"\n' +
           '  }\n' +
           '}',
@@ -78,6 +80,7 @@ describe('buildPackageConf', () => {
   it('should work with no tranformations', (done) => {
     const packageConf = {
       scripts: {
+        metapak: METAPAK_SCRIPT,
         postinstall: METAPAK_POST_INSTALL,
       },
     };
@@ -114,6 +117,7 @@ describe('buildPackageConf', () => {
   it('should work with several modules and configs', (done) => {
     const packageConf = {
       scripts: {
+        metapak: METAPAK_SCRIPT,
         postinstall: METAPAK_POST_INSTALL,
       },
     };
@@ -154,6 +158,7 @@ describe('buildPackageConf', () => {
           'project/dir/package.json',
           '{\n' +
           '  "scripts": {\n' +
+          '    "metapak": "' + METAPAK_SCRIPT + '",\n' +
           '    "postinstall": "' + METAPAK_POST_INSTALL + '"\n' +
           '  },\n' +
           '  "private": true,\n' +

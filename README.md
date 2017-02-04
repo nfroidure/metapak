@@ -3,19 +3,20 @@
 
 ## What's that?
 
-`metapak` provides a set of tools to build your own meta npm package easily.
+`metapak` provides a set of tools to build your own meta npm packages easily.
 
-A meta npm package takes advantage of npm lifecycle scripts
- to allow you to manage several similar npm packages in a
- simple and versioned way.
+A meta npm package takes advantage of npm
+ [lifecycle scripts](https://docs.npmjs.com/misc/scripts)
+ to allow you to manage several similar npm packages/NodeJS
+ projects in a simple and versioned way.
 
 Here is a [simple deck](https://slides.com/nfroidure/meta-npm-packages/live#/)
  introducing it.
 
 ## What is it good for?
 
-Let's say you are the author of thousands of Node modules. Now, imagine you
- want, for all of them:
+Let's say you are the author of thousands of Node modules.
+Now, imagine you want, for all of them:
 - change your linter,
 - change your license,
 - change your CI provider,
@@ -24,6 +25,21 @@ Let's say you are the author of thousands of Node modules. Now, imagine you
 - setup git hooks.
 
 This could look like a developer nightmare, not with `metapak`.
+
+## Features
+
+Enable you to create a npm meta module you will be able to install
+ on all you npm modules/NodeJS projects.
+- amend all your npm modules `package.json` globally, in
+ a composable way (shared dependencies, utility scripts etc...),
+- add assets to all your projects without polluting you git
+ history with insignificant changes,
+- automatically install git hooks.
+
+`metapak` can handle several meta packages so that you can compose
+ them easily and keep them small and focused on one concern.
+
+Zero config for your contributors, nothing to install globally.
 
 ## Usage
 
@@ -63,16 +79,31 @@ module.exports = (packageConf) => {
 
 # Let's also add some common assets metapak will add/update for us
 mkdir src/_common/assets
-echo "node_modules" > src/_common/assets/.gitignore
+# Adding the license
 wget -O src/_common/assets/LICENSE https://mit-license.org/license.txt
+# Adding a git ignore file
+# Note we replaced the dot of the file per _dot_
+# This is due to a magic behavior of npm
+# See: https://github.com/npm/npm/issues/15660
+echo "node_modules" > src/_common/assets/_dot_gitignore
 
 # And make some additions to them, like templating
 echo "
 module.exports = (file, packageConf) => {
-  if(file.name !== 'LICENSE') {
+  // Back to the good dot ;)
+  if(file.name.startsWith('_dot_')) {
+    file.name = file.name.replace('_dot_', '.');
+  }
+  // Simple templating of the LICENSE
+  // There is no glob matching or templating system
+  // in metapak to let you choose the ones you like
+  if(file.name === 'LICENSE') {
+    file.data = file.data.replace(
+      /<copyright holders>/g,
+      'Nicolas Froidure'
+    );
     return file;
   }
-  file.data = file.data.replace(/<copyright holders>/g, 'Nicolas Froidure');
   return file;
 };
 " > src/_common/assets.js
@@ -86,7 +117,12 @@ echo "module.exports = (hooks, packageConf) => {
 " > src/_common/hooks.js
 ```
 
-Now publish your package to NPM and install it in all your repositories.
+Now publish your package to npm and install it in all
+ your repositories development dependencies with metapak.
+
+```
+npm i --save-dev metapak metapak-nfroidure
+```
 
 That's it! There is a lot of things you can set on all your projects like
  CI scripts, linters, tests configuration etc...

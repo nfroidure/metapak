@@ -46,15 +46,15 @@ function buildPackageAssets(
       try {
         transformer = require(packageAssetsTransformerPath);
       } catch (err) {
-        log('debug', 'No package tranformation found at:', packageAssetsTransformerPath);
+        log('debug', 'No asset tranformation found at:', packageAssetsTransformerPath);
         log('stack', err.stack);
         transformer = identity;
       }
 
       return glob('**/*', { cwd: packageAssetsDir, dot: true, nodir: true })
       .then((assets) => {
-        assets = assets.map(asset => ({ dir: packageAssetsDir, name: asset, transformer }));
-        return assets;
+        assets = assets.map(asset => ({ dir: packageAssetsDir, name: asset }));
+        return { assets, transformer };
       })
       .catch((err) => {
         log('debug', 'No assets found at:', packageAssetsDir);
@@ -65,27 +65,37 @@ function buildPackageAssets(
   )
   .then((assetsDirsGroups) => {
     assetsDirsGroups = assetsDirsGroups
-    .reduce((combined, assets) => combined.concat(assets), []);
+    .reduce((combined, { assets, transformer }) => (
+      {
+        assets: combined.assets.concat(assets),
+        transformers: combined.transformers.concat(transformer),
+      }
+    ), { assets: [], transformers: [] });
     return assetsDirsGroups;
   })
-  .then((assetsDirsFiles) => {
+  .then(({ assets, transformers }) => {
     // Building the hash dedupes assets by picking them in the upper config
-    const assetsHash = assetsDirsFiles.reduce((hash, asset) => {
-      hash[asset.name] = asset;
+    const assetsHash = assets.reduce((hash, { dir, name }) => {
+      hash[name] = { dir, name };
       return hash;
     }, {});
 
     return Promise.all(
       Object.keys(assetsHash)
       .map((name) => {
-        const { dir, transformer } = assetsHash[name];
+        const { dir } = assetsHash[name];
         const assetPath = path.join(dir, name);
 
         log('debug', 'Processing asset:', assetPath);
         return fs.readFileAsync(assetPath, 'utf-8')
         .then(data => ({ name, dir, data }))
         .then((inputFile) => {
-          const newFile = transformer(inputFile, packageConf);
+          const newFile = transformers
+          .reduce(
+            (curInputFile, transformer) =>
+            transformer(curInputFile, packageConf),
+            inputFile
+          );
 
           return fs.readFileAsync(path.join(PROJECT_DIR, newFile.name), 'utf-8')
           .catch((data) => {

@@ -6,6 +6,5 @@
   },
   rules: {
     'no-magic-numbers': 0,
-    'node/no-unsupported-features': 0,
   },
 }

@@ -46,12 +46,12 @@
     "eslint": "3.4.0",
     "eslint-config-simplifield": "4.1.1",
     "istanbul": "0.4.5",
-    "metapak-nfroidure": "0.0.8",
+    "metapak-nfroidure": "0.0.10",
     "mocha": "3.2.0",
     "mocha-lcov-reporter": "1.2.0",
     "sinon": "^1.17.7"
   },
   "engines": {
-    "node": ">=4.2.0"
+    "node": ">=6.9.5"
   }
 }

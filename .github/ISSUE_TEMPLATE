@@ -32,3 +32,6 @@ I'm a gentledev i:
 ```
 <paste here>
 ```
+If the result is lower than 6.9.5, there is
+ poor chances i even have a look to it. Please,
+ use the last [NodeJS LTS version](https://nodejs.org/en/).

@@ -1,6 +1,10 @@
 # metapak
 > Node modules authoring made easy.
 
+**WIP:** This is a work in progress, use it at your own risk
+ until it's released as a 1.0.0 version. At that time, i'll
+ follow semver etc... In the meanwhile, your input is welcome.
+
 ## What's that?
 
 `metapak` provides a set of tools to build your own meta npm packages easily.

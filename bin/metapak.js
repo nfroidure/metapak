@@ -6,6 +6,7 @@ const Knifecycle = require('knifecycle').default;
 const debug = require('debug')('metapak');
 const fs = require('fs');
 const os = require('os');
+const mkdirp = require('mkdirp');
 const path = require('path');
 const glob = require('glob');
 const program = require('commander');
@@ -87,6 +88,7 @@ $.service('GIT_HOOKS_DIR',
 $.constant('require', require);
 $.constant('exit', process.exit);
 $.constant('fs', Promise.promisifyAll(fs));
+$.constant('mkdirp', Promise.promisify(mkdirp));
 $.constant('os', os);
 $.constant('glob', Promise.promisify(glob));
 $.constant('log', (type, ...args) => {

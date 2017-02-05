@@ -37,6 +37,7 @@
     "debug": "1.0.0",
     "glob": "^7.1.1",
     "knifecycle": "^1.1.2",
+    "mkdirp": "^0.5.1",
     "sort-object": "^3.0.2",
     "yerror": "^1.0.2"
   },

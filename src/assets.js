@@ -11,12 +11,12 @@ module.exports = initBuildPackageAssets;
 
 function initBuildPackageAssets($) {
   $.service('buildPackageAssets', $.depends([
-    'PROJECT_DIR', 'fs', 'log', 'glob', 'require',
+    'PROJECT_DIR', 'fs', 'log', 'glob', 'require', 'mkdirp',
   ], services => Promise.resolve(buildPackageAssets.bind(null, services))));
 }
 
 function buildPackageAssets(
-  { PROJECT_DIR, fs, log, glob, require },
+  { PROJECT_DIR, fs, log, glob, require, mkdirp },
   packageConf,
   metapakModulesSequence,
   metapakModulesConfigs
@@ -51,7 +51,7 @@ function buildPackageAssets(
         transformer = identity;
       }
 
-      return glob('**/*', { cwd: packageAssetsDir, dot: true })
+      return glob('**/*', { cwd: packageAssetsDir, dot: true, nodir: true })
       .then((assets) => {
         assets = assets.map(asset => ({ dir: packageAssetsDir, name: asset, transformer }));
         return assets;
@@ -104,7 +104,12 @@ function buildPackageAssets(
             .then(() => true);
           }
 
-          return fs.writeFileAsync(path.join(PROJECT_DIR, newFile.name), newFile.data, 'utf-8')
+          return _ensureDirExists({ PROJECT_DIR, mkdirp }, newFile)
+          .then(() => fs.writeFileAsync(
+            path.join(PROJECT_DIR, newFile.name),
+            newFile.data,
+            'utf-8'
+          ))
           .then(() => true);
         });
       })
@@ -115,4 +120,13 @@ function buildPackageAssets(
     .reduce((assetsChanged, assetChanged) => assetsChanged || assetChanged, false);
     return results;
   });
+}
+
+function _ensureDirExists({ PROJECT_DIR, mkdirp }, newFile) {
+  const dir = path.dirname(newFile.name);
+
+  if('.' === dir) {
+    return Promise.resolve();
+  }
+  return mkdirp(path.join(PROJECT_DIR, dir));
 }

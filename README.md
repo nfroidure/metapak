@@ -5,6 +5,13 @@
  until it's released as a 1.0.0 version. At that time, i'll
  follow semver etc... In the meanwhile, your input is welcome.
 
+ [![NPM version](https://badge.fury.io/js/metapak.svg)](https://npmjs.org/package/metapak)
+[![Build status](https://secure.travis-ci.org/nfroidure/metapak.svg)](https://travis-ci.org/nfroidure/metapak)
+[![Dependency Status](https://david-dm.org/nfroidure/metapak.svg)](https://david-dm.org/nfroidure/metapak)
+[![devDependency Status](https://david-dm.org/nfroidure/metapak/dev-status.svg)](https://david-dm.org/nfroidure/metapak#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/nfroidure/metapak/badge.svg?branch=master)](https://coveralls.io/r/nfroidure/metapak?branch=master)
+[![Code Climate](https://codeclimate.com/github/nfroidure/metapak.svg)](https://codeclimate.com/github/nfroidure/metapak)
+
 ## What's that?
 
 `metapak` provides a set of tools to build your own meta npm packages easily.

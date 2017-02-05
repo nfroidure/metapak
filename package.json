@@ -13,7 +13,8 @@
     "cover": "istanbul cover _mocha --report html -- src/**/*.mocha.js -R spec -t 5000",
     "coveralls": "istanbul cover _mocha --report lcovonly -- src/**/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "lint": "eslint src/**/*.js",
-    "postinstall": "metapak; metapak || echo 'Please `npm install --save-dev metapak`' exit 0",
+    "metapak": "metapak || echo 'Please `npm install --save-dev metapak`' exit 0",
+    "postinstall": "npm run metapak",
     "preversion": "npm t && npm run lint",
     "test": "mocha src/**/*.mocha.js"
   },
@@ -44,7 +45,7 @@
     "eslint": "3.4.0",
     "eslint-config-simplifield": "4.1.1",
     "istanbul": "0.4.5",
-    "metapak-nfroidure": "0.0.5",
+    "metapak-nfroidure": "0.0.7",
     "mocha": "3.2.0",
     "mocha-lcov-reporter": "1.2.0",
     "sinon": "^1.17.7"

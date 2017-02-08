@@ -58,7 +58,10 @@ $.service('GIT_HOOKS_DIR',
     exec('echo -n `git rev-parse --git-dir`/hooks', {
       cwd: PROJECT_DIR,
     }, (err, stdout, stderr) => {
-      const GIT_HOOKS_DIR = path.join(PROJECT_DIR, stdout.toString());
+      const outputPath = stdout.toString();
+      const GIT_HOOKS_DIR = path.isAbsolute(outputPath) ?
+        outputPath :
+        path.join(PROJECT_DIR, outputPath);
 
       if(err || !stdout) {
         log('debug', 'Could not find hooks dir.', err ? err.stack : '');

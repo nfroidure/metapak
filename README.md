@@ -83,7 +83,10 @@ module.exports = (packageConf) => {
   // And the MUST HAVE dependencies
   packageConf.dependencies = packageConf.dependencies || {};
   packageConf.dependencies.debug = '1.0.0';
-  packageConf.dependencies.eslint = '4.0.0';
+
+  // And the MUST HAVE dev dependencies
+  packageConf.devDependencies = packageConf.devDependencies || {};
+  packageConf.devDependencies.eslint = '3.0.0';
 
   return packageConf;
 }" > src/_common/package.js
@@ -143,7 +146,7 @@ You can also create specific configs and combine them. Let's say i work at
  at work:
 
 ```sh
-mkdir bigbrother
+mkdir src/bigbrother
 
 # Let's add a package.json template
 echo "

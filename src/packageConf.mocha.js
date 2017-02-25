@@ -5,7 +5,7 @@ const sinon = require('sinon');
 const Knifecycle = require('knifecycle').default;
 const initBuildPackageConf = require('./packageConf');
 const METAPAK_SCRIPT = 'metapak || echo \'Please `npm install --save-dev metapak`\' && exit 0';
-const METAPAK_POST_INSTALL = 'npm run metapak';
+const METAPAK_POST_INSTALL = 'npm run metapak --silent';
 
 function filterLogs(e) { return 'stack' !== e[0]; }
 

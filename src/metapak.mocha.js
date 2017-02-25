@@ -204,6 +204,77 @@ describe('metapak', () => {
     .catch(done);
   });
 
+  it('should fail with non-idempotent package transformer ', (done) => {
+    const readFileStub = sinon.stub();
+    const readdirStub = sinon.stub();
+    const packageConf = {
+      devDependencies: {
+        'metapak-http-service': '1.0.0',
+      },
+    };
+
+    readFileStub.onFirstCall().returns(Promise.resolve(JSON.stringify(packageConf)));
+    readdirStub.returns(Promise.resolve(['_common', 'private']));
+    readFileStub.onSecondCall().returns(Promise.resolve(JSON.stringify({
+      dependencies: {
+        siso: '1.0.0',
+        'strict-qs': '1.0.0',
+      },
+    })));
+    readFileStub.onThirdCall().returns(Promise.resolve(JSON.stringify({
+      private: true,
+    })));
+
+    $.constant('fs', {
+      readFileAsync: readFileStub,
+      readdirAsync: readdirStub,
+    });
+
+    $.run(DEPENDENCIES)
+    .then((services) => {
+      const {
+        exit, log, fs,
+        buildPackageConf, buildPackageAssets, buildPackageGitHooks,
+      } = services;
+
+      buildPackageConf.returns(Promise.resolve(true));
+
+      return metapak(services)
+      .then(() => {
+        assert.deepEqual(fs.readFileAsync.args, [[
+          'project/dir/package.json',
+          'utf-8',
+        ]]);
+        assert.deepEqual(log.args.slice(0, -1), [[
+          'debug',
+          'Resolved the metapak modules sequence:',
+          ['metapak-http-service'],
+        ], [
+          'debug',
+          'Found configs for "metapak-http-service":',
+          ['_common'],
+        ], [
+          'error',
+          '💀 - Could not run metapak script correctly:',
+          'E_MAX_ITERATIONS',
+          [
+            15,
+            15,
+          ],
+        ], [
+          'info',
+          '💊 - Debug by running again with "DEBUG=metapak" env.',
+        ]]);
+        assert.deepEqual(exit.args, [[1]]);
+        assert.deepEqual(buildPackageConf.args.length, 16);
+        assert.deepEqual(buildPackageAssets.args, []);
+        assert.deepEqual(buildPackageGitHooks.args, []);
+      });
+    })
+    .then(done)
+    .catch(done);
+  });
+
   it('should work with one module and several configs', (done) => {
     const readFileStub = sinon.stub();
     const readdirStub = sinon.stub();

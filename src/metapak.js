@@ -7,6 +7,8 @@ const {
   buildMetapakModulePath,
 } = require('./utils');
 
+const MAX_PACKAGE_BUILD_ITERATIONS = 15;
+
 module.exports = runMetapak;
 
 function runMetapak({
@@ -34,18 +36,23 @@ function runMetapak({
     return _getPackageMetapakModulesConfigs({
       PROJECT_DIR, fs, log,
     }, packageConf, metapakModulesSequence, metapackConfigsSequence)
-    .then((metapakModulesConfigs) => {
+    .then(metapakModulesConfigs => Promise.all([
+      metapakModulesConfigs,
+      recursivelyBuild(0, buildPackageConf, [
+        packageConf,
+        metapakModulesSequence,
+        metapakModulesConfigs,
+      ]),
+    ]))
+    .then(([metapakModulesConfigs, buildPackageConfResult]) => {
       const promises = [
-        buildPackageConf(packageConf, metapakModulesSequence, metapakModulesConfigs),
+        Promise.resolve(buildPackageConfResult),
         buildPackageAssets(packageConf, metapakModulesSequence, metapakModulesConfigs),
         buildPackageGitHooks(packageConf, metapakModulesSequence, metapakModulesConfigs),
       ];
-      const allPromise = Promise.all(promises);
 
-      // Trick to avoid stopping the process for one failure
-      return allPromise
-      .then(() => _awaitPromisesFullfil(promises))
-      .then(() => allPromise);
+      // Trick to avoid stopping the process immediately for one failure
+      return _awaitPromisesFullfil(promises);
     })
     .then(([packageConfModified, assetsModified, gitHooksAdded]) => {
       // The CI should not modify the repo contents and should fail when the
@@ -152,7 +159,30 @@ function _getPackageMetapakModulesConfigs({
 }
 
 function _awaitPromisesFullfil(promises) {
+  let err;
+
   return Promise.all(promises.map(
-    promise => promise.catch(() => {})
-  ));
+    promise => promise.catch((inErr) => {
+      err = err || inErr;
+    })
+  ))
+  .then((result) => {
+    if(err) {
+      throw err;
+    }
+    return result;
+  });
+}
+
+function recursivelyBuild(iteration, fn, args) {
+  return fn(...args)
+  .then((result) => {
+    if(!result) {
+      return !!iteration;
+    }
+    if(MAX_PACKAGE_BUILD_ITERATIONS <= iteration) {
+      throw new YError('E_MAX_ITERATIONS', iteration, MAX_PACKAGE_BUILD_ITERATIONS);
+    }
+    return recursivelyBuild(++iteration, fn, args);
+  });
 }

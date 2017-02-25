@@ -242,13 +242,13 @@ describe('buildPackageAssets', () => {
     .catch(done);
   });
 
-  it('should allow to rename assets', (done) => {
+  it('should allow to rename assets with async transformers', (done) => {
     const packageConf = {};
 
     requireStub.returns((file) => {
       file.name = 'notlol';
       file.data = '{\n  "private": false\n}';
-      return file;
+      return Promise.resolve(file);
     });
     readFileStub.onFirstCall().returns(Promise.resolve('{\n  "test": true\n}'));
     readFileStub.onSecondCall().returns(Promise.resolve('{\n  "private": true\n}'));

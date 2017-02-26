@@ -83,7 +83,7 @@ function buildPackageAssets(
     return Promise.all(
       Object.keys(assetsHash)
       .map(_processAsset.bind(null, {
-        PROJECT_DIR, mkdirp, log, fs,
+        PROJECT_DIR, mkdirp, log, fs, glob,
       }, {
         packageConf, transformers, assetsHash,
       }))
@@ -97,7 +97,7 @@ function buildPackageAssets(
 }
 
 function _processAsset({
-  PROJECT_DIR, mkdirp, log, fs,
+  PROJECT_DIR, mkdirp, log, fs, glob,
 }, { packageConf, transformers, assetsHash }, name) {
   const { dir } = assetsHash[name];
   const assetPath = path.join(dir, name);
@@ -112,7 +112,7 @@ function _processAsset({
       (curInputFilePromise, transformer) =>
       curInputFilePromise.then(
         curInputFile =>
-        transformer(curInputFile, packageConf)
+        transformer(curInputFile, packageConf, { PROJECT_DIR, fs, log, glob })
       ),
       Promise.resolve(inputFile)
     ).then(

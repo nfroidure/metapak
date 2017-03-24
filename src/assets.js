@@ -118,9 +118,9 @@ function _processAsset({
     ).then(
       newFile =>
       fs.readFileAsync(path.join(PROJECT_DIR, newFile.name), 'utf-8')
-      .catch((data) => {
-        log('debug', 'New asset:', path.join(dir, newFile.name));
-        return data || '';
+      .catch((err) => {
+        log('debug', 'New asset:', path.join(dir, newFile.name), err);
+        return '';
       })
       .then(data => [newFile, inputFile, { name: newFile.name, dir, data }])
     )
@@ -131,8 +131,11 @@ function _processAsset({
     }
 
     if('' === newFile.data) {
-      return fs.unlinkAsync(path.join(PROJECT_DIR, name))
-      .then(() => true);
+      if(originalFile.data) {
+        return fs.unlinkAsync(path.join(PROJECT_DIR, name))
+        .then(() => true);
+      }
+      return Promise.resolve(true);
     }
 
     return _ensureDirExists({ PROJECT_DIR, mkdirp }, newFile)

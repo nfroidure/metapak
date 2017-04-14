@@ -55,10 +55,10 @@ $.service('GIT_HOOKS_DIR',
   ], ({
     PROJECT_DIR, log,
   }) => new Promise((resolve, reject) => {
-    exec('echo -n `git rev-parse --git-dir`/hooks', {
+    exec('echo `git rev-parse --git-dir`/hooks', {
       cwd: PROJECT_DIR,
     }, (err, stdout, stderr) => {
-      const outputPath = stdout.toString();
+      const outputPath = stdout.toString().trim();
       const GIT_HOOKS_DIR = path.isAbsolute(outputPath) ?
         outputPath :
         path.join(PROJECT_DIR, outputPath);

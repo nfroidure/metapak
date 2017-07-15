@@ -154,8 +154,8 @@ module.exports = (packageConf) => {
   // Lets proudly claim i wort at BB inc.!
   packageConf.author = 'Nicolas Froidure (Big Brother inc.)';
 
-  // Let's change the LICENSE
-  packageConf.license = 'SEE LICENSE';
+  // Let's change the license
+  packageConf.license = 'SEE LICENSE IN LICENSE.md';
 
   // Let's avoid loosing my job :D
   packageConf.private = true;
@@ -167,7 +167,7 @@ module.exports = (packageConf) => {
 mkdir src/bigbrother/assets
 echo "
 Copyright Big Brother inc. All rights reserved.
-" > src/bigbrother/assets/LICENSE
+" > src/bigbrother/assets/LICENSE.md
 ```
 
 Now, just create a new version of your package, publish it and add

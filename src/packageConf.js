@@ -10,7 +10,7 @@ const {
 
 // Using an invariant post install hook to be future proof
 const METAPAK_POST_INSTALL = 'npm run metapak --silent';
-const METAPAK_SCRIPT = 'metapak || echo \'Please `npm install --save-dev metapak`\' && exit 0';
+const METAPAK_SCRIPT = 'metapak || exit 0';
 
 module.exports = initBuildPackageConf;
 

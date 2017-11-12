@@ -103,6 +103,137 @@ describe('buildPackageAssets', () => {
     .catch(done);
   });
 
+  it('should rename _dot_ prefixed files', (done) => {
+    const packageConf = {};
+
+    requireStub.returns((file) => {
+      file.data = '{\n  "private": false\n}';
+      return file;
+    });
+    readFileStub.onFirstCall().returns(Promise.resolve('{\n  "test": true\n}'));
+    readFileStub.onSecondCall().returns(Promise.resolve('{\n  "private": true\n}'));
+    writeFileStub.returns(Promise.resolve());
+    unlinkStub.returns(Promise.resolve());
+    globStub.returns(Promise.resolve(['_dot_gitignore']));
+    mkdirpStub.returns(Promise.resolve());
+
+    $.run(DEPENDENCIES)
+    .then(({ require, log, fs, buildPackageAssets }) =>
+      buildPackageAssets(
+        packageConf,
+        ['metapak-http-server'],
+        {
+          'metapak-http-server': ['_common'],
+        }
+      )
+      .then((result) => {
+        assert.deepEqual(globStub.args, [[
+          '**/*',
+          {
+            cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
+            dot: true,
+            nodir: true,
+          },
+        ]]);
+        assert.deepEqual(require.args, [[
+          'project/dir/node_modules/metapak-http-server/src/_common/assets.js',
+        ]]);
+        assert.deepEqual(readFileStub.args, [[
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/_dot_gitignore',
+          'utf-8',
+        ], [
+          'project/dir/.gitignore',
+          'utf-8',
+        ]]);
+        assert.deepEqual(mkdirpStub.args, [], 'No mkdirp performed.');
+        assert.deepEqual(writeFileStub.args, [[
+          'project/dir/.gitignore',
+          '{\n  "private": false\n}',
+          'utf-8',
+        ]]);
+        assert.deepEqual(unlinkStub.args, [], 'Deletes nothing.');
+        assert.deepEqual(log.args.filter(filterLogs), [[
+          'debug',
+          'Processing asset:',
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/_dot_gitignore',
+        ]]);
+        assert.equal(result, true, 'Indicates that data changed');
+      })
+    )
+    .then(done)
+    .catch(done);
+  });
+
+  it('should warn on using .gitignore files', (done) => {
+    const packageConf = {};
+
+    requireStub.returns((file) => {
+      file.data = '{\n  "private": false\n}';
+      return file;
+    });
+    readFileStub.onFirstCall().returns(Promise.resolve('{\n  "test": true\n}'));
+    readFileStub.onSecondCall().returns(Promise.resolve('{\n  "private": true\n}'));
+    writeFileStub.returns(Promise.resolve());
+    unlinkStub.returns(Promise.resolve());
+    globStub.returns(Promise.resolve(['.gitignore']));
+    mkdirpStub.returns(Promise.resolve());
+
+    $.run(DEPENDENCIES)
+    .then(({ require, log, fs, buildPackageAssets }) =>
+      buildPackageAssets(
+        packageConf,
+        ['metapak-http-server'],
+        {
+          'metapak-http-server': ['_common'],
+        }
+      )
+      .then((result) => {
+        assert.deepEqual(globStub.args, [[
+          '**/*',
+          {
+            cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
+            dot: true,
+            nodir: true,
+          },
+        ]]);
+        assert.deepEqual(require.args, [[
+          'project/dir/node_modules/metapak-http-server/src/_common/assets.js',
+        ]]);
+        assert.deepEqual(readFileStub.args, [[
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/.gitignore',
+          'utf-8',
+        ], [
+          'project/dir/.gitignore',
+          'utf-8',
+        ]]);
+        assert.deepEqual(mkdirpStub.args, [], 'No mkdirp performed.');
+        assert.deepEqual(writeFileStub.args, [[
+          'project/dir/.gitignore',
+          '{\n  "private": false\n}',
+          'utf-8',
+        ]]);
+        assert.deepEqual(unlinkStub.args, [], 'Deletes nothing.');
+        assert.deepEqual(log.args.filter(filterLogs), [[
+          'warning',
+          '`.gitignore` assets may not work, use `_dot_` instead of a raw `.`',
+        ], [
+          'warning',
+          'in your `assets` folder, metapak will care to rename them',
+        ], [
+          'warning',
+          'correctly. See https://github.com/npm/npm/issues/15660',
+        ], [
+          'debug',
+          'Processing asset:',
+          'project/dir/node_modules/metapak-http-server/src/_common/assets/.gitignore',
+        ]]);
+        assert.equal(result, true, 'Indicates that data changed');
+      })
+    )
+    .then(done)
+    .catch(done);
+  });
+
   it('should work whith several transformers', (done) => {
     const packageConf = {};
 
@@ -157,12 +288,12 @@ describe('buildPackageAssets', () => {
           'project/dir/node_modules/metapak-module1/src/_common/assets/_dot_gitignore',
           'utf-8',
         ], [
-          'project/dir/_dot_gitignore',
+          'project/dir/.gitignore',
           'utf-8',
         ]]);
         assert.deepEqual(mkdirpStub.args, [], 'No mkdirp performed.');
         assert.deepEqual(writeFileStub.args, [[
-          'project/dir/_dot_gitignore',
+          'project/dir/.gitignore',
           '.git\nnode_modules\ncoverage\n',
           'utf-8',
         ]]);

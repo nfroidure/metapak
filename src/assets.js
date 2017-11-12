@@ -53,7 +53,14 @@ function buildPackageAssets(
 
       return glob('**/*', { cwd: packageAssetsDir, dot: true, nodir: true })
       .then((assets) => {
-        assets = assets.map(asset => ({ dir: packageAssetsDir, name: asset }));
+        if(assets.some(asset => '.gitignore' === asset)) {
+          log('warning', '`.gitignore` assets may not work, use `_dot_` instead of a raw `.`');
+          log('warning', 'in your `assets` folder, metapak will care to rename them');
+          log('warning', 'correctly. See https://github.com/npm/npm/issues/15660');
+        }
+        assets = assets.map(
+          asset => ({ dir: packageAssetsDir, name: asset })
+        );
         return { assets, transformer };
       })
       .catch((err) => {
@@ -101,10 +108,13 @@ function _processAsset({
 }, { packageConf, transformers, assetsHash }, name) {
   const { dir } = assetsHash[name];
   const assetPath = path.join(dir, name);
+  const finalName = name.startsWith('_dot_') ?
+    name.replace('_dot_', '.') :
+    name;
 
   log('debug', 'Processing asset:', assetPath);
   return fs.readFileAsync(assetPath, 'utf-8')
-  .then(data => ({ name, dir, data }))
+  .then(data => ({ name: finalName, dir, data }))
   .then(
     inputFile =>
     transformers
@@ -132,7 +142,7 @@ function _processAsset({
 
     if('' === newFile.data) {
       if(originalFile.data) {
-        return fs.unlinkAsync(path.join(PROJECT_DIR, name))
+        return fs.unlinkAsync(path.join(PROJECT_DIR, newFile.name))
         .then(() => true);
       }
       return Promise.resolve(true);

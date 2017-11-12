@@ -26,6 +26,9 @@ function buildPackageConf(
   metapakModulesSequence,
   metapakModulesConfigs
 ) {
+  const originalDependencies = Object.keys(
+    packageConf.dependencies || {}
+  );
   const originalPackageConf = JSON.stringify(packageConf, null, 2);
 
   return mapConfigsSequentially(
@@ -73,6 +76,11 @@ function buildPackageConf(
         packageTransformer(newPackageConf),
       packageConf
     );
+    if(Object.keys(
+      newPackageConf.dependencies || {}
+    ).sort().join() !== originalDependencies.join()) {
+      log('warn', 'Changing dependencies with metapak is not recommended!');
+    }
     if(newPackageConf.dependencies) {
       newPackageConf.dependencies = sortobject(newPackageConf.dependencies);
     }

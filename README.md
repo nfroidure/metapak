@@ -145,7 +145,7 @@ echo "module.exports = (hooks, packageConf) => {
   // doing so would create a gap between
   // you metapak module/config and the
   // repository contents
-  hooks['pre-commit'].push('npm run metapak -s || exit 1');
+  hooks['pre-commit'].push('npm run metapak -- --safe || exit 1');
   return hooks;
 };
 " > src/_common/hooks.js

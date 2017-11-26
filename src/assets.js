@@ -1,5 +1,6 @@
 'use strict';
 
+const { inject } = require('knifecycle/dist/util');
 const path = require('path');
 const {
   identity,
@@ -10,7 +11,7 @@ const {
 module.exports = initBuildPackageAssets;
 
 function initBuildPackageAssets($) {
-  $.service('buildPackageAssets', $.depends([
+  $.service('buildPackageAssets', inject([
     'PROJECT_DIR', 'fs', 'log', 'glob', 'require', 'mkdirp',
   ], services => Promise.resolve(buildPackageAssets.bind(null, services))));
 }

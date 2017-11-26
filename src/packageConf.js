@@ -1,5 +1,6 @@
 'use strict';
 
+const { inject } = require('knifecycle/dist/util');
 const path = require('path');
 const sortobject = require('sort-object');
 const {
@@ -15,7 +16,7 @@ const METAPAK_SCRIPT = 'metapak || exit 0';
 module.exports = initBuildPackageConf;
 
 function initBuildPackageConf($) {
-  $.service('buildPackageConf', $.depends([
+  $.service('buildPackageConf', inject([
     'PROJECT_DIR', 'fs', 'require', 'log',
   ], services => Promise.resolve(buildPackageConf.bind(null, services))));
 }

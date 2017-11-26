@@ -3,6 +3,7 @@
 'use strict';
 
 const Knifecycle = require('knifecycle').default;
+const { inject } = require('knifecycle/dist/util');
 const debug = require('debug')('metapak');
 const fs = require('fs');
 const YError = require('yerror');
@@ -23,7 +24,7 @@ const $ = new Knifecycle();
 
 $.constant('ENV', process.env);
 $.service('PROJECT_DIR',
-  $.depends([
+  inject([
     'log', 'fs',
   ], ({
     log, fs,
@@ -51,7 +52,7 @@ $.service('PROJECT_DIR',
 ));
 
 $.service('GIT_HOOKS_DIR',
-  $.depends([
+  inject([
     'PROJECT_DIR', 'log',
   ], ({
     PROJECT_DIR, log,
@@ -113,7 +114,7 @@ program
   .parse(process.argv);
 
 $.service('mkdirp',
-  $.depends([
+  inject([
     'log',
   ], ({
     log,
@@ -132,7 +133,7 @@ $.service('mkdirp',
 );
 
 $.service('fs',
-  $.depends([
+  inject([
     'log',
   ], ({
     log,

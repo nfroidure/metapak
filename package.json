@@ -39,7 +39,7 @@
     "commander": "^2.9.0",
     "debug": "2.6.1",
     "glob": "^7.1.1",
-    "knifecycle": "^1.1.2",
+    "knifecycle": "^2.4.1",
     "mkdirp": "^0.5.1",
     "sort-object": "^3.0.2",
     "yerror": "^1.0.2"

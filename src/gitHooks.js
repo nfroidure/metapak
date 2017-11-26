@@ -1,5 +1,6 @@
 'use strict';
 
+const { inject } = require('knifecycle/dist/util');
 const {
   buildMetapakModulePath,
   mapConfigsSequentially,
@@ -10,7 +11,7 @@ const path = require('path');
 module.exports = initBuildPackageGitHooks;
 
 function initBuildPackageGitHooks($) {
-  $.service('buildPackageGitHooks', $.depends([
+  $.service('buildPackageGitHooks', inject([
     'ENV', 'PROJECT_DIR', 'GIT_HOOKS_DIR', 'fs', 'log', 'os', 'require',
   ], services =>
     Promise.resolve(buildPackageGitHooks.bind(null, services))

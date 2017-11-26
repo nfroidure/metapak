@@ -94,7 +94,7 @@ function _parseJSON({ log }, path, json) {
   return Promise.resolve(json)
   .then(JSON.parse.bind(JSON))
   .catch((err) => {
-    throw YError.cast(err, 'E_MALFORMED_PACKAGE', path);
+    throw YError.wrap(err, 'E_MALFORMED_PACKAGE', path);
   });
 }
 

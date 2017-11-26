@@ -5,6 +5,7 @@
 const Knifecycle = require('knifecycle').default;
 const debug = require('debug')('metapak');
 const fs = require('fs');
+const YError = require('yerror');
 const os = require('os');
 const mkdirp = require('mkdirp');
 const path = require('path');
@@ -90,7 +91,6 @@ $.service('GIT_HOOKS_DIR',
 
 $.constant('require', require);
 $.constant('exit', process.exit);
-$.constant('fs', Promise.promisifyAll(fs));
 $.constant('mkdirp', Promise.promisify(mkdirp));
 $.constant('os', os);
 $.constant('glob', Promise.promisify(glob));
@@ -108,7 +108,61 @@ initBuildPackageGitHooks($);
 
 program
   .version(require(path.join(__dirname, '..', 'package.json')).version)
+  .option('-s, --safe', 'Exit with 1 when changes are detected')
+  .option('-d, --dry-run', 'Print the changes without doing it')
   .parse(process.argv);
+
+$.service('mkdirp',
+  $.depends([
+    'log',
+  ], ({
+    log,
+  }) => {
+    const mkdirpAsync = Promise.promisify(mkdirp.mkdirp);
+
+    return Promise.resolve((path, ...args) => {
+      if(program.dryRun) {
+        log('debug', 'Create a folder:', path);
+        return Promise.resolve();
+      }
+      return preventChanges(path) ||
+        mkdirpAsync(path);
+    });
+  })
+);
+
+$.service('fs',
+  $.depends([
+    'log',
+  ], ({
+    log,
+  }) => {
+    const baseFS = Promise.promisifyAll(fs);
+
+    return Promise.resolve({
+      readFileAsync: baseFS.readFileAsync.bind(baseFS),
+      accessAsync: baseFS.accessAsync.bind(baseFS),
+      readdirAsync: baseFS.readdirAsync.bind(baseFS),
+      unlinkAsync: (path, ...args) => {
+        if(program.dryRun) {
+          log('debug', 'Delete a file:', path);
+          return Promise.resolve();
+        }
+        return preventChanges(path) ||
+          baseFS.unlinkAsync(path, ...args);
+      },
+      writeFileAsync: (path, ...args) => {
+        if(program.dryRun) {
+          log('debug', 'Modify a file:', path);
+          return Promise.resolve();
+        }
+        return preventChanges(path) ||
+          baseFS.writeFileAsync(path, ...args);
+      },
+      constants: baseFS.constants,
+    });
+  })
+);
 
 $.run([
   'ENV', 'PROJECT_DIR',
@@ -119,3 +173,10 @@ $.run([
 ])
 .then(runMetapak)
 .catch(console.log.bind(console)); // eslint-disable-line
+
+function preventChanges(path) {
+  if(program.safe) {
+    return Promise.reject(new YError('E_UNEXPECTED_CHANGES', path));
+  }
+  return {}.undef;
+}

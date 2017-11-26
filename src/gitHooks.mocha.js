@@ -13,10 +13,12 @@ describe('buildPackageGitHooks', () => {
   ];
   let $;
   let writeFileStub;
+  let readFileStub;
   let requireStub;
 
   beforeEach(() => {
     writeFileStub = sinon.stub();
+    readFileStub = sinon.stub();
     requireStub = sinon.stub();
 
     $ = new Knifecycle();
@@ -26,6 +28,7 @@ describe('buildPackageGitHooks', () => {
     $.constant('GIT_HOOKS_DIR', '.git/hooks');
     $.constant('os', { EOL: '\n' });
     $.constant('fs', {
+      readFileAsync: readFileStub,
       writeFileAsync: writeFileStub,
     });
     $.constant('require', requireStub);
@@ -45,6 +48,7 @@ describe('buildPackageGitHooks', () => {
       return hooks;
     });
     requireStub.onCall(3).throws(new Error('E_ERROR_2'));
+    readFileStub.returns(Promise.resolve(''));
     writeFileStub.returns(Promise.resolve());
 
     $.run(DEPENDENCIES)

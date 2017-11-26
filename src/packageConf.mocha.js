@@ -4,8 +4,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const Knifecycle = require('knifecycle').default;
 const initBuildPackageConf = require('./packageConf');
-const METAPAK_SCRIPT = 'metapak || exit 0';
-const METAPAK_POST_INSTALL = 'npm run metapak --silent';
+const METAPAK_SCRIPT = 'metapak';
 
 function filterLogs(e) { return 'stack' !== e[0]; }
 
@@ -58,8 +57,7 @@ describe('buildPackageConf', () => {
           'project/dir/package.json',
           '{\n' +
           '  "scripts": {\n' +
-          '    "metapak": "' + METAPAK_SCRIPT + '",\n' +
-          '    "postinstall": "' + METAPAK_POST_INSTALL + '"\n' +
+          '    "metapak": "' + METAPAK_SCRIPT + '"\n' +
           '  },\n' +
           '  "private": true\n' +
           '}',
@@ -81,7 +79,6 @@ describe('buildPackageConf', () => {
     const packageConf = {
       scripts: {
         metapak: METAPAK_SCRIPT,
-        postinstall: METAPAK_POST_INSTALL,
       },
     };
 
@@ -118,7 +115,6 @@ describe('buildPackageConf', () => {
     const packageConf = {
       scripts: {
         metapak: METAPAK_SCRIPT,
-        postinstall: METAPAK_POST_INSTALL,
       },
     };
 
@@ -158,8 +154,7 @@ describe('buildPackageConf', () => {
           'project/dir/package.json',
           '{\n' +
           '  "scripts": {\n' +
-          '    "metapak": "' + METAPAK_SCRIPT + '",\n' +
-          '    "postinstall": "' + METAPAK_POST_INSTALL + '"\n' +
+          '    "metapak": "' + METAPAK_SCRIPT + '"\n' +
           '  },\n' +
           '  "private": true,\n' +
           '  "license": "MIT",\n' +

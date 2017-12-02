@@ -1,3 +1,14 @@
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/nfroidure/metapak/compare/v1.0.0...v1.0.1) (2017-12-02)
+
+
+### Bug Fixes
+
+* **Configs:** Preserve original configs sequence ([984f830](https://github.com/nfroidure/metapak/commit/984f830))
+* **Dependencies:** Update debug due to its vulnerability ([28f24de](https://github.com/nfroidure/metapak/commit/28f24de))
+
+
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/nfroidure/metapak/compare/v0.0.21...v1.0.0) (2017-11-26)
 

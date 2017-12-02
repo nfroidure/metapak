@@ -339,7 +339,7 @@ describe('metapak', () => {
     .catch(done);
   });
 
-  it('should work with one module and several overriden configs', (done) => {
+  it('should work with one module and one config', (done) => {
     const readFileStub = sinon.stub();
     const readdirStub = sinon.stub();
     const packageConf = {
@@ -396,6 +396,73 @@ describe('metapak', () => {
           ['metapak-http-service'],
           {
             'metapak-http-service': ['_common', 'private'],
+          },
+        ]]);
+        assert.deepEqual(buildPackageAssets.args, buildPackageConf.args);
+        assert.deepEqual(buildPackageGitHooks.args, buildPackageConf.args);
+      });
+    })
+    .then(done)
+    .catch(done);
+  });
+
+  it('should work with one module and several overriden configs', (done) => {
+    const readFileStub = sinon.stub();
+    const readdirStub = sinon.stub();
+    const packageConf = {
+      devDependencies: {
+        'metapak-http-service': '1.0.0',
+      },
+      metapak: {
+        configs: ['private', 'bisous'],
+      },
+    };
+
+    readFileStub.onFirstCall().returns(Promise.resolve(JSON.stringify(packageConf)));
+    readdirStub.returns(Promise.resolve(['_common', 'bisous', 'private', 'coucou']));
+    readFileStub.onSecondCall().returns(Promise.resolve(JSON.stringify({
+      dependencies: {
+        siso: '1.0.0',
+        'strict-qs': '1.0.0',
+      },
+    })));
+    readFileStub.onThirdCall().returns(Promise.resolve(JSON.stringify({
+      private: true,
+    })));
+
+    $.constant('fs', {
+      readFileAsync: readFileStub,
+      readdirAsync: readdirStub,
+    });
+
+    $.run(DEPENDENCIES)
+    .then((services) => {
+      const {
+        exit, log, fs,
+        buildPackageConf, buildPackageAssets, buildPackageGitHooks,
+      } = services;
+
+      return metapak(services)
+      .then(() => {
+        assert.deepEqual(fs.readFileAsync.args, [[
+          'project/dir/package.json',
+          'utf-8',
+        ]]);
+        assert.deepEqual(log.args, [[
+          'debug',
+          'Resolved the metapak modules sequence:',
+          ['metapak-http-service'],
+        ], [
+          'debug',
+          'Found configs for "metapak-http-service":',
+          ['_common', 'private', 'bisous'],
+        ]]);
+        assert.deepEqual(exit.args, [[0]]);
+        assert.deepEqual(buildPackageConf.args, [[
+          packageConf,
+          ['metapak-http-service'],
+          {
+            'metapak-http-service': ['_common', 'private', 'bisous'],
           },
         ]]);
         assert.deepEqual(buildPackageAssets.args, buildPackageConf.args);

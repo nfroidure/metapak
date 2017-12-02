@@ -75,12 +75,12 @@
       "commitizen",
       "cz-conventional-changelog",
       "conventional-changelog-cli",
-      "eslint",
-      "eslint-config-simplifield",
       "mocha",
       "mocha-lcov-reporter",
       "coveralls",
-      "istanbul"
+      "istanbul",
+      "eslint",
+      "eslint-config-simplifield"
     ]
   }
 }

@@ -145,8 +145,8 @@ function _getPackageMetapakModulesConfigs({
         buildMetapakModulePath(PROJECT_DIR, packageConf, metapakModuleName, 'src')
       )
       .then((metapakModuleConfigs) => {
-        metapakModuleConfigs = metapakModuleConfigs
-        .filter(metapakModuleConfig => metapackConfigsSequence.includes(metapakModuleConfig));
+        metapakModuleConfigs = metapackConfigsSequence
+        .filter(metapakModuleConfig => metapakModuleConfigs.includes(metapakModuleConfig));
         log(
           'debug', 'Found configs for "' + metapakModuleName + '":',
           metapakModuleConfigs

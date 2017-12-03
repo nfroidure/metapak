@@ -20,6 +20,7 @@
     "cover": "istanbul cover _mocha --report html -- src/**/*.mocha.js -R spec -t 5000",
     "coveralls": "istanbul cover _mocha --report lcovonly -- src/**/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
+    "install": "node bin/metapak.js",
     "lint": "eslint src/**/*.js",
     "metapak": "node bin/metapak.js",
     "preversion": "npm t && npm run lint && npm run metapak -s",

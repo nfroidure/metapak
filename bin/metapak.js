@@ -173,7 +173,7 @@ $.run([
   'buildPackageGitHooks',
 ])
 .then(runMetapak)
-.catch(console.log.bind(console)); // eslint-disable-line
+.catch(console.error.bind(console)); // eslint-disable-line
 
 function preventChanges(path) {
   if(program.safe) {

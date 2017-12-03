@@ -1,3 +1,14 @@
+<a name="1.0.2"></a>
+## [1.0.2](https://github.com/nfroidure/metapak/compare/v1.0.1...v1.0.2) (2017-12-03)
+
+
+### Bug Fixes
+
+* **Bin:** Print catched errors in stderr ([12bc76c](https://github.com/nfroidure/metapak/commit/12bc76c))
+* **Install:** Fix post install script ([8b385c5](https://github.com/nfroidure/metapak/commit/8b385c5))
+
+
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://github.com/nfroidure/metapak/compare/v1.0.0...v1.0.1) (2017-12-02)
 

@@ -1,6 +1,6 @@
 {
   "name": "metapak",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Node modules authoring made easy.",
   "metapak": {
     "configs": [

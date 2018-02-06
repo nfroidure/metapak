@@ -99,11 +99,12 @@ function _parseJSON({ log }, path, json) {
 }
 
 function _getMetapakModulesSequence({ log, exit }, packageConf) {
+  const reg = new RegExp(/^(\@.+\/)?metapak-/);
   const metapakModulesNames = Object.keys(packageConf.devDependencies || {})
-  .filter(devDependency => devDependency.startsWith('metapak-'));
+  .filter(devDependency => reg.test(devDependency));
 
   // Allowing a metapak module to run on himself
-  if(packageConf.name && packageConf.name.startsWith('metapak-')) {
+  if(packageConf.name && reg.test(packageConf.name)) {
     metapakModulesNames.unshift(packageConf.name);
   }
 

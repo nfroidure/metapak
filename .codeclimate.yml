@@ -7,4 +7,9 @@ engines:
 
 ratings:
    paths:
-   - "src/**/*.js"
+   - "'src/**/*.js' 'bin/**/*.js'"
+## Exclude test files.
+exclude_patterns:
+- "dist/"
+- "**/node_modules/"
+- "src/**/*.mocha.js"

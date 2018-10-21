@@ -33,7 +33,7 @@ $.register(
     inject(
       ['log', 'fs'],
       ({ log, fs }) =>
-        new Promise((resolve) => {
+        new Promise(resolve => {
           const projectDir = path.join(__dirname, '..', '..', '..');
 
           // Here we assume that if a `node_modules` folder exists
@@ -69,7 +69,7 @@ $.register(
     inject(
       ['PROJECT_DIR', 'log'],
       ({ PROJECT_DIR, log }) =>
-        new Promise((resolve) => {
+        new Promise(resolve => {
           exec(
             'git rev-parse --git-dir',
             {

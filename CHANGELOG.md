@@ -1,3 +1,13 @@
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/nfroidure/metapak/compare/v1.0.3...v2.0.0) (2018-10-21)
+
+
+### Bug Fixes
+
+* **bin/metapak.js:** fix .git path ([82bed36](https://github.com/nfroidure/metapak/commit/82bed36))
+
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/nfroidure/metapak/compare/v1.0.2...v1.0.3) (2018-02-06)
 

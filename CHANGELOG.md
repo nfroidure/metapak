@@ -1,3 +1,7 @@
+# [3.1.0](https://github.com/nfroidure/metapak/compare/v3.0.1...v3.1.0) (2019-01-27)
+
+
+
 ## [3.0.1](https://github.com/nfroidure/metapak/compare/v3.0.0...v3.0.1) (2019-01-27)
 
 

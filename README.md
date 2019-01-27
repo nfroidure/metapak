@@ -7,14 +7,14 @@
 # metapak
 > Node modules authoring made easy.
 
-[![NPM version](https://badge.fury.io/js/metapak.svg)](https://npmjs.org/package/metapak)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/metapak/blob/master/LICENSE)
 [![Build status](https://secure.travis-ci.org/nfroidure/metapak.svg)](https://travis-ci.org/nfroidure/metapak)
+[![Coverage Status](https://coveralls.io/repos/nfroidure/metapak/badge.svg?branch=master)](https://coveralls.io/r/nfroidure/metapak?branch=master)
+[![NPM version](https://badge.fury.io/js/metapak.svg)](https://npmjs.org/package/metapak)
 [![Dependency Status](https://david-dm.org/nfroidure/metapak.svg)](https://david-dm.org/nfroidure/metapak)
 [![devDependency Status](https://david-dm.org/nfroidure/metapak/dev-status.svg)](https://david-dm.org/nfroidure/metapak#info=devDependencies)
-[![Coverage Status](https://coveralls.io/repos/nfroidure/metapak/badge.svg?branch=master)](https://coveralls.io/r/nfroidure/metapak?branch=master)
-[![Code Climate](https://codeclimate.com/github/nfroidure/metapak.svg)](https://codeclimate.com/github/nfroidure/metapak)
-[![Dependency Status](https://dependencyci.com/github/nfroidure/metapak/badge)](https://dependencyci.com/github/nfroidure/metapak)
 [![Package Quality](http://npm.packagequality.com/shield/metapak.svg)](http://packagequality.com/#?package=metapak)
+[![Code Climate](https://codeclimate.com/github/nfroidure/metapak.svg)](https://codeclimate.com/github/nfroidure/metapak)
 
 
 [//]: # (::contents:start)

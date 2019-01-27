@@ -1,6 +1,6 @@
 'use strict';
 
-const { inject, service } = require('knifecycle');
+const { service } = require('knifecycle');
 const {
   buildMetapakModulePath,
   mapConfigsSequentially,
@@ -13,11 +13,9 @@ module.exports = initBuildPackageGitHooks;
 function initBuildPackageGitHooks($) {
   $.register(
     service(
+      services => Promise.resolve(buildPackageGitHooks.bind(null, services)),
       'buildPackageGitHooks',
-      inject(
-        ['ENV', 'PROJECT_DIR', 'GIT_HOOKS_DIR', 'fs', 'log', 'os', 'require'],
-        services => Promise.resolve(buildPackageGitHooks.bind(null, services))
-      )
+      ['ENV', 'PROJECT_DIR', 'GIT_HOOKS_DIR', 'fs', 'log', 'os', 'require']
     )
   );
 }
@@ -30,6 +28,12 @@ function buildPackageGitHooks(
 ) {
   // Avoiding CI since it does not make sense
   if (ENV.CI) {
+    return Promise.resolve();
+  }
+
+  // Avoid adding hooks for package that ain't at the git
+  // root directory
+  if (path.relative(PROJECT_DIR, GIT_HOOKS_DIR).startsWith('..')) {
     return Promise.resolve();
   }
 

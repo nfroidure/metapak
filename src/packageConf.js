@@ -1,6 +1,6 @@
 'use strict';
 
-const { inject, service } = require('knifecycle');
+const { service } = require('knifecycle');
 const path = require('path');
 const sortobject = require('sort-object');
 const {
@@ -16,10 +16,9 @@ module.exports = initBuildPackageConf;
 function initBuildPackageConf($) {
   $.register(
     service(
+      services => Promise.resolve(buildPackageConf.bind(null, services)),
       'buildPackageConf',
-      inject(['PROJECT_DIR', 'fs', 'require', 'log'], services =>
-        Promise.resolve(buildPackageConf.bind(null, services))
-      )
+      ['PROJECT_DIR', 'fs', 'require', 'log']
     )
   );
 }

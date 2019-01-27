@@ -13,7 +13,11 @@
     ],
     "data": {
       "testsFiles": "'src/**/*.mocha.js'",
-      "files": "'src/**/*.js' 'bin/**/*.js'"
+      "files": "'src/**/*.js' 'bin/**/*.js'",
+      "bundleFiles": [
+        "src/**/*.js",
+        "bin/**/*.js"
+      ]
     }
   },
   "scripts": {
@@ -96,6 +100,7 @@
   "contributors": [],
   "files": [
     "src/**/*.js",
+    "bin/**/*.js",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"

@@ -123,69 +123,67 @@ async function initBuildPackageAssets(
     });
 }
 
-function _processAsset(
+async function _processAsset(
   { PROJECT_DIR, mkdirp, log, fs, glob },
   { packageConf, transformers, assetsHash },
   name
 ) {
   const { dir } = assetsHash[name];
   const assetPath = path.join(dir, name);
-  const finalName = name.startsWith('_dot_')
-    ? name.replace('_dot_', '.')
-    : name;
 
   log('debug', 'Processing asset:', assetPath);
-  return fs
-    .readFileAsync(assetPath, 'utf-8')
-    .then(data => ({ name: finalName, dir, data }))
-    .then(inputFile =>
-      transformers
-        .reduce(
-          (curInputFilePromise, transformer) =>
-            curInputFilePromise.then(curInputFile =>
-              transformer(curInputFile, packageConf, {
-                PROJECT_DIR,
-                fs,
-                log,
-                glob,
-              })
-            ),
-          Promise.resolve(inputFile)
-        )
-        .then(newFile =>
-          fs
-            .readFileAsync(path.join(PROJECT_DIR, newFile.name), 'utf-8')
-            .catch(err => {
-              log('debug', 'New asset:', path.join(dir, newFile.name), err);
-              return '';
-            })
-            .then(data => [newFile, { name: newFile.name, dir, data }])
-        )
-    )
-    .then(([newFile, originalFile]) => {
-      if (newFile.data === originalFile.data) {
-        return false;
-      }
 
-      if ('' === newFile.data) {
-        if (originalFile.data) {
-          return fs
-            .unlinkAsync(path.join(PROJECT_DIR, newFile.name))
-            .then(() => true);
-        }
-        return Promise.resolve(true);
-      }
+  const sourceFile = {
+    name: name.startsWith('_dot_') ? name.replace('_dot_', '.') : name,
+    data: await fs.readFileAsync(assetPath, 'utf-8'),
+  };
+  const newFile = await transformers.reduce(
+    (curInputFilePromise, transformer) =>
+      curInputFilePromise.then(curInputFile =>
+        transformer(curInputFile, packageConf, {
+          PROJECT_DIR,
+          fs,
+          log,
+          glob,
+        })
+      ),
+    Promise.resolve(sourceFile)
+  );
+  const originalFile = {
+    name: sourceFile.name,
+    dir,
+    data: await fs
+      .readFileAsync(path.join(PROJECT_DIR, newFile.name), 'utf-8')
+      .catch(err => {
+        log('debug', 'Asset not found:', path.join(dir, newFile.name));
+        log('stack', err.stack);
+        return '';
+      }),
+  };
 
-      return _ensureDirExists({ PROJECT_DIR, mkdirp }, newFile)
-        .then(() =>
-          fs.writeFileAsync(
-            path.join(PROJECT_DIR, newFile.name),
-            newFile.data,
-            'utf-8'
-          )
-        )
-        .then(() => true);
-    });
+  if (newFile.data === originalFile.data) {
+    return false;
+  }
+
+  if ('' === newFile.data) {
+    if (originalFile.data) {
+      log('debug', 'Deleting asset:', path.join(PROJECT_DIR, newFile.name));
+      await fs.unlinkAsync(path.join(PROJECT_DIR, newFile.name));
+
+      return true;
+    }
+    return false;
+  }
+
+  log('debug', 'Saving asset:', path.join(PROJECT_DIR, newFile.name));
+  await _ensureDirExists({ PROJECT_DIR, mkdirp }, newFile);
+  await fs.writeFileAsync(
+    path.join(PROJECT_DIR, newFile.name),
+    newFile.data,
+    'utf-8'
+  );
+
+  return true;
 }
 
 function _ensureDirExists({ PROJECT_DIR, mkdirp }, newFile) {

@@ -99,6 +99,7 @@ describe('buildPackageAssets', () => {
               'Processing asset:',
               'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
             ],
+            ['debug', 'Saving asset:', 'project/dir/lol'],
           ]);
           assert.equal(result, true, 'Indicates that data changed');
         })
@@ -162,6 +163,7 @@ describe('buildPackageAssets', () => {
               'Processing asset:',
               'project/dir/node_modules/metapak-http-server/src/_common/assets/_dot_gitignore',
             ],
+            ['debug', 'Saving asset:', 'project/dir/.gitignore'],
           ]);
           assert.equal(result, true, 'Indicates that data changed');
         })
@@ -237,6 +239,7 @@ describe('buildPackageAssets', () => {
               'Processing asset:',
               'project/dir/node_modules/metapak-http-server/src/_common/assets/.gitignore',
             ],
+            ['debug', 'Saving asset:', 'project/dir/.gitignore'],
           ]);
           assert.equal(result, true, 'Indicates that data changed');
         })
@@ -320,6 +323,7 @@ describe('buildPackageAssets', () => {
               'Processing asset:',
               'project/dir/node_modules/metapak-module1/src/_common/assets/_dot_gitignore',
             ],
+            ['debug', 'Saving asset:', 'project/dir/.gitignore'],
           ]);
           assert.equal(result, true, 'Indicates that data changed');
         })
@@ -387,6 +391,7 @@ describe('buildPackageAssets', () => {
               'Processing asset:',
               'project/dir/node_modules/metapak-http-server/src/_common/assets/lol/wadup',
             ],
+            ['debug', 'Saving asset:', 'project/dir/lol/wadup'],
           ]);
           assert.equal(result, true, 'Indicates that data changed');
         })
@@ -451,6 +456,7 @@ describe('buildPackageAssets', () => {
               'Processing asset:',
               'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
             ],
+            ['debug', 'Saving asset:', 'project/dir/notlol'],
           ]);
           assert.equal(result, true, 'Indicates that data changed');
         })
@@ -513,14 +519,14 @@ describe('buildPackageAssets', () => {
               'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
             ],
           ]);
-          assert.equal(result, false, 'Indicates that datadid not change');
+          assert.equal(result, false, 'Indicates that data did not change');
         })
       )
       .then(done)
       .catch(done);
   });
 
-  it('should delete when data did not change', done => {
+  it('should delete when data is empty', done => {
     const packageConf = {};
 
     requireStub.returns(file => {
@@ -577,8 +583,79 @@ describe('buildPackageAssets', () => {
               'Processing asset:',
               'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
             ],
+            ['debug', 'Deleting asset:', 'project/dir/lol'],
           ]);
           assert.equal(result, true, 'Indicates that changed');
+        })
+      )
+      .then(done)
+      .catch(done);
+  });
+
+  it('should not delete when data is empty and file is already  deleted', done => {
+    const packageConf = {};
+
+    requireStub.returns(file => {
+      file.data = '';
+      return file;
+    });
+    readFileStub.onFirstCall().returns(Promise.resolve('{\n  "test": true\n}'));
+    readFileStub
+      .onSecondCall()
+      .returns(Promise.reject(new Error('E_NOT_FOUND')));
+    writeFileStub.returns(Promise.resolve());
+    unlinkStub.returns(Promise.resolve());
+    globStub.returns(Promise.resolve(['lol']));
+    mkdirpStub.returns(Promise.resolve());
+
+    $.run(DEPENDENCIES)
+      .then(({ require, log, buildPackageAssets }) =>
+        buildPackageAssets(packageConf, ['metapak-http-server'], {
+          'metapak-http-server': ['_common'],
+        }).then(result => {
+          assert.deepEqual(globStub.args, [
+            [
+              '**/*',
+              {
+                cwd:
+                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                dot: true,
+                nodir: true,
+              },
+            ],
+          ]);
+          assert.deepEqual(require.args, [
+            [
+              'project/dir/node_modules/metapak-http-server/src/_common/assets.js',
+            ],
+          ]);
+          assert.deepEqual(readFileStub.args, [
+            [
+              'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
+              'utf-8',
+            ],
+            ['project/dir/lol', 'utf-8'],
+          ]);
+          assert.deepEqual(mkdirpStub.args, [], 'No mkdirp performed.');
+          assert.deepEqual(writeFileStub.args, [], 'Writes nothing.');
+          assert.deepEqual(
+            unlinkStub.args,
+            [],
+            'Does not delete the resource.'
+          );
+          assert.deepEqual(log.args.filter(filterLogs), [
+            [
+              'debug',
+              'Processing asset:',
+              'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
+            ],
+            [
+              'debug',
+              'Asset not found:',
+              'project/dir/node_modules/metapak-http-server/src/_common/assets/lol',
+            ],
+          ]);
+          assert.equal(result, false, 'Indicates that nothing changed');
         })
       )
       .then(done)

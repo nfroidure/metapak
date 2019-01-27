@@ -72,6 +72,7 @@ describe('buildPackageConf', () => {
               'Package tranformation found at:',
               'project/dir/node_modules/metapak-http-server/src/_common/package.js',
             ],
+            ['debug', 'Saving the package:', 'project/dir/package.json'],
           ]);
           assert.equal(result, true, 'Package conf changed.');
         })
@@ -189,6 +190,7 @@ describe('buildPackageConf', () => {
               'Package tranformation found at:',
               'project/dir/node_modules/metapak-schmilbik/src/author/package.js',
             ],
+            ['debug', 'Saving the package:', 'project/dir/package.json'],
           ]);
           assert.equal(result, true, 'Package conf changed.');
         })

@@ -1,11 +1,12 @@
-'use strict';
-
 const path = require('path');
+const chalk = require('chalk');
+const diff = require('diff');
 
 module.exports = {
   identity: x => x,
   buildMetapakModulePath,
   mapConfigsSequentially,
+  buildDiff,
 };
 
 function buildMetapakModulePath(
@@ -25,26 +26,34 @@ function buildMetapakModulePath(
   return path.join(...parts);
 }
 
-function mapConfigsSequentially(
+async function mapConfigsSequentially(
   metapakModulesSequence,
   metapakModulesConfigs,
   fn
 ) {
-  return Promise.resolve().then(() =>
-    Promise.all(
-      metapakModulesSequence.map(metapakModuleName =>
-        Promise.all(
-          metapakModulesConfigs[metapakModuleName].map(metapakModuleConfig =>
-            fn(metapakModuleName, metapakModuleConfig)
-          )
+  const packageTransformers = await Promise.all(
+    metapakModulesSequence.map(metapakModuleName =>
+      Promise.all(
+        metapakModulesConfigs[metapakModuleName].map(metapakModuleConfig =>
+          fn(metapakModuleName, metapakModuleConfig)
         )
       )
-    ).then(packageTransformers => {
-      packageTransformers = packageTransformers.reduce(
-        (combined, packageTransformer) => combined.concat(packageTransformer),
-        []
-      );
-      return packageTransformers;
-    })
+    )
   );
+
+  return packageTransformers.reduce(
+    (combined, packageTransformer) => combined.concat(packageTransformer),
+    []
+  );
+}
+
+function buildDiff(newData, originalDate) {
+  return diff
+    .diffJson(originalDate, newData, {})
+    .map(part =>
+      (part.added ? chalk.green : part.removed ? chalk.red : chalk.grey)(
+        part.value
+      )
+    )
+    .join('');
 }

@@ -1,3 +1,12 @@
+## [3.0.1](https://github.com/nfroidure/metapak/compare/v3.0.0...v3.0.1) (2019-01-27)
+
+
+### Bug Fixes
+
+* **Metapak config:** Add forgotten bundle files ([7aa4c79](https://github.com/nfroidure/metapak/commit/7aa4c79))
+
+
+
 # [3.0.0](https://github.com/nfroidure/metapak/compare/v2.0.0...v3.0.0) (2019-01-27)
 
 

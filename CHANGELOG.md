@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/nfroidure/metapak/compare/v2.0.0...v3.0.0) (2019-01-27)
+
+
+### Features
+
+* **Hooks:** Avoid running hooks transforms for non-root repos ([ccfe02b](https://github.com/nfroidure/metapak/commit/ccfe02b))
+
+
+### BREAKING CHANGES
+
+* **Hooks:** Will break for versions prior to Node 8
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/nfroidure/metapak/compare/v1.0.3...v2.0.0) (2018-10-21)
 

@@ -32,7 +32,7 @@ describe('buildPackageGitHooks', () => {
       })
     );
     $.register(constant('require', requireStub));
-    initBuildPackageGitHooks($);
+    $.register(initBuildPackageGitHooks);
   });
 
   it('should work with one module and one config', done => {

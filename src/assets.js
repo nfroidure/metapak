@@ -1,6 +1,4 @@
-'use strict';
-
-const { service } = require('knifecycle');
+const { autoHandler } = require('knifecycle');
 const path = require('path');
 const {
   identity,
@@ -8,19 +6,9 @@ const {
   mapConfigsSequentially,
 } = require('./utils');
 
-module.exports = initBuildPackageAssets;
+module.exports = autoHandler(initBuildPackageAssets);
 
-function initBuildPackageAssets($) {
-  $.register(
-    service(
-      services => Promise.resolve(buildPackageAssets.bind(null, services)),
-      'buildPackageAssets',
-      ['PROJECT_DIR', 'fs', 'log', 'glob', 'require', 'mkdirp']
-    )
-  );
-}
-
-function buildPackageAssets(
+async function initBuildPackageAssets(
   { PROJECT_DIR, fs, log, glob, require, mkdirp },
   packageConf,
   metapakModulesSequence,

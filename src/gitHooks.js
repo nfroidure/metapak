@@ -1,6 +1,6 @@
 'use strict';
 
-const { service } = require('knifecycle');
+const { autoHandler } = require('knifecycle');
 const {
   buildMetapakModulePath,
   mapConfigsSequentially,
@@ -8,19 +8,9 @@ const {
 } = require('./utils');
 const path = require('path');
 
-module.exports = initBuildPackageGitHooks;
+module.exports = autoHandler(initBuildPackageGitHooks);
 
-function initBuildPackageGitHooks($) {
-  $.register(
-    service(
-      services => Promise.resolve(buildPackageGitHooks.bind(null, services)),
-      'buildPackageGitHooks',
-      ['ENV', 'PROJECT_DIR', 'GIT_HOOKS_DIR', 'fs', 'log', 'os', 'require']
-    )
-  );
-}
-
-function buildPackageGitHooks(
+async function initBuildPackageGitHooks(
   { ENV, PROJECT_DIR, GIT_HOOKS_DIR, fs, os, log, require },
   packageConf,
   metapakModulesSequence,

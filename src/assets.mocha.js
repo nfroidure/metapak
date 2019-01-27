@@ -41,7 +41,7 @@ describe('buildPackageAssets', () => {
       })
     );
     $.register(constant('require', requireStub));
-    initBuildPackageAssets($);
+    $.register(initBuildPackageAssets);
   });
 
   it('should work when data changed', done => {

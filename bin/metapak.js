@@ -24,7 +24,7 @@ const $ = new Knifecycle();
 $.register(constant('ENV', process.env));
 $.register(service(initProjectDir, 'PROJECT_DIR', ['log', 'fs']));
 
-function initProjectDir({ log, fs }) {
+async function initProjectDir({ log, fs }) {
   return new Promise(resolve => {
     const projectDir = path.join(__dirname, '..', '..', '..');
 
@@ -52,7 +52,7 @@ function initProjectDir({ log, fs }) {
 
 $.register(service(initGitHooksDir, 'GIT_HOOKS_DIR', ['PROJECT_DIR', 'log']));
 
-function initGitHooksDir({ PROJECT_DIR, log }) {
+async function initGitHooksDir({ PROJECT_DIR, log }) {
   return new Promise(resolve => {
     exec(
       'git rev-parse --git-dir',
@@ -106,9 +106,9 @@ $.register(
   })
 );
 
-initBuildPackageConf($);
-initBuildPackageAssets($);
-initBuildPackageGitHooks($);
+$.register(initBuildPackageConf);
+$.register(initBuildPackageAssets);
+$.register(initBuildPackageGitHooks);
 
 program
   .version(require(path.join(__dirname, '..', 'package.json')).version)
@@ -118,7 +118,7 @@ program
 
 $.register(service(initMkdirp, 'mkdirp', ['log']));
 
-function initMkdirp({ log }) {
+async function initMkdirp({ log }) {
   const mkdirpAsync = Promise.promisify(mkdirp.mkdirp);
 
   return Promise.resolve((path, ...args) => {
@@ -132,7 +132,7 @@ function initMkdirp({ log }) {
 
 $.register(service(initFS, 'fs', ['log']));
 
-function initFS({ log }) {
+async function initFS({ log }) {
   const baseFS = Promise.promisifyAll(fs);
 
   return Promise.resolve({

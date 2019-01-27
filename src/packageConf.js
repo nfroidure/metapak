@@ -1,6 +1,6 @@
 'use strict';
 
-const { service } = require('knifecycle');
+const { autoHandler } = require('knifecycle');
 const path = require('path');
 const sortobject = require('sort-object');
 const {
@@ -11,19 +11,9 @@ const {
 
 const METAPAK_SCRIPT = 'metapak';
 
-module.exports = initBuildPackageConf;
+module.exports = autoHandler(initBuildPackageConf);
 
-function initBuildPackageConf($) {
-  $.register(
-    service(
-      services => Promise.resolve(buildPackageConf.bind(null, services)),
-      'buildPackageConf',
-      ['PROJECT_DIR', 'fs', 'require', 'log']
-    )
-  );
-}
-
-function buildPackageConf(
+async function initBuildPackageConf(
   { PROJECT_DIR, fs, require, log },
   packageConf,
   metapakModulesSequence,

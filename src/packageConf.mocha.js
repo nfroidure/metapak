@@ -30,7 +30,7 @@ describe('buildPackageConf', () => {
       })
     );
     $.register(constant('require', requireStub));
-    initBuildPackageConf($);
+    $.register(initBuildPackageConf);
   });
 
   it('should work with one module and one config', done => {

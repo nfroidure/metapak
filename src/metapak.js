@@ -9,7 +9,7 @@ const MAX_PACKAGE_BUILD_ITERATIONS = 15;
 
 module.exports = runMetapak;
 
-function runMetapak({
+async function runMetapak({
   ENV,
   PROJECT_DIR,
   log,

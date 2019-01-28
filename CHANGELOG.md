@@ -1,3 +1,12 @@
+## [3.1.1](https://github.com/nfroidure/metapak/compare/v3.1.0...v3.1.1) (2019-01-28)
+
+
+### Bug Fixes
+
+* **Core:** Avoid false positive warnings ([e609347](https://github.com/nfroidure/metapak/commit/e609347))
+
+
+
 # [3.1.0](https://github.com/nfroidure/metapak/compare/v3.0.1...v3.1.0) (2019-01-27)
 
 

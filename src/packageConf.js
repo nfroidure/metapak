@@ -68,7 +68,7 @@ async function initBuildPackageConf(
   if (
     Object.keys(newPackageConf.dependencies || {})
       .sort()
-      .join() !== originalDependencies.join()
+      .join() !== originalDependencies.sort().join()
   ) {
     log('warn', 'Changing dependencies with metapak is not recommended!');
   }

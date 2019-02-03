@@ -1,17 +1,11 @@
-'use strict';
-
-const { autoHandler } = require('knifecycle');
-const {
-  buildMetapakModulePath,
-  mapConfigsSequentially,
-  identity,
-} = require('./utils');
 const path = require('path');
+const { autoHandler } = require('knifecycle');
+const { mapConfigsSequentially, identity } = require('./utils');
 
 module.exports = autoHandler(initBuildPackageGitHooks);
 
 async function initBuildPackageGitHooks(
-  { ENV, PROJECT_DIR, GIT_HOOKS_DIR, fs, os, log, require },
+  { ENV, PROJECT_DIR, GIT_HOOKS_DIR, fs, os, log, require, resolveModule },
   packageConf,
   metapakModulesSequence,
   metapakModulesConfigs
@@ -31,10 +25,8 @@ async function initBuildPackageGitHooks(
     metapakModulesSequence,
     metapakModulesConfigs,
     (metapakModuleName, metapakModuleConfig) => {
-      const packageHooksPath = buildMetapakModulePath(
-        PROJECT_DIR,
-        packageConf,
-        metapakModuleName,
+      const packageHooksPath = path.join(
+        resolveModule(metapakModuleName),
         'src',
         metapakModuleConfig,
         'hooks.js'

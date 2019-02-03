@@ -41,6 +41,12 @@ describe('buildPackageAssets', () => {
       })
     );
     $.register(constant('require', requireStub));
+    $.register(
+      constant(
+        'resolveModule',
+        moduleName => `project/dir/node_modules/${moduleName}`
+      )
+    );
     $.register(initBuildPackageAssets);
   });
 

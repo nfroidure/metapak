@@ -29,6 +29,12 @@ describe('metapak', () => {
     $.register(constant('log', sinon.stub()));
     $.register(constant('exit', sinon.stub()));
     $.register(constant('PROJECT_DIR', 'project/dir'));
+    $.register(
+      constant(
+        'resolveModule',
+        moduleName => `project/dir/node_modules/${moduleName}`
+      )
+    );
     buildPackageConfStub = sinon.stub();
     $.register(constant('buildPackageConf', buildPackageConfStub));
     buildPackageAssetsStub = sinon.stub();

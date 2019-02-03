@@ -32,6 +32,12 @@ describe('buildPackageGitHooks', () => {
       })
     );
     $.register(constant('require', requireStub));
+    $.register(
+      constant(
+        'resolveModule',
+        moduleName => `/home/whoiam/project/dir/node_modules/${moduleName}`
+      )
+    );
     $.register(initBuildPackageGitHooks);
   });
 

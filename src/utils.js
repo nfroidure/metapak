@@ -1,30 +1,11 @@
-const path = require('path');
 const chalk = require('chalk');
 const diff = require('diff');
 
 module.exports = {
   identity: x => x,
-  buildMetapakModulePath,
   mapConfigsSequentially,
   buildDiff,
 };
-
-function buildMetapakModulePath(
-  PROJECT_DIR,
-  packageConf,
-  metapakModuleName,
-  ...parts
-) {
-  // Take in count the edge case of self applying metapak module
-  parts = [PROJECT_DIR]
-    .concat(
-      packageConf.name !== metapakModuleName
-        ? ['node_modules', metapakModuleName]
-        : []
-    )
-    .concat(parts);
-  return path.join(...parts);
-}
 
 async function mapConfigsSequentially(
   metapakModulesSequence,

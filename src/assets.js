@@ -1,15 +1,11 @@
 const { autoHandler } = require('knifecycle');
 const path = require('path');
-const {
-  identity,
-  buildMetapakModulePath,
-  mapConfigsSequentially,
-} = require('./utils');
+const { identity, mapConfigsSequentially } = require('./utils');
 
 module.exports = autoHandler(initBuildPackageAssets);
 
 async function initBuildPackageAssets(
-  { PROJECT_DIR, fs, log, glob, require, mkdirp },
+  { PROJECT_DIR, fs, log, glob, require, mkdirp, resolveModule },
   packageConf,
   metapakModulesSequence,
   metapakModulesConfigs
@@ -18,18 +14,15 @@ async function initBuildPackageAssets(
     metapakModulesSequence,
     metapakModulesConfigs,
     (metapakModuleName, metapakModuleConfig) => {
-      const packageAssetsDir = buildMetapakModulePath(
-        PROJECT_DIR,
-        packageConf,
-        metapakModuleName,
+      const modulePath = resolveModule(metapakModuleName);
+      const packageAssetsDir = path.join(
+        modulePath,
         'src',
         metapakModuleConfig,
         'assets'
       );
-      const packageAssetsTransformerPath = buildMetapakModulePath(
-        PROJECT_DIR,
-        packageConf,
-        metapakModuleName,
+      const packageAssetsTransformerPath = path.join(
+        modulePath,
         'src',
         metapakModuleConfig,
         'assets.js'

@@ -1,10 +1,7 @@
-'use strict';
-
 const path = require('path');
 const Promise = require('bluebird');
 const YError = require('yerror');
 const { autoService } = require('knifecycle');
-const { buildMetapakModulePath } = require('./utils');
 
 const MAX_PACKAGE_BUILD_ITERATIONS = 15;
 
@@ -19,6 +16,7 @@ async function initMetapak({
   buildPackageConf,
   buildPackageAssets,
   buildPackageGitHooks,
+  resolveModule,
 }) {
   return async function metapak() {
     return _loadJSONFile({ fs }, path.join(PROJECT_DIR, 'package.json'))
@@ -49,9 +47,9 @@ async function initMetapak({
             fs,
             log,
           },
-          packageConf,
           metapakModulesSequence,
-          metapackConfigsSequence
+          metapackConfigsSequence,
+          resolveModule
         )
           .then(metapakModulesConfigs =>
             Promise.all([
@@ -187,23 +185,18 @@ function _reorderMetapakModulesNames(
 }
 
 function _getPackageMetapakModulesConfigs(
-  { PROJECT_DIR, fs, log },
-  packageConf,
+  { fs, log },
   metapakModulesSequence,
-  metapackConfigsSequence
+  metapackConfigsSequence,
+  resolveModule
 ) {
   return Promise.props(
     metapakModulesSequence.reduce(
       (metapakModulesConfigs, metapakModuleName) => {
+        const modulePath = path.join(resolveModule(metapakModuleName), 'src');
+
         metapakModulesConfigs[metapakModuleName] = fs
-          .readdirAsync(
-            buildMetapakModulePath(
-              PROJECT_DIR,
-              packageConf,
-              metapakModuleName,
-              'src'
-            )
-          )
+          .readdirAsync(modulePath)
           .then(metapakModuleConfigs => {
             metapakModuleConfigs = metapackConfigsSequence.filter(
               metapakModuleConfig =>

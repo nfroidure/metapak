@@ -1,5 +1,3 @@
-'use strict';
-
 const {
   default: Knifecycle,
   constant,
@@ -22,6 +20,7 @@ const initBuildPackageConf = require('../src/packageConf');
 const initBuildPackageAssets = require('../src/assets');
 const initBuildPackageGitHooks = require('../src/gitHooks');
 const initProjectDir = require('../src/projectDir');
+const initResolveModule = require('../src/resolveModule');
 
 module.exports = { runMetapak, prepareMetapak };
 
@@ -62,6 +61,7 @@ async function prepareMetapak($ = new Knifecycle()) {
   $.register(initBuildPackageConf);
   $.register(initBuildPackageAssets);
   $.register(initBuildPackageGitHooks);
+  $.register(initResolveModule);
 
   program
     .version(require(path.join(__dirname, '..', 'package.json')).version)

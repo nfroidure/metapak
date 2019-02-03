@@ -4,19 +4,14 @@ const sortKeys = require('sort-keys');
 // when supporting only Node 10+
 const isDeepStrictEqual = require('deep-strict-equal');
 const path = require('path');
-const {
-  buildMetapakModulePath,
-  mapConfigsSequentially,
-  identity,
-  buildDiff,
-} = require('./utils');
+const { mapConfigsSequentially, identity, buildDiff } = require('./utils');
 
 const METAPAK_SCRIPT = 'metapak';
 
 module.exports = autoHandler(initBuildPackageConf);
 
 async function initBuildPackageConf(
-  { ENV, PROJECT_DIR, fs, require, log },
+  { ENV, PROJECT_DIR, fs, require, log, resolveModule },
   packageConf,
   metapakModulesSequence,
   metapakModulesConfigs
@@ -28,10 +23,8 @@ async function initBuildPackageConf(
     metapakModulesSequence,
     metapakModulesConfigs,
     async (metapakModuleName, metapakModuleConfig) => {
-      const packageTransformPath = buildMetapakModulePath(
-        PROJECT_DIR,
-        packageConf,
-        metapakModuleName,
+      const packageTransformPath = path.join(
+        resolveModule(metapakModuleName),
         'src',
         metapakModuleConfig,
         'package.js'

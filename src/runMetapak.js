@@ -5,8 +5,8 @@
 const {
   default: Knifecycle,
   constant,
-  service,
   autoService,
+  name,
 } = require('knifecycle');
 const debug = require('debug')('metapak');
 const fs = require('fs');
@@ -18,13 +18,14 @@ const glob = require('glob');
 const program = require('commander');
 const Promise = require('bluebird');
 const { exec } = require('child_process');
+const pkgDir = require('pkg-dir');
 
 const initMetapak = require('../src/metapak');
 const initBuildPackageConf = require('../src/packageConf');
 const initBuildPackageAssets = require('../src/assets');
 const initBuildPackageGitHooks = require('../src/gitHooks');
 
-module.exports = { runMetapak };
+module.exports = { runMetapak, prepareMetapak };
 
 async function runMetapak() {
   try {
@@ -43,8 +44,6 @@ async function runMetapak() {
 async function prepareMetapak($ = new Knifecycle()) {
   $.register(initMetapak);
   $.register(constant('ENV', process.env));
-  $.register(service(initProjectDir, 'PROJECT_DIR', ['log', 'fs']));
-  $.register(service(initGitHooksDir, 'GIT_HOOKS_DIR', ['PROJECT_DIR', 'log']));
   $.register(constant('require', require));
   $.register(constant('exit', process.exit));
   $.register(constant('mkdirp', Promise.promisify(mkdirp)));
@@ -59,6 +58,8 @@ async function prepareMetapak($ = new Knifecycle()) {
       console[type](...args); // eslint-disable-line
     })
   );
+  $.register(name('PROJECT_DIR', autoService(initProjectDir)));
+  $.register(name('GIT_HOOKS_DIR', autoService(initGitHooksDir)));
 
   $.register(initBuildPackageConf);
   $.register(initBuildPackageAssets);
@@ -79,8 +80,8 @@ async function prepareMetapak($ = new Knifecycle()) {
     })
   );
 
-  $.register(service(initMkdirp, 'mkdirp', ['log']));
-  $.register(service(initFS, 'fs', ['log']));
+  $.register(autoService(initMkdirp));
+  $.register(name('fs', autoService(initFS)));
 
   return $;
 }
@@ -92,30 +93,19 @@ function preventChanges(path) {
   return {}.undef;
 }
 
-async function initProjectDir({ log, fs }) {
-  return new Promise(resolve => {
-    const projectDir = path.join(__dirname, '..', '..', '..');
+async function initProjectDir({ exit, log }) {
+  const projectDir = await pkgDir();
 
-    // Here we assume that if a `node_modules` folder exists
-    // in the directory, we must be inside a module
-    fs.accessAsync(path.join(projectDir, 'node_modules'), fs.constants.R_OK)
-      .then(() => {
-        log('debug', 'Found the project dir:', projectDir);
-        resolve(projectDir);
-      })
-      .catch(err => {
-        const metapakDir = path.join(__dirname, '..');
+  if (projectDir) {
+    log('debug', 'Found the project dir:', projectDir);
+    return projectDir;
+  }
 
-        log(
-          'debug',
-          'Project dir does not exist, assuming we are running on' +
-            ' `metapak` itself:',
-          metapakDir
-        );
-        log('stack', err.stack);
-        resolve(metapakDir);
-      });
-  });
+  log(
+    'error',
+    'Project dir does not exist, are you sure you ran metapak inside a Node project?'
+  );
+  exit(1);
 }
 
 async function initGitHooksDir({ PROJECT_DIR, log }) {

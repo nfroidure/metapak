@@ -1,3 +1,12 @@
+## [3.1.5](https://github.com/nfroidure/metapak/compare/v3.1.4...v3.1.5) (2019-02-03)
+
+
+### Bug Fixes
+
+* **Plugin resolution:** Use the `require` resolution to retrieve configs ([87946c2](https://github.com/nfroidure/metapak/commit/87946c2))
+
+
+
 ## [3.1.4](https://github.com/nfroidure/metapak/compare/v3.1.3...v3.1.4) (2019-02-03)
 
 

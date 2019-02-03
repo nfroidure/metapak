@@ -1,5 +1,3 @@
-#! /usr/bin/env node
-
 'use strict';
 
 const {
@@ -18,12 +16,12 @@ const glob = require('glob');
 const program = require('commander');
 const Promise = require('bluebird');
 const { exec } = require('child_process');
-const pkgDir = require('pkg-dir');
 
 const initMetapak = require('../src/metapak');
 const initBuildPackageConf = require('../src/packageConf');
 const initBuildPackageAssets = require('../src/assets');
 const initBuildPackageGitHooks = require('../src/gitHooks');
+const initProjectDir = require('../src/projectDir');
 
 module.exports = { runMetapak, prepareMetapak };
 
@@ -58,7 +56,7 @@ async function prepareMetapak($ = new Knifecycle()) {
       console[type](...args); // eslint-disable-line
     })
   );
-  $.register(name('PROJECT_DIR', autoService(initProjectDir)));
+  $.register(name('PROJECT_DIR', initProjectDir));
   $.register(name('GIT_HOOKS_DIR', autoService(initGitHooksDir)));
 
   $.register(initBuildPackageConf);
@@ -91,21 +89,6 @@ function preventChanges(path) {
     return Promise.reject(new YError('E_UNEXPECTED_CHANGES', path));
   }
   return {}.undef;
-}
-
-async function initProjectDir({ exit, log }) {
-  const projectDir = await pkgDir();
-
-  if (projectDir) {
-    log('debug', 'Found the project dir:', projectDir);
-    return projectDir;
-  }
-
-  log(
-    'error',
-    'Project dir does not exist, are you sure you ran metapak inside a Node project?'
-  );
-  exit(1);
 }
 
 async function initGitHooksDir({ PROJECT_DIR, log }) {

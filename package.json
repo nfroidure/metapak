@@ -29,7 +29,6 @@
     "cover": "nyc npm test && nyc report --reporter=html --reporter=text",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls && rm -rf ./coverage",
     "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
-    "install": "node bin/metapak.js",
     "lint": "eslint 'src/**/*.js' 'bin/**/*.js'",
     "metapak": "node bin/metapak.js",
     "mocha": "mocha 'src/**/*.mocha.js'",

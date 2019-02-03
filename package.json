@@ -1,6 +1,6 @@
 {
   "name": "metapak",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "Node modules authoring made easy.",
   "bin": {
     "metapak": "bin/metapak.js"

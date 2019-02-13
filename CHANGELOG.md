@@ -1,3 +1,12 @@
+## [3.1.6](https://github.com/nfroidure/metapak/compare/v3.1.5...v3.1.6) (2019-02-13)
+
+
+### Bug Fixes
+
+* **Core:** Fix metapak module check for plugins running themselves ([6a71d23](https://github.com/nfroidure/metapak/commit/6a71d23))
+
+
+
 ## [3.1.5](https://github.com/nfroidure/metapak/compare/v3.1.4...v3.1.5) (2019-02-03)
 
 

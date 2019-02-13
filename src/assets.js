@@ -14,7 +14,7 @@ async function initBuildPackageAssets(
     metapakModulesSequence,
     metapakModulesConfigs,
     (metapakModuleName, metapakModuleConfig) => {
-      const modulePath = resolveModule(metapakModuleName);
+      const modulePath = resolveModule(metapakModuleName, packageConf);
       const packageAssetsDir = path.join(
         modulePath,
         'src',

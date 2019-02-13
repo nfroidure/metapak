@@ -26,7 +26,7 @@ async function initBuildPackageGitHooks(
     metapakModulesConfigs,
     (metapakModuleName, metapakModuleConfig) => {
       const packageHooksPath = path.join(
-        resolveModule(metapakModuleName),
+        resolveModule(metapakModuleName, packageConf),
         'src',
         metapakModuleConfig,
         'hooks.js'

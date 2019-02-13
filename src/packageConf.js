@@ -24,7 +24,7 @@ async function initBuildPackageConf(
     metapakModulesConfigs,
     async (metapakModuleName, metapakModuleConfig) => {
       const packageTransformPath = path.join(
-        resolveModule(metapakModuleName),
+        resolveModule(metapakModuleName, packageConf),
         'src',
         metapakModuleConfig,
         'package.js'

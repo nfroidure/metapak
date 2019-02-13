@@ -53,7 +53,8 @@ async function initMetapak({
         },
         metapakModulesSequence,
         metapackConfigsSequence,
-        resolveModule
+        resolveModule,
+        packageConf
       );
 
       const buildPackageConfResult = await recursivelyBuild(
@@ -188,12 +189,16 @@ function _getPackageMetapakModulesConfigs(
   { fs, log },
   metapakModulesSequence,
   metapackConfigsSequence,
-  resolveModule
+  resolveModule,
+  packageConf
 ) {
   return Promise.props(
     metapakModulesSequence.reduce(
       (metapakModulesConfigs, metapakModuleName) => {
-        const modulePath = path.join(resolveModule(metapakModuleName), 'src');
+        const modulePath = path.join(
+          resolveModule(metapakModuleName, packageConf),
+          'src'
+        );
 
         metapakModulesConfigs[metapakModuleName] = fs
           .readdirAsync(modulePath)

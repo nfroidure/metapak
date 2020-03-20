@@ -43,7 +43,7 @@ async function prepareMetapak($ = new Knifecycle()) {
   $.register(constant('ENV', process.env));
   $.register(constant('require', require));
   $.register(constant('exit', process.exit));
-  $.register(constant('mkdirp', Promise.promisify(mkdirp)));
+  $.register(constant('mkdirp', mkdirp));
   $.register(constant('os', os));
   $.register(constant('glob', Promise.promisify(glob)));
   $.register(

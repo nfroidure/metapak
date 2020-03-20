@@ -1,3 +1,12 @@
+## [3.1.8](https://github.com/nfroidure/metapak/compare/v3.1.7...v3.1.8) (2020-03-20)
+
+
+### Bug Fixes
+
+* **dependencies:** fix mkdirp signarutre change ([921f0cb](https://github.com/nfroidure/metapak/commit/921f0cbe027c697e94c07d3e7f5710ef1da61dc2))
+
+
+
 ## [3.1.7](https://github.com/nfroidure/metapak/compare/v3.1.6...v3.1.7) (2020-02-02)
 
 

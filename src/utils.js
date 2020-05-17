@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const diff = require('diff');
 
 module.exports = {
-  identity: x => x,
+  identity: (x) => x,
   mapConfigsSequentially,
   buildDiff,
 };
@@ -13,9 +13,9 @@ async function mapConfigsSequentially(
   fn
 ) {
   const packageTransformers = await Promise.all(
-    metapakModulesSequence.map(metapakModuleName =>
+    metapakModulesSequence.map((metapakModuleName) =>
       Promise.all(
-        metapakModulesConfigs[metapakModuleName].map(metapakModuleConfig =>
+        metapakModulesConfigs[metapakModuleName].map((metapakModuleConfig) =>
           fn(metapakModuleName, metapakModuleConfig)
         )
       )
@@ -31,7 +31,7 @@ async function mapConfigsSequentially(
 function buildDiff(newData, originalDate) {
   return diff
     .diffJson(originalDate, newData, {})
-    .map(part =>
+    .map((part) =>
       (part.added ? chalk.green : part.removed ? chalk.red : chalk.grey)(
         part.value
       )

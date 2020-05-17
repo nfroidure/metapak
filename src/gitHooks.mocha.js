@@ -35,25 +35,25 @@ describe('buildPackageGitHooks', () => {
     $.register(
       constant(
         'resolveModule',
-        moduleName => `/home/whoiam/project/dir/node_modules/${moduleName}`
+        (moduleName) => `/home/whoiam/project/dir/node_modules/${moduleName}`
       )
     );
     $.register(initBuildPackageGitHooks);
   });
 
-  it('should work with one module and one config', done => {
+  it('should work with one module and one config', (done) => {
     $.register(constant('ENV', {}));
     $.register(
       constant('GIT_HOOKS_DIR', '/home/whoiam/project/dir/.git/hooks')
     );
 
-    requireStub.onCall(0).returns(hooks => {
+    requireStub.onCall(0).returns((hooks) => {
       hooks['pre-commit'] = hooks['pre-commit'] || [];
       hooks['pre-commit'].push('npm run test && npm run lint || exit 1');
       return hooks;
     });
     requireStub.onCall(1).throws(new Error('E_ERROR_1'));
-    requireStub.onCall(2).returns(hooks => {
+    requireStub.onCall(2).returns((hooks) => {
       hooks['pre-commit'] = hooks['pre-commit'] || [];
       hooks['pre-commit'].push('npm run coveralls');
       return hooks;
@@ -111,7 +111,7 @@ describe('buildPackageGitHooks', () => {
       .catch(done);
   });
 
-  it('should not run on CI', done => {
+  it('should not run on CI', (done) => {
     $.register(
       constant('ENV', {
         CI: 1,
@@ -121,13 +121,13 @@ describe('buildPackageGitHooks', () => {
       constant('GIT_HOOKS_DIR', '/home/whoiam/project/dir/.git/hooks')
     );
 
-    requireStub.onCall(0).returns(hooks => {
+    requireStub.onCall(0).returns((hooks) => {
       hooks['pre-commit'] = hooks['pre-commit'] || [];
       hooks['pre-commit'].push('npm run test && npm run lint || exit 1');
       return hooks;
     });
     requireStub.onCall(1).throws(new Error('E_ERROR_1'));
-    requireStub.onCall(2).returns(hooks => {
+    requireStub.onCall(2).returns((hooks) => {
       hooks['pre-commit'] = hooks['pre-commit'] || [];
       hooks['pre-commit'].push('npm run coveralls');
       return hooks;
@@ -151,17 +151,17 @@ describe('buildPackageGitHooks', () => {
       .catch(done);
   });
 
-  it('should not run on parent git repository', done => {
+  it('should not run on parent git repository', (done) => {
     $.register(constant('ENV', {}));
     $.register(constant('GIT_HOOKS_DIR', '/home/whoiam/project/.git/hooks'));
 
-    requireStub.onCall(0).returns(hooks => {
+    requireStub.onCall(0).returns((hooks) => {
       hooks['pre-commit'] = hooks['pre-commit'] || [];
       hooks['pre-commit'].push('npm run test && npm run lint || exit 1');
       return hooks;
     });
     requireStub.onCall(1).throws(new Error('E_ERROR_1'));
-    requireStub.onCall(2).returns(hooks => {
+    requireStub.onCall(2).returns((hooks) => {
       hooks['pre-commit'] = hooks['pre-commit'] || [];
       hooks['pre-commit'].push('npm run coveralls');
       return hooks;

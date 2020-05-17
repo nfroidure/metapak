@@ -33,16 +33,16 @@ describe('buildPackageConf', () => {
     $.register(
       constant(
         'resolveModule',
-        moduleName => `project/dir/node_modules/${moduleName}`
+        (moduleName) => `project/dir/node_modules/${moduleName}`
       )
     );
     $.register(initBuildPackageConf);
   });
 
-  it('should work with one module and one config', done => {
+  it('should work with one module and one config', (done) => {
     const packageConf = {};
 
-    requireStub.returns(packageConf => {
+    requireStub.returns((packageConf) => {
       packageConf.private = true;
       return packageConf;
     });
@@ -52,7 +52,7 @@ describe('buildPackageConf', () => {
       .then(({ require, log, buildPackageConf }) =>
         buildPackageConf(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(require.args, [
             [
               'project/dir/node_modules/metapak-http-server/src/_common/package.js',
@@ -87,7 +87,7 @@ describe('buildPackageConf', () => {
       .catch(done);
   });
 
-  it('should work with no tranformations', done => {
+  it('should work with no tranformations', (done) => {
     const packageConf = {
       scripts: {
         metapak: METAPAK_SCRIPT,
@@ -101,7 +101,7 @@ describe('buildPackageConf', () => {
       .then(({ require, log, buildPackageConf }) =>
         buildPackageConf(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(require.args, [
             [
               'project/dir/node_modules/metapak-http-server/src/_common/package.js',
@@ -122,22 +122,22 @@ describe('buildPackageConf', () => {
       .catch(done);
   });
 
-  it('should work with several modules and configs', done => {
+  it('should work with several modules and configs', (done) => {
     const packageConf = {
       scripts: {
         metapak: METAPAK_SCRIPT,
       },
     };
 
-    requireStub.onFirstCall().returns(packageConf => {
+    requireStub.onFirstCall().returns((packageConf) => {
       packageConf.private = true;
       return packageConf;
     });
-    requireStub.onSecondCall().returns(packageConf => {
+    requireStub.onSecondCall().returns((packageConf) => {
       packageConf.license = 'MIT';
       return packageConf;
     });
-    requireStub.onThirdCall().returns(packageConf => {
+    requireStub.onThirdCall().returns((packageConf) => {
       packageConf.author = 'John Doe';
       return packageConf;
     });
@@ -152,7 +152,7 @@ describe('buildPackageConf', () => {
             'metapak-http-server': ['_common'],
             'metapak-schmilbik': ['_common', 'author'],
           }
-        ).then(result => {
+        ).then((result) => {
           assert.deepEqual(require.args, [
             [
               'project/dir/node_modules/metapak-http-server/src/_common/package.js',

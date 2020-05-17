@@ -44,16 +44,16 @@ describe('buildPackageAssets', () => {
     $.register(
       constant(
         'resolveModule',
-        moduleName => `project/dir/node_modules/${moduleName}`
+        (moduleName) => `project/dir/node_modules/${moduleName}`
       )
     );
     $.register(initBuildPackageAssets);
   });
 
-  it('should work when data changed', done => {
+  it('should work when data changed', (done) => {
     const packageConf = {};
 
-    requireStub.returns(file => {
+    requireStub.returns((file) => {
       file.data = '{\n  "private": false\n}';
       return file;
     });
@@ -70,7 +70,7 @@ describe('buildPackageAssets', () => {
       .then(({ require, log, buildPackageAssets }) =>
         buildPackageAssets(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',
@@ -114,10 +114,10 @@ describe('buildPackageAssets', () => {
       .catch(done);
   });
 
-  it('should rename _dot_ prefixed files', done => {
+  it('should rename _dot_ prefixed files', (done) => {
     const packageConf = {};
 
-    requireStub.returns(file => {
+    requireStub.returns((file) => {
       file.data = '{\n  "private": false\n}';
       return file;
     });
@@ -134,7 +134,7 @@ describe('buildPackageAssets', () => {
       .then(({ require, log, buildPackageAssets }) =>
         buildPackageAssets(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',
@@ -178,10 +178,10 @@ describe('buildPackageAssets', () => {
       .catch(done);
   });
 
-  it('should warn on using .gitignore files', done => {
+  it('should warn on using .gitignore files', (done) => {
     const packageConf = {};
 
-    requireStub.returns(file => {
+    requireStub.returns((file) => {
       file.data = '{\n  "private": false\n}';
       return file;
     });
@@ -198,7 +198,7 @@ describe('buildPackageAssets', () => {
       .then(({ require, log, buildPackageAssets }) =>
         buildPackageAssets(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',
@@ -254,14 +254,14 @@ describe('buildPackageAssets', () => {
       .catch(done);
   });
 
-  it('should work whith several transformers', done => {
+  it('should work whith several transformers', (done) => {
     const packageConf = {};
 
-    requireStub.onFirstCall().returns(file => {
+    requireStub.onFirstCall().returns((file) => {
       file.data += 'node_modules\n';
       return file;
     });
-    requireStub.onSecondCall().returns(file => {
+    requireStub.onSecondCall().returns((file) => {
       file.data += 'coverage\n';
       return file;
     });
@@ -282,7 +282,7 @@ describe('buildPackageAssets', () => {
             'metapak-module1': ['_common'],
             'metapak-module2': ['_common'],
           }
-        ).then(result => {
+        ).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',
@@ -338,10 +338,10 @@ describe('buildPackageAssets', () => {
       .catch(done);
   });
 
-  it('should work whith directories', done => {
+  it('should work whith directories', (done) => {
     const packageConf = {};
 
-    requireStub.returns(file => {
+    requireStub.returns((file) => {
       file.data = '{\n  "private": false\n}';
       return file;
     });
@@ -358,7 +358,7 @@ describe('buildPackageAssets', () => {
       .then(({ require, log, buildPackageAssets }) =>
         buildPackageAssets(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',
@@ -406,10 +406,10 @@ describe('buildPackageAssets', () => {
       .catch(done);
   });
 
-  it('should allow to rename assets with async transformers', done => {
+  it('should allow to rename assets with async transformers', (done) => {
     const packageConf = {};
 
-    requireStub.returns(file => {
+    requireStub.returns((file) => {
       file.name = 'notlol';
       file.data = '{\n  "private": false\n}';
       return Promise.resolve(file);
@@ -427,7 +427,7 @@ describe('buildPackageAssets', () => {
       .then(({ require, log, buildPackageAssets }) =>
         buildPackageAssets(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',
@@ -471,10 +471,10 @@ describe('buildPackageAssets', () => {
       .catch(done);
   });
 
-  it('should work when data did not change', done => {
+  it('should work when data did not change', (done) => {
     const packageConf = {};
 
-    requireStub.returns(file => {
+    requireStub.returns((file) => {
       file.data = '{\n  "private": true\n}';
       return file;
     });
@@ -491,7 +491,7 @@ describe('buildPackageAssets', () => {
       .then(({ require, log, buildPackageAssets }) =>
         buildPackageAssets(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',
@@ -532,10 +532,10 @@ describe('buildPackageAssets', () => {
       .catch(done);
   });
 
-  it('should delete when data is empty', done => {
+  it('should delete when data is empty', (done) => {
     const packageConf = {};
 
-    requireStub.returns(file => {
+    requireStub.returns((file) => {
       file.data = '';
       return file;
     });
@@ -552,7 +552,7 @@ describe('buildPackageAssets', () => {
       .then(({ require, log, buildPackageAssets }) =>
         buildPackageAssets(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',
@@ -598,10 +598,10 @@ describe('buildPackageAssets', () => {
       .catch(done);
   });
 
-  it('should not delete when data is empty and file is already  deleted', done => {
+  it('should not delete when data is empty and file is already  deleted', (done) => {
     const packageConf = {};
 
-    requireStub.returns(file => {
+    requireStub.returns((file) => {
       file.data = '';
       return file;
     });
@@ -618,7 +618,7 @@ describe('buildPackageAssets', () => {
       .then(({ require, log, buildPackageAssets }) =>
         buildPackageAssets(packageConf, ['metapak-http-server'], {
           'metapak-http-server': ['_common'],
-        }).then(result => {
+        }).then((result) => {
           assert.deepEqual(globStub.args, [
             [
               '**/*',

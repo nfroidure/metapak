@@ -32,7 +32,7 @@ describe('metapak', () => {
     $.register(
       constant(
         'resolveModule',
-        moduleName => `project/dir/node_modules/${moduleName}`
+        (moduleName) => `project/dir/node_modules/${moduleName}`
       )
     );
     buildPackageConfStub = sinon.stub();

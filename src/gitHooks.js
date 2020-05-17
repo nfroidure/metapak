@@ -40,16 +40,16 @@ async function initBuildPackageGitHooks(
       return identity;
     }
   )
-    .then(hooksBuilders => {
+    .then((hooksBuilders) => {
       hooksBuilders = hooksBuilders.reduce(
         (hooks, hooksBuilder) => hooksBuilder(hooks, packageConf),
         {}
       );
       return hooksBuilders;
     })
-    .then(hooks =>
+    .then((hooks) =>
       Promise.all(
-        Object.keys(hooks).map(hookName => {
+        Object.keys(hooks).map((hookName) => {
           const hookContent =
             '#!/bin/sh' +
             os.EOL +
@@ -62,13 +62,13 @@ async function initBuildPackageGitHooks(
 
           return fs
             .readFileAsync(hookPath, 'utf-8')
-            .catch(err => {
+            .catch((err) => {
               log('debug', 'No existing hook found:', hookPath);
               log('stack', err.stack);
               return '';
             })
             .then(
-              currentHookContent =>
+              (currentHookContent) =>
                 currentHookContent === hookContent ||
                 fs.writeFileAsync(hookPath, hookContent, {
                   mode: 0o777,

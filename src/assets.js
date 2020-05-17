@@ -42,8 +42,8 @@ async function initBuildPackageAssets(
       }
 
       return glob('**/*', { cwd: packageAssetsDir, dot: true, nodir: true })
-        .then(assets => {
-          if (assets.some(asset => '.gitignore' === asset)) {
+        .then((assets) => {
+          if (assets.some((asset) => '.gitignore' === asset)) {
             log(
               'warning',
               '`.gitignore` assets may not work, use `_dot_` instead of a raw `.`'
@@ -57,20 +57,20 @@ async function initBuildPackageAssets(
               'correctly. See https://github.com/npm/npm/issues/15660'
             );
           }
-          assets = assets.map(asset => ({
+          assets = assets.map((asset) => ({
             dir: packageAssetsDir,
             name: asset,
           }));
           return { assets, transformer };
         })
-        .catch(err => {
+        .catch((err) => {
           log('debug', 'No assets found at:', packageAssetsDir);
           log('stack', err.stack);
           return [];
         });
     }
   )
-    .then(assetsDirsGroups => {
+    .then((assetsDirsGroups) => {
       assetsDirsGroups = assetsDirsGroups.reduce(
         (combined, { assets, transformer }) => ({
           assets: combined.assets.concat(assets),
@@ -107,7 +107,7 @@ async function initBuildPackageAssets(
         )
       );
     })
-    .then(results => {
+    .then((results) => {
       results = results.reduce(
         (assetsChanged, assetChanged) => assetsChanged || assetChanged,
         false
@@ -132,7 +132,7 @@ async function _processAsset(
   };
   const newFile = await transformers.reduce(
     (curInputFilePromise, transformer) =>
-      curInputFilePromise.then(curInputFile =>
+      curInputFilePromise.then((curInputFile) =>
         transformer(curInputFile, packageConf, {
           PROJECT_DIR,
           fs,
@@ -147,7 +147,7 @@ async function _processAsset(
     dir,
     data: await fs
       .readFileAsync(path.join(PROJECT_DIR, newFile.name), 'utf-8')
-      .catch(err => {
+      .catch((err) => {
         log('debug', 'Asset not found:', path.join(dir, newFile.name));
         log('stack', err.stack);
         return '';

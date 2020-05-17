@@ -125,7 +125,7 @@ async function initMetapak({
 function _loadJSONFile({ fs, log }, path) {
   return fs
     .readFileAsync(path, 'utf-8')
-    .catch(err => {
+    .catch((err) => {
       throw YError.wrap(err, 'E_PACKAGE_NOT_FOUND', path);
     })
     .then(_parseJSON.bind(null, { log }, path));
@@ -134,7 +134,7 @@ function _loadJSONFile({ fs, log }, path) {
 function _parseJSON(_, path, json) {
   return Promise.resolve(json)
     .then(JSON.parse.bind(JSON))
-    .catch(err => {
+    .catch((err) => {
       throw YError.wrap(err, 'E_MALFORMED_PACKAGE', path);
     });
 }
@@ -143,7 +143,7 @@ function _getMetapakModulesSequence({ log, exit }, packageConf) {
   const reg = new RegExp(/^(@.+\/)?metapak-/);
   const metapakModulesNames = Object.keys(
     packageConf.devDependencies || {}
-  ).filter(devDependency => reg.test(devDependency));
+  ).filter((devDependency) => reg.test(devDependency));
 
   // Allowing a metapak module to run on himself
   if (packageConf.name && reg.test(packageConf.name)) {
@@ -170,7 +170,7 @@ function _reorderMetapakModulesNames(
         packageConf.metapak.sequence
       );
     }
-    packageConf.metapak.sequence.forEach(moduleName => {
+    packageConf.metapak.sequence.forEach((moduleName) => {
       if (!metapakModulesNames.includes(moduleName)) {
         throw new YError('E_BAD_SEQUENCE_ITEM', moduleName);
       }
@@ -202,9 +202,9 @@ function _getPackageMetapakModulesConfigs(
 
         metapakModulesConfigs[metapakModuleName] = fs
           .readdirAsync(modulePath)
-          .then(metapakModuleConfigs => {
+          .then((metapakModuleConfigs) => {
             metapakModuleConfigs = metapackConfigsSequence.filter(
-              metapakModuleConfig =>
+              (metapakModuleConfig) =>
                 metapakModuleConfigs.includes(metapakModuleConfig)
             );
             log(
@@ -225,12 +225,12 @@ function _awaitPromisesFullfil(promises) {
   let err;
 
   return Promise.all(
-    promises.map(promise =>
-      promise.catch(inErr => {
+    promises.map((promise) =>
+      promise.catch((inErr) => {
         err = err || inErr;
       })
     )
-  ).then(result => {
+  ).then((result) => {
     if (err) {
       throw err;
     }
@@ -239,7 +239,7 @@ function _awaitPromisesFullfil(promises) {
 }
 
 function recursivelyBuild(iteration, fn, args) {
-  return fn(...args).then(result => {
+  return fn(...args).then((result) => {
     if (!result) {
       return !!iteration;
     }

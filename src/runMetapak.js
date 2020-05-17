@@ -92,7 +92,7 @@ function preventChanges(path) {
 }
 
 async function initGitHooksDir({ PROJECT_DIR, log }) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     exec(
       'git rev-parse --git-dir',
       {
@@ -120,7 +120,7 @@ async function initGitHooksDir({ PROJECT_DIR, log }) {
             log('debug', 'Hooks dir exists:', GIT_HOOKS_DIR);
             resolve(GIT_HOOKS_DIR);
           })
-          .catch(err2 => {
+          .catch((err2) => {
             log('debug', 'Hooks dir does not exist:', GIT_HOOKS_DIR);
             log('stack', err2.stack);
             resolve('');

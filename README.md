@@ -8,12 +8,12 @@
 > Node modules authoring made easy.
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/metapak/blob/master/LICENSE)
-[![Build status](https://secure.travis-ci.org/nfroidure/metapak.svg)](https://travis-ci.org/nfroidure/metapak)
-[![Coverage Status](https://coveralls.io/repos/nfroidure/metapak/badge.svg?branch=master)](https://coveralls.io/r/nfroidure/metapak?branch=master)
+[![Build status](https://travis-ci.com/nfroidure/metapak.svg?branch=master)](https://travis-ci.com/github/nfroidure/metapak)
+[![Coverage Status](https://coveralls.io/repos/github/nfroidure/metapak/badge.svg?branch=master)](https://coveralls.io/github/nfroidure/metapak?branch=master)
 [![NPM version](https://badge.fury.io/js/metapak.svg)](https://npmjs.org/package/metapak)
 [![Dependency Status](https://david-dm.org/nfroidure/metapak.svg)](https://david-dm.org/nfroidure/metapak)
 [![devDependency Status](https://david-dm.org/nfroidure/metapak/dev-status.svg)](https://david-dm.org/nfroidure/metapak#info=devDependencies)
-[![Package Quality](http://npm.packagequality.com/shield/metapak.svg)](http://packagequality.com/#?package=metapak)
+[![Package Quality](https://npm.packagequality.com/shield/metapak.svg)](https://packagequality.com/#?package=metapak)
 [![Code Climate](https://codeclimate.com/github/nfroidure/metapak.svg)](https://codeclimate.com/github/nfroidure/metapak)
 
 
@@ -21,23 +21,20 @@
 
 ## What's that?
 
-`metapak` provides a set of tools to build
- your own meta npm packages easily.
+`metapak` provides a set of tools to build your own meta npm packages easily.
 
 A meta npm package takes advantage of npm
- [lifecycle scripts](https://docs.npmjs.com/misc/scripts)
- to allow you to manage several similar npm
- packages/NodeJS projects in a simple and
- versioned way.
+[lifecycle scripts](https://docs.npmjs.com/misc/scripts) to allow you to manage
+several similar npm packages/NodeJS projects in a simple and versioned way.
 
 Here is a [simple deck](https://slides.com/nfroidure/meta-npm-packages/live#/)
- introducing it.
+introducing it.
 
 ## What is it good for?
 
-Let's say you are the author of thousands
- of Node modules. Now, imagine you want,
- for all of them:
+Let's say you are the author of thousands of Node modules. Now, imagine you
+want, for all of them:
+
 - change your linter,
 - change your license,
 - change your CI provider,
@@ -45,43 +42,36 @@ Let's say you are the author of thousands
 - add a contributors guide,
 - setup git hooks.
 
-This could look like a developer nightmare but
- with `metapak` you can manage that complexity
- by creating idempotent scripts to run on
- all your projects.
+This could look like a developer nightmare but with `metapak` you can manage
+that complexity by creating idempotent scripts to run on all your projects.
 
 ## Features
 
 Allows you to create a npm meta module to:
-- amend all your npm modules `package.json`
- globally, in a composable way (shared
- dependencies, utility scripts etc...),
-- add assets to all your projects without
- polluting your git history with
- insignificant changes,
-- automatically install git hooks so that
- all your coding flow are respected by
- your contributors.
 
-`metapak` can handle several meta packages
- so that you can compose them easily and
- keep them small and focused on one concern.
+- amend all your npm modules `package.json` globally, in a composable way
+  (shared dependencies, utility scripts etc...),
+- add assets to all your projects without polluting your git history with
+  insignificant changes,
+- automatically install git hooks so that all your coding flow are respected by
+  your contributors.
 
-Zero config for your contributors, nothing
- to install globally.
+`metapak` can handle several meta packages so that you can compose them easily
+and keep them small and focused on one concern.
+
+Zero config for your contributors, nothing to install globally.
 
 ## Usage
 
-First create your own `metapak` module
- (you can look [at mine](https://github.com/nfroidure/metapak-nfroidure)
- to grasp its architecture).
+First create your own `metapak` module (you can look
+[at mine](https://github.com/nfroidure/metapak-nfroidure) to grasp its
+architecture).
 
-You **must** name your module with
- the `metapak-` prefix in order to make
- it work.
+You **must** name your module with the `metapak-` prefix in order to make it
+work.
 
-Now, just define the states of all your
- Node modules:
+Now, just define the states of all your Node modules:
+
 ```sh
 mkdir src
 mkdir src/_common
@@ -162,10 +152,9 @@ echo "module.exports = (hooks, packageConf) => {
 " > src/_common/hooks.js
 ```
 
-For convenience, you can add a post install
- script and a peer dependency to
- your metapak plugin for a better user
- experience:
+For convenience, you can add a post install script and a peer dependency to your
+metapak plugin for a better user experience:
+
 ```js
 {
   "scripts": {
@@ -177,21 +166,19 @@ For convenience, you can add a post install
 }
 ```
 
-Now publish your package to npm and install
- it in all your repositories development
- dependencies with metapak:
+Now publish your package to npm and install it in all your repositories
+development dependencies with metapak:
+
 ```
 npm i --save-dev metapak metapak-nfroidure
 ```
 
-That's it! There is a lot of things you can set
- on all your projects like CI scripts, linters,
- tests configuration etc...
+That's it! There is a lot of things you can set on all your projects like CI
+scripts, linters, tests configuration etc...
 
-You can also create specific configs and
- combine them. Let's say I work for the
- Big Brother inc. and i want to add special
- behaviors for the modules I create at work:
+You can also create specific configs and combine them. Let's say I work for the
+Big Brother inc. and i want to add special behaviors for the modules I create at
+work:
 
 ```sh
 mkdir src/bigbrother
@@ -218,10 +205,9 @@ Copyright Big Brother inc. All rights reserved.
 " > src/bigbrother/assets/LICENSE.md
 ```
 
-Now, just create a new version of your package,
- publish it and add this specific behavior by
- adding the following property to your
- Big Brother's projects:
+Now, just create a new version of your package, publish it and add this specific
+behavior by adding the following property to your Big Brother's projects:
+
 ```
 {
   "version": "1.0.0",
@@ -231,13 +217,9 @@ Now, just create a new version of your package,
 }
 ```
 
-Note that the `_common` folder config
- cannot be disabled. That said you can
- only create specific configs and have
- no common behavior set at all. Keep
- common configs simple and very general
- to avoid having to change it too often.
-
+Note that the `_common` folder config cannot be disabled. That said you can only
+create specific configs and have no common behavior set at all. Keep common
+configs simple and very general to avoid having to change it too often.
 
 [//]: # (::contents:end)
 

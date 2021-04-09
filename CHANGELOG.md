@@ -1,3 +1,12 @@
+## [4.0.2](https://github.com/nfroidure/metapak/compare/v4.0.1...v4.0.2) (2021-04-09)
+
+
+### Bug Fixes
+
+* **require:** add forgotten require default ([add7c4e](https://github.com/nfroidure/metapak/commit/add7c4e71fabac3d191440bd23ba98ae21c13d10))
+
+
+
 ## [4.0.1](https://github.com/nfroidure/metapak/compare/v4.0.0...v4.0.1) (2021-04-09)
 
 

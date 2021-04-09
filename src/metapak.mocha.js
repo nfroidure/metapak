@@ -4,7 +4,7 @@ const assert = require('assert');
 const sinon = require('sinon');
 const { default: Knifecycle, constant } = require('knifecycle');
 const initMetapak = require('./metapak');
-const YError = require('yerror');
+const YError = require('yerror').default;
 
 describe('metapak', () => {
   const DEPENDENCIES = [

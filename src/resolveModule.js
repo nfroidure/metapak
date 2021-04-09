@@ -1,4 +1,4 @@
-const YError = require('yerror');
+const YError = require('yerror').default;
 const path = require('path');
 const { autoService } = require('knifecycle');
 

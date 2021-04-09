@@ -1,6 +1,6 @@
 const path = require('path');
 const Promise = require('bluebird');
-const YError = require('yerror');
+const YError = require('yerror').default;
 const { autoService } = require('knifecycle');
 
 const MAX_PACKAGE_BUILD_ITERATIONS = 15;

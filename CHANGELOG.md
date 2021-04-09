@@ -1,3 +1,17 @@
+# [4.0.0](https://github.com/nfroidure/metapak/compare/v3.1.10...v4.0.0) (2021-04-09)
+
+
+### chore
+
+* **dependencies:** update dependencies ([c5ed8e2](https://github.com/nfroidure/metapak/commit/c5ed8e2f4bcd713f6032ff3f7d9a0e9d8e16c1bd))
+
+
+### BREAKING CHANGES
+
+* **dependencies:** Only work with Node12+
+
+
+
 ## [3.1.10](https://github.com/nfroidure/metapak/compare/v3.1.9...v3.1.10) (2020-05-17)
 
 

@@ -6,7 +6,7 @@ const {
 } = require('knifecycle');
 const debug = require('debug')('metapak');
 const fs = require('fs');
-const YError = require('yerror');
+const YError = require('yerror').default;
 const os = require('os');
 const mkdirp = require('mkdirp');
 const path = require('path');

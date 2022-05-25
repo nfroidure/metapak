@@ -10,11 +10,6 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/metapak/blob/master/LICENSE)
 [![Build status](https://travis-ci.com/nfroidure/metapak.svg?branch=master)](https://travis-ci.com/github/nfroidure/metapak)
 [![Coverage Status](https://coveralls.io/repos/github/nfroidure/metapak/badge.svg?branch=master)](https://coveralls.io/github/nfroidure/metapak?branch=master)
-[![NPM version](https://badge.fury.io/js/metapak.svg)](https://npmjs.org/package/metapak)
-[![Dependency Status](https://david-dm.org/nfroidure/metapak.svg)](https://david-dm.org/nfroidure/metapak)
-[![devDependency Status](https://david-dm.org/nfroidure/metapak/dev-status.svg)](https://david-dm.org/nfroidure/metapak#info=devDependencies)
-[![Package Quality](https://npm.packagequality.com/shield/metapak.svg)](https://packagequality.com/#?package=metapak)
-[![Code Climate](https://codeclimate.com/github/nfroidure/metapak.svg)](https://codeclimate.com/github/nfroidure/metapak)
 
 
 [//]: # (::contents:start)

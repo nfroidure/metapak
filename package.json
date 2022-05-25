@@ -56,28 +56,28 @@
     "bluebird": "^3.7.2",
     "chalk": "^4.1.0",
     "commander": "^7.2.0",
-    "debug": "^4.3.1",
+    "debug": "^4.3.4",
     "deep-strict-equal": "^0.2.0",
-    "diff": "^5.0.0",
+    "diff": "^5.1.0",
     "glob": "^7.1.6",
-    "knifecycle": "^11.1.1",
+    "knifecycle": "^12.0.2",
     "mkdirp": "^1.0.4",
     "pkg-dir": "^5.0.0",
     "sort-keys": "^4.2.0",
-    "yerror": "^6.0.0"
+    "yerror": "^6.0.1"
   },
   "devDependencies": {
-    "commitizen": "^4.2.3",
-    "conventional-changelog-cli": "^2.1.1",
-    "coveralls": "^3.1.0",
+    "commitizen": "^4.2.4",
+    "conventional-changelog-cli": "^2.2.2",
+    "coveralls": "^3.1.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^7.23.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "metapak-nfroidure": "11.0.7",
-    "mocha": "^8.3.2",
+    "eslint": "^8.16.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "metapak-nfroidure": "11.2.0",
+    "mocha": "^10.0.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.2.1",
-    "sinon": "^10.0.1"
+    "prettier": "^2.6.2",
+    "sinon": "^14.0.0"
   },
   "engines": {
     "node": ">=12.19.0"

@@ -75,8 +75,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -139,8 +138,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -203,8 +201,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -287,8 +284,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-module1/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-module1/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -296,8 +292,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-module2/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-module2/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -363,8 +358,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -432,8 +426,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -496,8 +489,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -557,8 +549,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
                 dot: true,
                 nodir: true,
               },
@@ -623,8 +614,7 @@ describe('buildPackageAssets', () => {
             [
               '**/*',
               {
-                cwd:
-                  'project/dir/node_modules/metapak-http-server/src/_common/assets',
+                cwd: 'project/dir/node_modules/metapak-http-server/src/_common/assets',
                 dot: true,
                 nodir: true,
               },

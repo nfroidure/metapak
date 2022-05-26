@@ -1,5 +1,4 @@
 const path = require('path');
-const Promise = require('bluebird');
 const YError = require('yerror').default;
 const { autoService } = require('knifecycle');
 
@@ -185,40 +184,44 @@ function _reorderMetapakModulesNames(
   return metapakModulesNames;
 }
 
-function _getPackageMetapakModulesConfigs(
+async function _getPackageMetapakModulesConfigs(
   { fs, log },
   metapakModulesSequence,
   metapackConfigsSequence,
   resolveModule,
   packageConf
 ) {
-  return Promise.props(
-    metapakModulesSequence.reduce(
-      (metapakModulesConfigs, metapakModuleName) => {
-        const modulePath = path.join(
-          resolveModule(metapakModuleName, packageConf),
-          'src'
-        );
+  const allModulesConfigs = metapakModulesSequence.reduce(
+    (metapakModulesConfigs, metapakModuleName) => {
+      const modulePath = path.join(
+        resolveModule(metapakModuleName, packageConf),
+        'src'
+      );
 
-        metapakModulesConfigs[metapakModuleName] = fs
-          .readdirAsync(modulePath)
-          .then((metapakModuleConfigs) => {
-            metapakModuleConfigs = metapackConfigsSequence.filter(
-              (metapakModuleConfig) =>
-                metapakModuleConfigs.includes(metapakModuleConfig)
-            );
-            log(
-              'debug',
-              'Found configs for "' + metapakModuleName + '":',
-              metapakModuleConfigs
-            );
-            return metapakModuleConfigs;
-          });
-        return metapakModulesConfigs;
-      },
-      {}
-    )
+      metapakModulesConfigs[metapakModuleName] = fs
+        .readdirAsync(modulePath)
+        .then((metapakModuleConfigs) => {
+          metapakModuleConfigs = metapackConfigsSequence.filter(
+            (metapakModuleConfig) =>
+              metapakModuleConfigs.includes(metapakModuleConfig)
+          );
+          log(
+            'debug',
+            'Found configs for "' + metapakModuleName + '":',
+            metapakModuleConfigs
+          );
+          return metapakModuleConfigs;
+        });
+      return metapakModulesConfigs;
+    },
+    {}
   );
+  return await Object.keys(allModulesConfigs).reduce(async (p, key) => {
+    return {
+      ...(await p),
+      [key]: await allModulesConfigs[key],
+    };
+  }, Promise.resolve({}));
 }
 
 function _awaitPromisesFullfil(promises) {

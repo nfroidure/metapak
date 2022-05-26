@@ -11,8 +11,8 @@ const os = require('os');
 const mkdirp = require('mkdirp');
 const path = require('path');
 const glob = require('glob');
+const { promisify } = require('util');
 const program = require('commander');
-const Promise = require('bluebird');
 const { exec } = require('child_process');
 
 const initMetapak = require('../src/metapak');
@@ -45,7 +45,7 @@ async function prepareMetapak($ = new Knifecycle()) {
   $.register(constant('exit', process.exit));
   $.register(constant('mkdirp', mkdirp));
   $.register(constant('os', os));
-  $.register(constant('glob', Promise.promisify(glob)));
+  $.register(constant('glob', promisify(glob)));
   $.register(
     constant('log', (type, ...args) => {
       if ('debug' === type || 'stack' === type) {
@@ -62,36 +62,34 @@ async function prepareMetapak($ = new Knifecycle()) {
   $.register(initBuildPackageAssets);
   $.register(initBuildPackageGitHooks);
   $.register(initResolveModule);
-
-  program
-    .version(require(path.join(__dirname, '..', 'package.json')).version)
-    .option('-s, --safe', 'Exit with 1 when changes are detected')
-    .option('-d, --dry-run', 'Print the changes without doing it')
-    .parse(process.argv);
-
-  $.register(
-    autoService(async function initProgram({ packageConf }) {
-      return program
-        .version(packageConf.version)
-        .option('-b, --base [value]', 'Base for links')
-        .parse(process.argv);
-    })
-  );
-
+  $.register(autoService(initProgramOptions));
+  $.register(autoService(initPreventChanges));
   $.register(autoService(initMkdirp));
   $.register(name('fs', autoService(initFS)));
 
   return $;
 }
 
-function preventChanges(path) {
-  if (program.safe) {
-    return Promise.reject(new YError('E_UNEXPECTED_CHANGES', path));
-  }
-  return {}.undef;
+async function initProgramOptions() {
+  return program
+    .version(require(path.join(__dirname, '..', 'package.json')).version)
+    .option('-s, --safe', 'Exit with 1 when changes are detected')
+    .option('-d, --dry-run', 'Print the changes without doing it')
+    .option('-b, --base [value]', 'Base for links')
+    .parse(process.argv)
+    .opts();
 }
 
-async function initGitHooksDir({ PROJECT_DIR, log }) {
+async function initPreventChanges({ programOptions }) {
+  return function preventChanges(path) {
+    if (programOptions.safe) {
+      return Promise.reject(new YError('E_UNEXPECTED_CHANGES', path));
+    }
+    return {}.undef;
+  };
+}
+
+async function initGitHooksDir({ PROJECT_DIR, fs, log }) {
   return new Promise((resolve) => {
     exec(
       'git rev-parse --git-dir',
@@ -130,11 +128,11 @@ async function initGitHooksDir({ PROJECT_DIR, log }) {
   });
 }
 
-async function initMkdirp({ log }) {
-  const mkdirpAsync = Promise.promisify(mkdirp.mkdirp);
+async function initMkdirp({ programOptions, preventChanges, log }) {
+  const mkdirpAsync = promisify(mkdirp.mkdirp);
 
   return Promise.resolve((path, ...args) => {
-    if (program.dryRun) {
+    if (programOptions.dryRun) {
       log('debug', 'Create a folder:', path);
       return Promise.resolve();
     }
@@ -142,27 +140,25 @@ async function initMkdirp({ log }) {
   });
 }
 
-async function initFS({ log }) {
-  const baseFS = Promise.promisifyAll(fs);
-
+async function initFS({ programOptions, preventChanges, log }) {
   return Promise.resolve({
-    readFileAsync: baseFS.readFileAsync.bind(baseFS),
-    accessAsync: baseFS.accessAsync.bind(baseFS),
-    readdirAsync: baseFS.readdirAsync.bind(baseFS),
+    readFileAsync: fs.promises.readFile,
+    accessAsync: fs.promises.access,
+    readdirAsync: fs.promises.readdir,
     unlinkAsync: (path, ...args) => {
-      if (program.dryRun) {
-        log('debug', 'Delete a file:', path);
+      if (programOptions.dryRun) {
+        log('warn', 'Delete a file:', path);
         return Promise.resolve();
       }
-      return preventChanges(path) || baseFS.unlinkAsync(path, ...args);
+      return preventChanges(path) || fs.promises.unlink(path, ...args);
     },
     writeFileAsync: (path, ...args) => {
-      if (program.dryRun) {
-        log('debug', 'Modify a file:', path);
+      if (programOptions.dryRun) {
+        log('warn', 'Modify a file:', path);
         return Promise.resolve();
       }
-      return preventChanges(path) || baseFS.writeFileAsync(path, ...args);
+      return preventChanges(path) || fs.promises.writeFile(path, ...args);
     },
-    constants: baseFS.constants,
+    constants: fs.constants,
   });
 }

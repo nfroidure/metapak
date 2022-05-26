@@ -53,18 +53,17 @@
   },
   "homepage": "https://github.com/nfroidure/metapak#readme",
   "dependencies": {
-    "bluebird": "^3.7.2",
     "chalk": "^4.1.0",
-    "commander": "^7.2.0",
+    "commander": "^9.2.0",
     "debug": "^4.3.4",
     "deep-strict-equal": "^0.2.0",
     "diff": "^5.1.0",
-    "glob": "^7.1.6",
-    "knifecycle": "^12.0.2",
+    "glob": "^8.0.3",
+    "knifecycle": "^12.0.4",
     "mkdirp": "^1.0.4",
     "pkg-dir": "^5.0.0",
     "sort-keys": "^4.2.0",
-    "yerror": "^6.0.1"
+    "yerror": "^6.0.2"
   },
   "devDependencies": {
     "commitizen": "^4.2.4",
@@ -73,7 +72,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.16.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "metapak-nfroidure": "11.2.0",
+    "metapak-nfroidure": "11.2.1",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "prettier": "^2.6.2",

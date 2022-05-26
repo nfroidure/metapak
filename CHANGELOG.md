@@ -1,3 +1,12 @@
+## [4.0.4](https://github.com/nfroidure/metapak/compare/v4.0.3...v4.0.4) (2022-05-26)
+
+
+### Bug Fixes
+
+* **options:** fix CLI options ([6f5fc2f](https://github.com/nfroidure/metapak/commit/6f5fc2fb90580668bbf97f5b5143de02b6ee8594))
+
+
+
 ## [4.0.3](https://github.com/nfroidure/metapak/compare/v4.0.2...v4.0.3) (2022-05-25)
 
 

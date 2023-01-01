@@ -1,5 +1,5 @@
 #! /usr/bin/env node
 
-const { runMetapak } = require('../src/runMetapak');
+import { runMetapak } from "../dist/index.js";
 
 runMetapak();

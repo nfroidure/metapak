@@ -8,7 +8,6 @@
 > Node modules authoring made easy.
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/metapak/blob/master/LICENSE)
-[![Build status](https://travis-ci.com/nfroidure/metapak.svg?branch=master)](https://travis-ci.com/github/nfroidure/metapak)
 [![Coverage Status](https://coveralls.io/repos/github/nfroidure/metapak/badge.svg?branch=master)](https://coveralls.io/github/nfroidure/metapak?branch=master)
 
 
@@ -65,13 +64,14 @@ architecture).
 You **must** name your module with the `metapak-` prefix in order to make it
 work.
 
-Now, just define the states of all your Node modules:
+Now, just define a configuration (named `main` here) you will be able to apply
+to all your NPM modules:
 
 ```sh
 mkdir src
-mkdir src/_common
+mkdir src/main
 
-# Let's set the package.json of all your modules
+# Let's set the package.json of your modules
 # Note this has to be an idempotent function
 # (ie: same run same result)
 echo "
@@ -86,7 +86,7 @@ module.exports = (packageConf) => {
 
   // Let's add my handy scripts
   packageConf.scripts = packageConf.scripts || {};
-  packageConf.scripts.cli = 'env NODE_ENV=${NODE_ENV:-cli}';
+  packageConf.scripts.lint = 'eslint';
 
   // And the MUST HAVE dependencies
   packageConf.dependencies = packageConf.dependencies || {};
@@ -97,19 +97,19 @@ module.exports = (packageConf) => {
   packageConf.devDependencies.eslint = '3.0.0';
 
   return packageConf;
-}" > src/_common/package.js
+}" > src/main/package.js
 
 # Let's also add some common assets
 # metapak will add/update for us
-mkdir src/_common/assets
+mkdir src/main/assets
 # Adding the license
-wget -O src/_common/assets/LICENSE https://mit-license.org/license.txt
+wget -O src/main/assets/LICENSE https://mit-license.org/license.txt
 # Adding a git ignore file
 # Note we replaced the dot of the file per _dot_
 # This is due to a magic behavior of npm
 # See: https://github.com/npm/npm/issues/15660
 # metapak will rename it to .gitignore
-echo "node_modules" > src/_common/assets/_dot_gitignore
+echo "node_modules" > src/main/assets/_dot_gitignore
 
 # And make some additions to them, like templating
 echo "
@@ -126,7 +126,7 @@ module.exports = (file, packageConf) => {
   }
   return file;
 };
-" > src/_common/assets.js
+" > src/main/assets.js
 
 # Finally let's add my git hooks on it
 echo "module.exports = (hooks, packageConf) => {
@@ -144,20 +144,17 @@ echo "module.exports = (hooks, packageConf) => {
   hooks['pre-commit'].push('npm run metapak -- --safe || exit 1');
   return hooks;
 };
-" > src/_common/hooks.js
+" > src/main/hooks.js
 ```
 
-For convenience, you can add a post install script and a peer dependency to your
-metapak plugin for a better user experience:
+For convenience, you can add a peer dependency to your metapak plugin to force a
+given metapak version:
 
-```js
+```json
 {
-  "scripts": {
-    "postinstall": "npm run metapak",
-  },
   "peerDependencies": {
-    "metapak": "^2.0.0"
-  },
+    "metapak": "^4.0.4"
+  }
 }
 ```
 
@@ -167,6 +164,30 @@ development dependencies with metapak:
 ```
 npm i --save-dev metapak metapak-nfroidure
 ```
+
+And declare the configuration to apply it:
+
+```json
+{
+  "version": "1.0.0",
+  "metapak": {
+    "configs": ["main"]
+  }
+  "scripts": {
+    "metapak": "metapak"
+  }
+}
+```
+
+Now by running:
+
+```sh
+npm run metapak
+```
+
+All changes will apply automatically. If you are in a CI/CD context, you will
+take benefit to use `npm run metapak -- --safe` that will make the command fail
+if there is any change. It is useful to avoid commit unstable changes.
 
 That's it! There is a lot of things you can set on all your projects like CI
 scripts, linters, tests configuration etc...
@@ -207,14 +228,19 @@ behavior by adding the following property to your Big Brother's projects:
 {
   "version": "1.0.0",
   "metapak": {
-    "configs": ["bigbrother"]
+    "configs": ["main", "bigbrother"]
   }
 }
 ```
 
-Note that the `_common` folder config cannot be disabled. That said you can only
-create specific configs and have no common behavior set at all. Keep common
-configs simple and very general to avoid having to change it too often.
+## Contributing
+
+To contribute to Metapak, simply clone this repository and run the tests. To
+test the CLI, use:
+
+```sh
+node bin/metapak.js
+```
 
 [//]: # (::contents:end)
 

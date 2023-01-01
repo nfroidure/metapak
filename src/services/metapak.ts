@@ -1,10 +1,18 @@
-const path = require('path');
-const YError = require('yerror').default;
-const { autoService } = require('knifecycle');
+import path from 'path';
+import { printStackTrace, YError } from 'yerror';
+import { autoService } from 'knifecycle';
+import type { LogService } from 'common-services';
+import type { FSService } from './fs.js';
+import type { ResolveModuleService } from './resolveModule.js';
+import type { BuildPackageAssetsService } from './assets.js';
+import type { BuildPackageGitHooksService } from './gitHooks.js';
+import type { BuildPackageConfService } from './packageConf.js';
+
+export type MetapakService = () => Promise<void>;
 
 const MAX_PACKAGE_BUILD_ITERATIONS = 15;
 
-module.exports = autoService(initMetapak);
+export default autoService(initMetapak);
 
 async function initMetapak({
   ENV,
@@ -16,22 +24,32 @@ async function initMetapak({
   buildPackageAssets,
   buildPackageGitHooks,
   resolveModule,
-}) {
+}: {
+  ENV: Record<string, string>;
+  PROJECT_DIR: string;
+  log: LogService;
+  exit: typeof process.exit;
+  fs: FSService;
+  buildPackageConf: BuildPackageConfService;
+  buildPackageAssets: BuildPackageAssetsService;
+  buildPackageGitHooks: BuildPackageGitHooksService;
+  resolveModule: ResolveModuleService;
+}): Promise<MetapakService> {
   return async function metapak() {
     try {
       const packageConf = await _loadJSONFile(
-        { fs },
-        path.join(PROJECT_DIR, 'package.json')
+        { fs, log },
+        path.join(PROJECT_DIR, 'package.json'),
       );
 
       const metapackConfigsSequence = ['_common'].concat(
         packageConf.metapak && packageConf.metapak.configs
           ? packageConf.metapak.configs
-          : []
+          : [],
       );
-      let metapakModulesSequence = _getMetapakModulesSequence(
-        { log, exit },
-        packageConf
+      const metapakModulesSequence = _getMetapakModulesSequence(
+        { log },
+        packageConf,
       );
 
       if (!metapakModulesSequence.length) {
@@ -40,46 +58,64 @@ async function initMetapak({
         log(
           'debug',
           'Resolved the metapak modules sequence:',
-          metapakModulesSequence
+          metapakModulesSequence,
         );
       }
 
       const metapakModulesConfigs = await _getPackageMetapakModulesConfigs(
         {
-          PROJECT_DIR,
           fs,
           log,
         },
         metapakModulesSequence,
         metapackConfigsSequence,
         resolveModule,
-        packageConf
+        packageConf,
       );
 
-      const buildPackageConfResult = await recursivelyBuild(
-        0,
-        buildPackageConf,
-        [packageConf, metapakModulesSequence, metapakModulesConfigs]
+      let packageConfBuildResult = false;
+      let iteration = 0;
+      do {
+        packageConfBuildResult = await buildPackageConf(
+          packageConf,
+          metapakModulesSequence,
+          metapakModulesConfigs,
+        );
+        iteration++;
+      } while (
+        packageConfBuildResult &&
+        iteration < MAX_PACKAGE_BUILD_ITERATIONS
       );
+
+      if (packageConfBuildResult) {
+        log(
+          'error',
+          `🤷 - Reached the maximum allowed iterations. It means metapak keeps changing the repository and never reach a stable state. Probably that some operations made are not idempotent.`,
+        );
+        throw new YError(
+          'E_MAX_ITERATIONS',
+          iteration,
+          MAX_PACKAGE_BUILD_ITERATIONS,
+        );
+      }
 
       const promises = [
-        Promise.resolve(buildPackageConfResult),
+        Promise.resolve(packageConfBuildResult),
         buildPackageAssets(
           packageConf,
           metapakModulesSequence,
-          metapakModulesConfigs
+          metapakModulesConfigs,
         ),
         buildPackageGitHooks(
           packageConf,
           metapakModulesSequence,
-          metapakModulesConfigs
+          metapakModulesConfigs,
         ),
       ];
 
-      // Trick to avoid stopping the process immediately for one failure
-      const [packageConfModified, assetsModified] = await _awaitPromisesFullfil(
-        promises
-      );
+      // Avoid stopping the process immediately for one failure
+      await Promise.allSettled(promises);
+      const [packageConfModified, assetsModified] = await Promise.all(promises);
 
       // The CI should not modify the repo contents and should fail when the
       // package would have been modified cause it should not happen and it probably
@@ -87,7 +123,7 @@ async function initMetapak({
       if ((packageConfModified || assetsModified) && ENV.CI) {
         log(
           'error',
-          '💀 - This commit is not valid since it do not match the meta package state.'
+          '💀 - This commit is not valid since it do not match the meta package state.',
         );
         exit(1);
       }
@@ -95,27 +131,27 @@ async function initMetapak({
         log(
           'info',
           '🚧 - The project package.json changed, you may want' +
-            ' to `npm install` again to install new dependencies.'
+            ' to `npm install` again to install new dependencies.',
         );
       }
       if (assetsModified) {
         log(
           'info',
-          '🚧 - Some assets were added to the project, you may want to stage them.'
+          '🚧 - Some assets were added to the project, you may want to stage them.',
         );
       }
       exit(0);
     } catch (err) {
-      const castedErr = YError.cast(err);
+      const castedErr = YError.cast(err as Error);
 
       log(
         'error',
         '💀 - Could not run metapak script correctly:',
         castedErr.code,
-        castedErr.params
+        castedErr.params,
       );
-      log('info', '💊 - Debug by running again with "DEBUG=metapak" env.');
-      log('stack', castedErr.stack);
+      log('warning', '💊 - Debug by running again with "DEBUG=metapak" env.');
+      log('error-stack', printStackTrace(castedErr));
       exit(1);
     }
   };
@@ -138,10 +174,10 @@ function _parseJSON(_, path, json) {
     });
 }
 
-function _getMetapakModulesSequence({ log, exit }, packageConf) {
+function _getMetapakModulesSequence({ log }, packageConf) {
   const reg = new RegExp(/^(@.+\/)?metapak-/);
   const metapakModulesNames = Object.keys(
-    packageConf.devDependencies || {}
+    packageConf.devDependencies || {},
   ).filter((devDependency) => reg.test(devDependency));
 
   // Allowing a metapak module to run on himself
@@ -149,24 +185,20 @@ function _getMetapakModulesSequence({ log, exit }, packageConf) {
     metapakModulesNames.unshift(packageConf.name);
   }
 
-  return _reorderMetapakModulesNames(
-    { log, exit },
-    packageConf,
-    metapakModulesNames
-  );
+  return _reorderMetapakModulesNames({ log }, packageConf, metapakModulesNames);
 }
 
 function _reorderMetapakModulesNames(
   { log },
   packageConf,
-  metapakModulesNames
+  metapakModulesNames,
 ) {
   if (packageConf.metapak && packageConf.metapak.sequence) {
     if (!(packageConf.metapak.sequence instanceof Array)) {
       throw new YError(
         'E_BAD_SEQUENCE_TYPE',
         typeof packageConf.metapak.sequence,
-        packageConf.metapak.sequence
+        packageConf.metapak.sequence,
       );
     }
     packageConf.metapak.sequence.forEach((moduleName) => {
@@ -177,7 +209,7 @@ function _reorderMetapakModulesNames(
     log(
       'debug',
       'Reordering metapak modules sequence.',
-      packageConf.metapak.sequence
+      packageConf.metapak.sequence,
     );
     return packageConf.metapak.sequence;
   }
@@ -189,13 +221,13 @@ async function _getPackageMetapakModulesConfigs(
   metapakModulesSequence,
   metapackConfigsSequence,
   resolveModule,
-  packageConf
+  packageConf,
 ) {
   const allModulesConfigs = metapakModulesSequence.reduce(
     (metapakModulesConfigs, metapakModuleName) => {
       const modulePath = path.join(
         resolveModule(metapakModuleName, packageConf),
-        'src'
+        'src',
       );
 
       metapakModulesConfigs[metapakModuleName] = fs
@@ -203,18 +235,18 @@ async function _getPackageMetapakModulesConfigs(
         .then((metapakModuleConfigs) => {
           metapakModuleConfigs = metapackConfigsSequence.filter(
             (metapakModuleConfig) =>
-              metapakModuleConfigs.includes(metapakModuleConfig)
+              metapakModuleConfigs.includes(metapakModuleConfig),
           );
           log(
             'debug',
             'Found configs for "' + metapakModuleName + '":',
-            metapakModuleConfigs
+            metapakModuleConfigs,
           );
           return metapakModuleConfigs;
         });
       return metapakModulesConfigs;
     },
-    {}
+    {},
   );
   return await Object.keys(allModulesConfigs).reduce(async (p, key) => {
     return {
@@ -222,37 +254,4 @@ async function _getPackageMetapakModulesConfigs(
       [key]: await allModulesConfigs[key],
     };
   }, Promise.resolve({}));
-}
-
-function _awaitPromisesFullfil(promises) {
-  let err;
-
-  return Promise.all(
-    promises.map((promise) =>
-      promise.catch((inErr) => {
-        err = err || inErr;
-      })
-    )
-  ).then((result) => {
-    if (err) {
-      throw err;
-    }
-    return result;
-  });
-}
-
-function recursivelyBuild(iteration, fn, args) {
-  return fn(...args).then((result) => {
-    if (!result) {
-      return !!iteration;
-    }
-    if (MAX_PACKAGE_BUILD_ITERATIONS <= iteration) {
-      throw new YError(
-        'E_MAX_ITERATIONS',
-        iteration,
-        MAX_PACKAGE_BUILD_ITERATIONS
-      );
-    }
-    return recursivelyBuild(++iteration, fn, args);
-  });
 }

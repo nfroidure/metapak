@@ -2,6 +2,9 @@
   "name": "metapak",
   "version": "4.0.4",
   "description": "Node modules authoring made easy.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "metapak": "bin/metapak.js"
   },
@@ -9,33 +12,40 @@
     "configs": [
       "main",
       "readme",
-      "mocha",
+      "tsesm",
       "eslint",
-      "travis",
-      "codeclimate"
+      "jest",
+      "ghactions"
     ],
     "data": {
-      "testsFiles": "'src/**/*.mocha.js'",
-      "files": "'src/**/*.js' 'bin/**/*.js'",
+      "files": "'src/**/*.ts'",
+      "testsFiles": "'src/**/*.test.ts'",
+      "distFiles": "'dist/**/*.js'",
+      "ignore": [
+        "dist"
+      ],
       "bundleFiles": [
-        "src/**/*.js",
-        "bin/**/*.js"
+        "dist",
+        "src",
+        "bin"
       ]
     }
   },
   "scripts": {
+    "build": "rimraf -f 'dist' && tsc --outDir dist",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
-    "cover": "nyc npm test && nyc report --reporter=html --reporter=text",
-    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls && rm -rf ./coverage",
+    "cover": "npm run jest -- --coverage",
+    "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
-    "lint": "eslint 'src/**/*.js' 'bin/**/*.js'",
+    "jest": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest",
+    "lint": "eslint 'src/**/*.ts'",
     "metapak": "node bin/metapak.js",
     "mocha": "mocha 'src/**/*.mocha.js'",
-    "precz": "npm t && npm run lint && npm run metapak -- -s",
-    "prettier": "prettier --write 'src/**/*.js' 'bin/**/*.js'",
-    "preversion": "npm t && npm run lint && npm run metapak -- -s",
-    "test": "npm run mocha",
+    "precz": "npm run build && npm t && npm run lint && npm run metapak -- -s",
+    "prettier": "prettier --write 'src/**/*.ts'",
+    "preversion": "npm run build && npm t && npm run lint && npm run metapak -- -s",
+    "test": "npm run jest",
     "version": "npm run changelog"
   },
   "repository": {
@@ -53,68 +63,79 @@
   },
   "homepage": "https://github.com/nfroidure/metapak#readme",
   "dependencies": {
-    "chalk": "^4.1.0",
-    "commander": "^9.2.0",
+    "@types/glob": "^8.0.0",
+    "@types/mkdirp": "^1.0.2",
+    "chalk": "^5.2.0",
+    "commander": "^9.4.1",
+    "common-services": "^12.1.0",
     "debug": "^4.3.4",
-    "deep-strict-equal": "^0.2.0",
     "diff": "^5.1.0",
     "glob": "^8.0.3",
-    "knifecycle": "^12.0.4",
+    "knifecycle": "^14.1.0",
     "mkdirp": "^1.0.4",
-    "pkg-dir": "^5.0.0",
-    "sort-keys": "^4.2.0",
-    "yerror": "^6.0.2"
+    "pkg-dir": "^7.0.0",
+    "sort-keys": "^5.0.0",
+    "type-fest": "^3.5.0",
+    "yerror": "^6.2.1"
   },
   "devDependencies": {
-    "commitizen": "^4.2.4",
+    "@typescript-eslint/eslint-plugin": "^5.36.0",
+    "@typescript-eslint/parser": "^5.36.0",
+    "commitizen": "^4.2.5",
     "conventional-changelog-cli": "^2.2.2",
     "coveralls": "^3.1.1",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.16.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "metapak-nfroidure": "11.2.1",
-    "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
-    "prettier": "^2.6.2",
-    "sinon": "^14.0.0"
+    "esbuild": "^0.15.6",
+    "esbuild-jest": "^0.5.0",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.0.1",
+    "metapak-nfroidure": "12.3.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.2"
   },
   "engines": {
-    "node": ">=12.19.0"
+    "node": ">=16.15.0"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "contributors": [],
+  "files": [
+    "dist",
+    "src",
+    "bin",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "greenkeeper": {
     "ignore": [
       "commitizen",
       "cz-conventional-changelog",
       "conventional-changelog-cli",
-      "mocha",
-      "coveralls",
-      "nyc",
+      "typescript",
+      "rimraf",
       "eslint",
       "eslint-config-prettier",
-      "prettier"
-    ]
-  },
-  "contributors": [],
-  "files": [
-    "src/**/*.js",
-    "bin/**/*.js",
-    "LICENSE",
-    "README.md",
-    "CHANGELOG.md"
-  ],
-  "nyc": {
-    "exclude": [
-      "'src/**/*.mocha.js'"
+      "eslint-plugin-prettier",
+      "prettier",
+      "@typescript-eslint/eslint-plugin",
+      "@typescript-eslint/parser",
+      "jest",
+      "coveralls"
     ]
   },
   "eslintConfig": {
     "extends": [
-      "eslint:recommended"
+      "eslint:recommended",
+      "plugin:prettier/recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
     ],
     "parserOptions": {
       "ecmaVersion": 2018,
@@ -132,13 +153,45 @@
     ],
     "rules": {
       "prettier/prettier": "error"
-    }
+    },
+    "parser": "@typescript-eslint/parser",
+    "ignorePatterns": [
+      "*.d.ts"
+    ]
   },
   "prettier": {
     "semi": true,
     "printWidth": 80,
     "singleQuote": true,
-    "trailingComma": "es5",
+    "trailingComma": "all",
     "proseWrap": "always"
+  },
+  "jest": {
+    "coverageReporters": [
+      "lcov"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": [
+        "esbuild-jest",
+        {
+          "sourcemap": true,
+          "format": "esm"
+        }
+      ]
+    },
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "#(.*)": "<rootDir>/node_modules/$1",
+      "(.+)\\.js": "$1"
+    },
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ]
   }
 }

@@ -104,7 +104,6 @@ describe('metapak', () => {
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }
@@ -142,10 +141,8 @@ describe('metapak', () => {
           [
             "error",
             "💀 - Could not run metapak script correctly:",
-            "E_PACKAGE_NOT_FOUND",
-            [
-              "project/dir/package.json",
-            ],
+            "E_AOUCH",
+            [],
           ],
           [
             "warning",
@@ -155,7 +152,6 @@ describe('metapak', () => {
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }
@@ -193,9 +189,8 @@ describe('metapak', () => {
           [
             "error",
             "💀 - Could not run metapak script correctly:",
-            "E_MALFORMED_PACKAGE",
+            "E_UNEXPECTED",
             [
-              "project/dir/package.json",
               "Unexpected token } in JSON at position 3",
             ],
           ],
@@ -207,7 +202,6 @@ describe('metapak', () => {
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }
@@ -267,7 +261,6 @@ describe('metapak', () => {
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }
@@ -326,7 +319,6 @@ describe('metapak', () => {
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }
@@ -390,9 +382,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -405,9 +395,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -420,9 +408,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -435,9 +421,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -450,9 +434,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -465,9 +447,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -480,9 +460,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -495,9 +473,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -510,9 +486,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -525,9 +499,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -540,9 +512,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -555,9 +525,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -570,9 +538,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -585,9 +551,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
           [
@@ -600,9 +564,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
         ],
@@ -623,9 +585,7 @@ describe('metapak', () => {
           [
             "debug",
             "Found configs for "metapak-http-service":",
-            [
-              "_common",
-            ],
+            [],
           ],
           [
             "error",
@@ -648,7 +608,6 @@ describe('metapak', () => {
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }
@@ -711,9 +670,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
         ],
@@ -728,9 +685,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
         ],
@@ -745,9 +700,7 @@ describe('metapak', () => {
               "metapak-http-service",
             ],
             {
-              "metapak-http-service": [
-                "_common",
-              ],
+              "metapak-http-service": [],
             },
           ],
         ],
@@ -767,15 +720,12 @@ describe('metapak', () => {
           [
             "debug",
             "Found configs for "metapak-http-service":",
-            [
-              "_common",
-            ],
+            [],
           ],
         ],
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }
@@ -847,7 +797,6 @@ describe('metapak', () => {
             ],
             {
               "metapak-http-service": [
-                "_common",
                 "private",
               ],
             },
@@ -870,7 +819,6 @@ describe('metapak', () => {
             ],
             {
               "metapak-http-service": [
-                "_common",
                 "private",
               ],
             },
@@ -893,7 +841,6 @@ describe('metapak', () => {
             ],
             {
               "metapak-http-service": [
-                "_common",
                 "private",
               ],
             },
@@ -916,7 +863,6 @@ describe('metapak', () => {
             "debug",
             "Found configs for "metapak-http-service":",
             [
-              "_common",
               "private",
             ],
           ],
@@ -924,7 +870,6 @@ describe('metapak', () => {
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }
@@ -997,7 +942,6 @@ describe('metapak', () => {
             ],
             {
               "metapak-http-service": [
-                "_common",
                 "private",
                 "bisous",
               ],
@@ -1022,7 +966,6 @@ describe('metapak', () => {
             ],
             {
               "metapak-http-service": [
-                "_common",
                 "private",
                 "bisous",
               ],
@@ -1047,7 +990,6 @@ describe('metapak', () => {
             ],
             {
               "metapak-http-service": [
-                "_common",
                 "private",
                 "bisous",
               ],
@@ -1071,7 +1013,6 @@ describe('metapak', () => {
             "debug",
             "Found configs for "metapak-http-service":",
             [
-              "_common",
               "private",
               "bisous",
             ],
@@ -1080,7 +1021,6 @@ describe('metapak', () => {
         "readFileAsyncCalls": [
           [
             "project/dir/package.json",
-            "utf-8",
           ],
         ],
       }

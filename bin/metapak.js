@@ -1,5 +1,5 @@
 #! /usr/bin/env node
 
-import { runMetapak } from "../dist/index.js";
+import { runMetapak } from '../dist/index.js';
 
 runMetapak();

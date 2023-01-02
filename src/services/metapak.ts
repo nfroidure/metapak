@@ -6,7 +6,10 @@ import type { FSService } from './fs.js';
 import type { ResolveModuleService } from './resolveModule.js';
 import type { BuildPackageAssetsService } from './assets.js';
 import type { BuildPackageGitHooksService } from './gitHooks.js';
-import type { BuildPackageConfService } from './packageConf.js';
+import type {
+  MetapakPackageJson,
+  BuildPackageConfService,
+} from './packageConf.js';
 
 export type MetapakService = () => Promise<void>;
 
@@ -37,16 +40,12 @@ async function initMetapak({
 }): Promise<MetapakService> {
   return async function metapak() {
     try {
-      const packageConf = await _loadJSONFile(
-        { fs, log },
-        path.join(PROJECT_DIR, 'package.json'),
-      );
-
-      const metapackConfigsSequence = ['_common'].concat(
-        packageConf.metapak && packageConf.metapak.configs
-          ? packageConf.metapak.configs
-          : [],
-      );
+      const packageConf = JSON.parse(
+        (
+          await fs.readFileAsync(path.join(PROJECT_DIR, 'package.json'))
+        ).toString(),
+      ) as MetapakPackageJson;
+      const metapackConfigsSequence = packageConf.metapak?.configs || [];
       const metapakModulesSequence = _getMetapakModulesSequence(
         { log },
         packageConf,
@@ -66,10 +65,10 @@ async function initMetapak({
         {
           fs,
           log,
+          resolveModule,
         },
         metapakModulesSequence,
         metapackConfigsSequence,
-        resolveModule,
         packageConf,
       );
 
@@ -157,24 +156,10 @@ async function initMetapak({
   };
 }
 
-function _loadJSONFile({ fs, log }, path) {
-  return fs
-    .readFileAsync(path, 'utf-8')
-    .catch((err) => {
-      throw YError.wrap(err, 'E_PACKAGE_NOT_FOUND', path);
-    })
-    .then(_parseJSON.bind(null, { log }, path));
-}
-
-function _parseJSON(_, path, json) {
-  return Promise.resolve(json)
-    .then(JSON.parse.bind(JSON))
-    .catch((err) => {
-      throw YError.wrap(err, 'E_MALFORMED_PACKAGE', path);
-    });
-}
-
-function _getMetapakModulesSequence({ log }, packageConf) {
+function _getMetapakModulesSequence(
+  { log }: { log: LogService },
+  packageConf: MetapakPackageJson,
+) {
   const reg = new RegExp(/^(@.+\/)?metapak-/);
   const metapakModulesNames = Object.keys(
     packageConf.devDependencies || {},
@@ -189,9 +174,9 @@ function _getMetapakModulesSequence({ log }, packageConf) {
 }
 
 function _reorderMetapakModulesNames(
-  { log },
-  packageConf,
-  metapakModulesNames,
+  { log }: { log: LogService },
+  packageConf: MetapakPackageJson,
+  metapakModulesNames: string[],
 ) {
   if (packageConf.metapak && packageConf.metapak.sequence) {
     if (!(packageConf.metapak.sequence instanceof Array)) {
@@ -217,11 +202,14 @@ function _reorderMetapakModulesNames(
 }
 
 async function _getPackageMetapakModulesConfigs(
-  { fs, log },
-  metapakModulesSequence,
-  metapackConfigsSequence,
-  resolveModule,
-  packageConf,
+  {
+    fs,
+    log,
+    resolveModule,
+  }: { fs: FSService; log: LogService; resolveModule: ResolveModuleService },
+  metapakModulesSequence: string[],
+  metapackConfigsSequence: string[],
+  packageConf: MetapakPackageJson,
 ) {
   const allModulesConfigs = metapakModulesSequence.reduce(
     (metapakModulesConfigs, metapakModuleName) => {

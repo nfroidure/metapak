@@ -6,12 +6,21 @@ import { mapConfigsSequentially, identity, buildDiff } from '../libs/utils.js';
 import { printStackTrace } from 'yerror';
 import type { ImporterService, LogService } from 'common-services';
 import type { PackageJSONTransformer } from '../libs/utils.js';
-import type { JsonObject } from 'type-fest';
 import type { ResolveModuleService } from './resolveModule.js';
 import type { FSService } from './fs.js';
+import type { JsonObject, PackageJson } from 'type-fest';
+
+export type MetapakConfiguration<T = JsonObject> = {
+  configs: string[];
+  sequence: string[];
+  data: T;
+};
+export type MetapakPackageJson<T = JsonObject> = PackageJson & {
+  metapak?: MetapakConfiguration<T>;
+};
 
 export type BuildPackageConfService = (
-  packageConf: JsonObject,
+  packageConf: MetapakPackageJson,
   metapakModulesSequence: string[],
   metapakModulesConfigs: Record<string, string[]>,
 ) => Promise<boolean>;
@@ -34,7 +43,7 @@ async function initBuildPackageConf({
   resolveModule: ResolveModuleService;
 }): Promise<BuildPackageConfService> {
   return async (
-    packageConf: JsonObject,
+    packageConf: MetapakPackageJson,
     metapakModulesSequence: string[],
     metapakModulesConfigs: Record<string, string[]>,
   ) => {
@@ -75,7 +84,7 @@ async function initBuildPackageConf({
       },
     );
 
-    let newPackageConf: any = packageConf;
+    let newPackageConf: MetapakPackageJson = packageConf;
 
     // Adding the `metapak` postinstall script via an idempotent way
     newPackageConf.scripts = packageConf.scripts || {};

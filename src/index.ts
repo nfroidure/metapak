@@ -19,6 +19,15 @@ import initProjectDir from './services/projectDir.js';
 import initResolveModule from './services/resolveModule.js';
 import initProgramOptions from './services/programOptions.js';
 import type { MetapakService } from './services/metapak.js';
+import type { PackageJSONTransformer } from './libs/utils.js';
+import type { PackageAssetsTransformer } from './services/assets.js';
+import type { GitHooksTransformer } from './services/gitHooks.js';
+
+export type {
+  PackageAssetsTransformer,
+  PackageJSONTransformer,
+  GitHooksTransformer,
+};
 
 export async function runMetapak() {
   try {

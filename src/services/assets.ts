@@ -1,15 +1,15 @@
 import { autoService } from 'knifecycle';
 import path from 'path';
 import { identity, mapConfigsSequentially } from '../libs/utils.js';
-import type { JsonObject } from 'type-fest';
 import { printStackTrace } from 'yerror';
-import { FSService } from './fs.js';
-import { ImporterService, LogService } from 'common-services';
-import { ResolveModuleService } from './resolveModule.js';
 import type Glob from 'glob';
+import type { FSService } from './fs.js';
+import type { ImporterService, LogService } from 'common-services';
+import type { ResolveModuleService } from './resolveModule.js';
+import type { MetapakPackageJson } from './packageConf.js';
 
 export type BuildPackageAssetsService = (
-  packageConf: JsonObject,
+  packageConf: MetapakPackageJson,
   metapakModulesSequence: string[],
   metapakModulesConfigs: Record<string, string[]>,
 ) => Promise<void>;
@@ -20,7 +20,12 @@ export type AssetFile = {
 };
 export type PackageAssetsTransformer = (
   file: AssetFile,
-  packageConf: JsonObject,
+  packageConf?: MetapakPackageJson,
+  services?: {
+    PROJECT_DIR: string;
+    log: LogService;
+    fs: FSService;
+  },
 ) => Promise<AssetFile>;
 
 export default autoService(initBuildPackageAssets);
@@ -41,7 +46,7 @@ async function initBuildPackageAssets({
   resolveModule: ResolveModuleService;
 }) {
   return async (
-    packageConf: JsonObject,
+    packageConf: MetapakPackageJson,
     metapakModulesSequence: string[],
     metapakModulesConfigs: Record<string, string[]>,
   ) => {
@@ -139,7 +144,6 @@ async function initBuildPackageAssets({
                 PROJECT_DIR,
                 log,
                 fs,
-                glob,
               },
               {
                 packageConf,
@@ -164,14 +168,20 @@ async function _processAsset(
     PROJECT_DIR,
     log,
     fs,
-    glob,
   }: {
     PROJECT_DIR: string;
     log: LogService;
     fs: FSService;
-    glob: (pattern: string, options: Glob.IOptions) => Promise<string[]>;
   },
-  { packageConf, transformers, assetsHash },
+  {
+    packageConf,
+    transformers,
+    assetsHash,
+  }: {
+    packageConf: MetapakPackageJson;
+    transformers: PackageAssetsTransformer[];
+    assetsHash: Record<string, AssetFile>;
+  },
   name: string,
 ) {
   const { dir } = assetsHash[name];
@@ -179,33 +189,32 @@ async function _processAsset(
 
   log('debug', 'Processing asset:', assetPath);
 
-  const sourceFile = {
+  const sourceFile: AssetFile = {
     name: name.startsWith('_dot_') ? name.replace('_dot_', '.') : name,
+    dir,
     data: (await fs.readFileAsync(assetPath)).toString(),
   };
-  const newFile = await transformers.reduce(
-    (curInputFilePromise, transformer) =>
-      curInputFilePromise.then((curInputFile) =>
-        transformer(curInputFile, packageConf, {
-          PROJECT_DIR,
-          fs,
-          log,
-          glob,
-        }),
-      ),
-    Promise.resolve(sourceFile),
-  );
+  let newFile = sourceFile;
+
+  for (const transformer of transformers) {
+    newFile = await transformer(newFile, packageConf, {
+      PROJECT_DIR,
+      fs,
+      log,
+    });
+  }
+
   const originalFile: AssetFile = {
     name: sourceFile.name,
     dir,
     data: (
-      await fs
+      (await fs
         .readFileAsync(path.join(PROJECT_DIR, newFile.name))
         .catch((err) => {
           log('debug', 'Asset not found:', path.join(dir, newFile.name));
           log('debug-stack', printStackTrace(err));
-          return '';
-        })
+          return Buffer.from('');
+        })) as Buffer
     ).toString(),
   };
 
@@ -227,7 +236,7 @@ async function _processAsset(
   await _ensureDirExists({ PROJECT_DIR, fs }, newFile);
   await fs.writeFileAsync(
     path.join(PROJECT_DIR, newFile.name),
-    Buffer.from(newFile.data),
+    Buffer.from(newFile.data || ''),
   );
 
   return true;

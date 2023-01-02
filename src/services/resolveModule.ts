@@ -2,11 +2,11 @@ import { YError } from 'yerror';
 import path from 'path';
 import { autoService } from 'knifecycle';
 import type { ResolveService } from 'common-services';
-import { JsonObject } from 'type-fest';
+import type { MetapakPackageJson } from './packageConf.js';
 
 export type ResolveModuleService = (
   metapakModuleName: string,
-  packageConf: JsonObject,
+  packageConf: MetapakPackageJson,
 ) => string;
 
 export default autoService(initResolveModule);

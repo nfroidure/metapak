@@ -1,27 +1,25 @@
 import { autoService } from 'knifecycle';
 import path from 'path';
-import { identity, mapConfigsSequentially } from '../libs/utils.js';
+import { identityAsync, mapConfigsSequentially } from '../libs/utils.js';
 import { printStackTrace } from 'yerror';
+import type { MetapakContext, MetapakPackageJson } from '../libs/utils.js';
 import type Glob from 'glob';
 import type { FSService } from './fs.js';
 import type { ImporterService, LogService } from 'common-services';
-import type { ResolveModuleService } from './resolveModule.js';
-import type { MetapakPackageJson } from './packageConf.js';
 
 export type BuildPackageAssetsService = (
-  packageConf: MetapakPackageJson,
-  metapakModulesSequence: string[],
-  metapakModulesConfigs: Record<string, string[]>,
+  packageConf: MetapakPackageJson<unknown, unknown>,
+  metapakContext: MetapakContext,
 ) => Promise<void>;
 export type AssetFile = {
   dir: string;
   name: string;
-  data?: string;
+  data: string;
 };
-export type PackageAssetsTransformer = (
+export type PackageAssetsTransformer<T, U> = (
   file: AssetFile,
-  packageConf?: MetapakPackageJson,
-  services?: {
+  packageConf: MetapakPackageJson<T, U>,
+  services: {
     PROJECT_DIR: string;
     log: LogService;
     fs: FSService;
@@ -36,87 +34,82 @@ async function initBuildPackageAssets({
   log,
   glob,
   importer,
-  resolveModule,
 }: {
   PROJECT_DIR: string;
   fs: FSService;
   log: LogService;
   glob: (pattern: string, options: Glob.IOptions) => Promise<string[]>;
-  importer: ImporterService<{ default: PackageAssetsTransformer }>;
-  resolveModule: ResolveModuleService;
+  importer: ImporterService<{
+    default: PackageAssetsTransformer<unknown, unknown>;
+  }>;
 }) {
   return async (
-    packageConf: MetapakPackageJson,
-    metapakModulesSequence: string[],
-    metapakModulesConfigs: Record<string, string[]>,
+    packageConf: MetapakPackageJson<unknown, unknown>,
+    metapakContext: MetapakContext,
   ) => {
     return mapConfigsSequentially<{
       assets: AssetFile[];
-      transformer: PackageAssetsTransformer;
-    }>(
-      metapakModulesSequence,
-      metapakModulesConfigs,
-      async (metapakModuleName, metapakModuleConfig) => {
-        const modulePath = resolveModule(metapakModuleName, packageConf);
-        const packageAssetsDir = path.join(
-          modulePath,
-          'src',
-          metapakModuleConfig,
-          'assets',
-        );
-        const packageAssetsTransformerPath = path.join(
-          modulePath,
-          'src',
-          metapakModuleConfig,
-          'assets.js',
-        );
-        let transformer: PackageAssetsTransformer;
+      transformer: PackageAssetsTransformer<unknown, unknown>;
+    }>(metapakContext, async (metapakModuleName, metapakConfigName) => {
+      const packageAssetsDir = path.join(
+        metapakContext.modulesConfigs[metapakModuleName].base,
+        metapakContext.modulesConfigs[metapakModuleName].assetsDir,
+        metapakConfigName,
+        'assets',
+      );
+      const packageAssetsTransformerPath = path.join(
+        metapakContext.modulesConfigs[metapakModuleName].base,
+        metapakContext.modulesConfigs[metapakModuleName].srcDir,
+        metapakConfigName,
+        'assets.js',
+      );
+      let transformer: PackageAssetsTransformer<unknown, unknown>;
 
-        try {
-          transformer = (await importer(packageAssetsTransformerPath)).default;
-        } catch (err) {
+      try {
+        transformer = (await importer(packageAssetsTransformerPath)).default;
+      } catch (err) {
+        log(
+          'debug',
+          'No asset tranformation found at:',
+          packageAssetsTransformerPath,
+        );
+        log('debug-stack', printStackTrace(err));
+        transformer = identityAsync;
+      }
+
+      try {
+        const assetsNames = await glob('**/*', {
+          cwd: packageAssetsDir,
+          dot: true,
+          nodir: true,
+        });
+
+        if (assetsNames.some((asset) => '.gitignore' === asset)) {
           log(
-            'debug',
-            'No asset tranformation found at:',
-            packageAssetsTransformerPath,
+            'warning',
+            '`.gitignore` assets may not work, use `_dot_` instead of a raw `.`',
           );
-          log('debug-stack', printStackTrace(err));
-          transformer = identity;
+          log(
+            'warning',
+            'in your `assets` folder, metapak will care to rename them',
+          );
+          log(
+            'warning',
+            'correctly. See https://github.com/npm/npm/issues/15660',
+          );
         }
-
-        try {
-          const assetsNames = await glob('**/*', {
-            cwd: packageAssetsDir,
-            dot: true,
-            nodir: true,
-          });
-
-          if (assetsNames.some((asset) => '.gitignore' === asset)) {
-            log(
-              'warning',
-              '`.gitignore` assets may not work, use `_dot_` instead of a raw `.`',
-            );
-            log(
-              'warning',
-              'in your `assets` folder, metapak will care to rename them',
-            );
-            log(
-              'warning',
-              'correctly. See https://github.com/npm/npm/issues/15660',
-            );
-          }
-          const assets: AssetFile[] = assetsNames.map((asset) => ({
-            dir: packageAssetsDir,
-            name: asset,
-          }));
-          return { assets, transformer };
-        } catch (err) {
-          log('debug', 'No assets found at:', packageAssetsDir);
-          log('debug-stack', printStackTrace(err));
-          return { assets: [], transformer };
-        }
-      },
-    )
+        const assets: AssetFile[] = assetsNames.map((asset) => ({
+          dir: packageAssetsDir,
+          name: asset,
+          data: '',
+        }));
+        return { assets, transformer };
+      } catch (err) {
+        log('debug', 'No assets found at:', packageAssetsDir);
+        log('debug-stack', printStackTrace(err));
+        return { assets: [], transformer };
+      }
+    })
       .then((assetsDirsGroups) => {
         return assetsDirsGroups.reduce(
           (combined, { assets, transformer }) => ({
@@ -125,7 +118,7 @@ async function initBuildPackageAssets({
           }),
           { assets: [], transformers: [] } as {
             assets: AssetFile[];
-            transformers: PackageAssetsTransformer[];
+            transformers: PackageAssetsTransformer<unknown, unknown>[];
           },
         );
       })
@@ -178,8 +171,8 @@ async function _processAsset(
     transformers,
     assetsHash,
   }: {
-    packageConf: MetapakPackageJson;
-    transformers: PackageAssetsTransformer[];
+    packageConf: MetapakPackageJson<unknown, unknown>;
+    transformers: PackageAssetsTransformer<unknown, unknown>[];
     assetsHash: Record<string, AssetFile>;
   },
   name: string,

@@ -1,15 +1,16 @@
 import path from 'path';
 import { printStackTrace, YError } from 'yerror';
 import { autoService } from 'knifecycle';
-import type { LogService } from 'common-services';
+import type {
+  MetapakContext,
+  MetapakModuleConfigs,
+  MetapakPackageJson,
+} from '../libs/utils.js';
+import type { LogService, ResolveService } from 'common-services';
 import type { FSService } from './fs.js';
-import type { ResolveModuleService } from './resolveModule.js';
 import type { BuildPackageAssetsService } from './assets.js';
 import type { BuildPackageGitHooksService } from './gitHooks.js';
-import type {
-  MetapakPackageJson,
-  BuildPackageConfService,
-} from './packageConf.js';
+import type { BuildPackageConfService } from './packageConf.js';
 
 export type MetapakService = () => Promise<void>;
 
@@ -26,7 +27,7 @@ async function initMetapak({
   buildPackageConf,
   buildPackageAssets,
   buildPackageGitHooks,
-  resolveModule,
+  resolve,
 }: {
   ENV: Record<string, string>;
   PROJECT_DIR: string;
@@ -36,16 +37,33 @@ async function initMetapak({
   buildPackageConf: BuildPackageConfService;
   buildPackageAssets: BuildPackageAssetsService;
   buildPackageGitHooks: BuildPackageGitHooksService;
-  resolveModule: ResolveModuleService;
+  resolve: ResolveService;
 }): Promise<MetapakService> {
   return async function metapak() {
     try {
-      const packageConf = JSON.parse(
+      const basePackageConf = JSON.parse(
         (
           await fs.readFileAsync(path.join(PROJECT_DIR, 'package.json'))
         ).toString(),
-      ) as MetapakPackageJson;
-      const metapackConfigsSequence = packageConf.metapak?.configs || [];
+      );
+
+      if (!('metapak' in basePackageConf)) {
+        log(
+          'error',
+          `❌ - Metapak config not found in the project "package.json" file.`,
+        );
+        throw new YError('E_NO_METAPAK_CONFIG');
+      }
+
+      const packageConf = {
+        metapak: {
+          data: {},
+          config: [],
+          ...(basePackageConf.metapak || {}),
+        },
+        ...basePackageConf,
+      } as MetapakPackageJson<unknown, unknown>;
+
       const metapakModulesSequence = _getMetapakModulesSequence(
         { log },
         packageConf,
@@ -61,24 +79,47 @@ async function initMetapak({
         );
       }
 
-      const metapakModulesConfigs = await _getPackageMetapakModulesConfigs(
+      const metapakModulesConfigs = await readMetapakModulesConfigs(
         {
+          PROJECT_DIR,
           fs,
           log,
-          resolveModule,
+          resolve,
         },
         metapakModulesSequence,
-        metapackConfigsSequence,
         packageConf,
       );
 
+      const metapakConfigsSequence = (
+        packageConf.metapak?.configs || []
+      ).filter((configName) => {
+        const configFound = Object.keys(metapakModulesConfigs).some(
+          (aModuleName) =>
+            metapakModulesConfigs[aModuleName].configs.includes(configName),
+        );
+
+        if (!configFound) {
+          log(
+            'error',
+            `❌ - Metapak configs sequence refers to an unavailable config (${configName}).`,
+          );
+        }
+
+        return configFound;
+      });
+
+      const metapakContext: MetapakContext = {
+        modulesConfigs: metapakModulesConfigs,
+        modulesSequence: metapakModulesSequence,
+        configsSequence: metapakConfigsSequence,
+      };
       let packageConfBuildResult = false;
       let iteration = 0;
+
       do {
         packageConfBuildResult = await buildPackageConf(
           packageConf,
-          metapakModulesSequence,
-          metapakModulesConfigs,
+          metapakContext,
         );
         iteration++;
       } while (
@@ -100,16 +141,8 @@ async function initMetapak({
 
       const promises = [
         Promise.resolve(packageConfBuildResult),
-        buildPackageAssets(
-          packageConf,
-          metapakModulesSequence,
-          metapakModulesConfigs,
-        ),
-        buildPackageGitHooks(
-          packageConf,
-          metapakModulesSequence,
-          metapakModulesConfigs,
-        ),
+        buildPackageAssets(packageConf, metapakContext),
+        buildPackageGitHooks(packageConf, metapakContext),
       ];
 
       // Avoid stopping the process immediately for one failure
@@ -158,7 +191,7 @@ async function initMetapak({
 
 function _getMetapakModulesSequence(
   { log }: { log: LogService },
-  packageConf: MetapakPackageJson,
+  packageConf: MetapakPackageJson<unknown, unknown>,
 ) {
   const reg = new RegExp(/^(@.+\/)?metapak-/);
   const metapakModulesNames = Object.keys(
@@ -175,7 +208,7 @@ function _getMetapakModulesSequence(
 
 function _reorderMetapakModulesNames(
   { log }: { log: LogService },
-  packageConf: MetapakPackageJson,
+  packageConf: MetapakPackageJson<unknown, unknown>,
   metapakModulesNames: string[],
 ) {
   if (packageConf.metapak && packageConf.metapak.sequence) {
@@ -201,45 +234,80 @@ function _reorderMetapakModulesNames(
   return metapakModulesNames;
 }
 
-async function _getPackageMetapakModulesConfigs(
+async function readMetapakModulesConfigs(
   {
+    PROJECT_DIR,
     fs,
     log,
-    resolveModule,
-  }: { fs: FSService; log: LogService; resolveModule: ResolveModuleService },
+    resolve,
+  }: {
+    PROJECT_DIR: string;
+    fs: FSService;
+    log: LogService;
+    resolve: ResolveService;
+  },
   metapakModulesSequence: string[],
-  metapackConfigsSequence: string[],
-  packageConf: MetapakPackageJson,
-) {
-  const allModulesConfigs = metapakModulesSequence.reduce(
-    (metapakModulesConfigs, metapakModuleName) => {
-      const modulePath = path.join(
-        resolveModule(metapakModuleName, packageConf),
-        'src',
-      );
+  packageConf: MetapakPackageJson<unknown, unknown>,
+): Promise<MetapakModuleConfigs> {
+  const moduleConfigs: MetapakModuleConfigs = {};
 
-      metapakModulesConfigs[metapakModuleName] = fs
-        .readdirAsync(modulePath)
-        .then((metapakModuleConfigs) => {
-          metapakModuleConfigs = metapackConfigsSequence.filter(
-            (metapakModuleConfig) =>
-              metapakModuleConfigs.includes(metapakModuleConfig),
-          );
-          log(
-            'debug',
-            'Found configs for "' + metapakModuleName + '":',
-            metapakModuleConfigs,
-          );
-          return metapakModuleConfigs;
-        });
-      return metapakModulesConfigs;
-    },
-    {},
-  );
-  return await Object.keys(allModulesConfigs).reduce(async (p, key) => {
-    return {
-      ...(await p),
-      [key]: await allModulesConfigs[key],
+  for (const metapakModuleName of metapakModulesSequence) {
+    let base = '';
+
+    try {
+      // Cover the case a metapak plugin runs itself
+      if (metapakModuleName === packageConf.name) {
+        base = path.dirname(resolve(`${PROJECT_DIR}/package`));
+      } else {
+        base = path.dirname(resolve(`${metapakModuleName}/package`));
+      }
+    } catch (err) {
+      throw YError.wrap(
+        err as Error,
+        'E_MODULE_NOT_FOUND',
+        metapakModuleName,
+        packageConf.name,
+      );
+    }
+    const assetsDir = 'src';
+    const eventualBuildDir = path.join(base, 'dist');
+    let buildExists = false;
+
+    try {
+      await fs.accessAsync(eventualBuildDir);
+      buildExists = true;
+    } catch (err) {
+      log('debug', `🏗 - No build path found (${eventualBuildDir}).`);
+      log('debug-stack', printStackTrace(err));
+    }
+
+    const srcDir = buildExists ? 'dist' : 'src';
+    const fullSrcDir = path.join(base, srcDir);
+    let configs: string[] = [];
+
+    try {
+      configs = await fs.readdirAsync(fullSrcDir);
+    } catch (err) {
+      log(
+        'error',
+        `❌ - No configs found at "${fullSrcDir}" for the module "${metapakModuleName}".`,
+      );
+      log('error-stack', printStackTrace(err));
+      throw err;
+    }
+
+    moduleConfigs[metapakModuleName] = {
+      base,
+      assetsDir,
+      srcDir,
+      configs,
     };
-  }, Promise.resolve({}));
+    log(
+      'debug',
+      `📥 - Built config for "${metapakModuleName}:`,
+      moduleConfigs[metapakModuleName],
+    );
+  }
+
+  return moduleConfigs;
 }

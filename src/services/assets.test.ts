@@ -1,19 +1,28 @@
 import { describe, beforeEach, test, jest, expect } from '@jest/globals';
 import { Knifecycle, constant } from 'knifecycle';
-import initBuildPackageAssets, { PackageAssetsTransformer } from './assets.js';
+import initBuildPackageAssets from './assets.js';
+import type {
+  BuildPackageAssetsService,
+  PackageAssetsTransformer,
+} from './assets.js';
 import type { ImporterService, LogService } from 'common-services';
 import type { FSService } from './fs.js';
+import type { MetapakPackageJson } from '../libs/utils.js';
+import type { JsonObject } from 'type-fest';
 
 describe('buildPackageAssets', () => {
   const readFileAsync = jest.fn<FSService['readFileAsync']>();
   const writeFileAsync = jest.fn<FSService['writeFileAsync']>();
   const unlinkAsync = jest.fn<FSService['unlinkAsync']>();
   const mkdirpAsync = jest.fn<FSService['mkdirpAsync']>();
-  const importer =
-    jest.fn<ImporterService<{ default: PackageAssetsTransformer }>>();
+  const importer = jest.fn<
+    ImporterService<{
+      default: PackageAssetsTransformer<JsonObject, JsonObject>;
+    }>
+  >();
   const glob = jest.fn<() => Promise<string[]>>();
   const log = jest.fn<LogService>();
-  let $;
+  let $: Knifecycle;
 
   beforeEach(() => {
     readFileAsync.mockReset();
@@ -38,17 +47,16 @@ describe('buildPackageAssets', () => {
       }),
     );
     $.register(constant('importer', importer));
-    $.register(
-      constant(
-        'resolveModule',
-        (moduleName) => `project/dir/node_modules/${moduleName}`,
-      ),
-    );
     $.register(initBuildPackageAssets);
   });
 
   test('should work when data changed', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common', 'author'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValue({
       default: async (file) => {
@@ -63,14 +71,21 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValue(['lol']);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common', 'author'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,
@@ -92,17 +107,28 @@ describe('buildPackageAssets', () => {
               "nodir": true,
             },
           ],
+          [
+            "**/*",
+            {
+              "cwd": "project/dir/node_modules/metapak-http-server/src/author/assets",
+              "dot": true,
+              "nodir": true,
+            },
+          ],
         ],
         "importerCalls": [
           [
             "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
+          ],
+          [
+            "project/dir/node_modules/metapak-http-server/src/author/assets.js",
           ],
         ],
         "logCalls": [
           [
             "debug",
             "Processing asset:",
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
+            "project/dir/node_modules/metapak-http-server/src/author/assets/lol",
           ],
           [
             "debug",
@@ -113,7 +139,7 @@ describe('buildPackageAssets', () => {
         "mkdirpAsyncCalls": [],
         "readFileAsyncCalls": [
           [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
+            "project/dir/node_modules/metapak-http-server/src/author/assets/lol",
           ],
           [
             "project/dir/lol",
@@ -135,7 +161,12 @@ describe('buildPackageAssets', () => {
   });
 
   test('should rename _dot_ prefixed files', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValue({
       default: async (file) => {
@@ -150,14 +181,21 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValue(['_dot_gitignore']);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,
@@ -222,7 +260,12 @@ describe('buildPackageAssets', () => {
   });
 
   test('should warn on using .gitignore files', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValue({
       default: async (file) => {
@@ -237,14 +280,21 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValue(['.gitignore']);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,
@@ -321,7 +371,12 @@ describe('buildPackageAssets', () => {
   });
 
   test('should work whith several transformers', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValueOnce({
       default: async (file) => {
@@ -343,15 +398,27 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValueOnce([]);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-module1', 'metapak-module2'],
-      {
-        'metapak-module1': ['_common'],
-        'metapak-module2': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-module1', 'metapak-module2'],
+      modulesConfigs: {
+        'metapak-module1': {
+          base: 'project/dir/node_modules/metapak-module1',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
+        'metapak-module2': {
+          base: 'project/dir/node_modules/metapak-module2',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,
@@ -428,7 +495,12 @@ describe('buildPackageAssets', () => {
   });
 
   test('should work whith directories', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValue({
       default: async (file) => {
@@ -443,14 +515,21 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValue(['lol/wadup']);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,
@@ -519,7 +598,12 @@ describe('buildPackageAssets', () => {
   });
 
   test('should allow to rename assets with async transformers', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValue({
       default: async (file) => {
@@ -535,14 +619,21 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValue(['lol']);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,
@@ -607,7 +698,12 @@ describe('buildPackageAssets', () => {
   });
 
   test('should work when data did not change', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValue({
       default: async (file) => {
@@ -622,14 +718,21 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValue(['lol']);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,
@@ -681,7 +784,12 @@ describe('buildPackageAssets', () => {
   });
 
   test('should delete when data is empty', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValue({
       default: async (file) => {
@@ -696,14 +804,21 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValue(['lol']);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,
@@ -764,7 +879,12 @@ describe('buildPackageAssets', () => {
   });
 
   test('should not delete when data is empty and file is already  deleted', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValue({
       default: async (file) => {
@@ -779,14 +899,21 @@ describe('buildPackageAssets', () => {
     mkdirpAsync.mockResolvedValue(undefined);
     glob.mockResolvedValue(['lol']);
 
-    const { buildPackageAssets } = await $.run(['buildPackageAssets']);
-    const result = await buildPackageAssets(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageAssets } = await $.run<{
+      buildPackageAssets: BuildPackageAssetsService;
+    }>(['buildPackageAssets']);
+    const result = await buildPackageAssets(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       globCalls: glob.mock.calls,

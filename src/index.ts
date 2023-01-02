@@ -16,17 +16,24 @@ import initBuildPackageConf from './services/packageConf.js';
 import initBuildPackageAssets from './services/assets.js';
 import initBuildPackageGitHooks from './services/gitHooks.js';
 import initProjectDir from './services/projectDir.js';
-import initResolveModule from './services/resolveModule.js';
 import initProgramOptions from './services/programOptions.js';
 import type { MetapakService } from './services/metapak.js';
-import type { PackageJSONTransformer } from './libs/utils.js';
+import type {
+  MetapakPackageJson,
+  PackageJSONTransformer,
+} from './libs/utils.js';
 import type { PackageAssetsTransformer } from './services/assets.js';
 import type { GitHooksTransformer } from './services/gitHooks.js';
+import type { FSService } from './services/fs.js';
+import type { LogService } from 'common-services';
 
 export type {
+  MetapakPackageJson,
   PackageAssetsTransformer,
   PackageJSONTransformer,
   GitHooksTransformer,
+  FSService,
+  LogService,
 };
 
 export async function runMetapak() {
@@ -64,7 +71,6 @@ export async function prepareMetapak($ = new Knifecycle()) {
   $.register(initLogService);
   $.register(initImporterService);
   $.register(initResolveService);
-  $.register(initResolveModule);
   $.register(name('PROJECT_DIR', initProjectDir));
   $.register(name('GIT_HOOKS_DIR', autoService(initGitHooksDir)));
 

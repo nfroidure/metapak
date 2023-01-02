@@ -1,30 +1,50 @@
 import chalk from 'chalk';
 import { diffJson } from 'diff';
-import type { JsonValue, JsonObject } from 'type-fest';
+import type { JsonValue, JsonObject, PackageJson } from 'type-fest';
 
-export type PackageJSONTransformer = (packageJSON: JsonObject) => JsonObject;
+export type MetapakConfiguration<T = JsonObject> = {
+  configs: string[];
+  sequence?: string[];
+  data: T;
+};
+export type MetapakPackageJson<T, U> = PackageJson & {
+  metapak: MetapakConfiguration<T>;
+} & U;
+export type MetapakModuleConfigs = Record<
+  string,
+  {
+    base: string;
+    srcDir: string;
+    assetsDir: string;
+    configs: string[];
+  }
+>;
+export type MetapakContext = {
+  modulesConfigs: MetapakModuleConfigs;
+  modulesSequence: string[];
+  configsSequence: string[];
+};
+export type PackageJSONTransformer<T, U> = (
+  packageJSON: MetapakPackageJson<T, U>,
+) => MetapakPackageJson<T, U>;
 
-export const identity = (x) => x;
+export const identity = <T>(x: T): T => x;
+export const identityAsync = async <T>(x: T): Promise<T> => x;
 
 export async function mapConfigsSequentially<T>(
-  metapakModulesSequence: string[],
-  metapakModulesConfigs: Record<string, string[]>,
+  metapakContext: MetapakContext,
   fn: (metapakModuleName: string, metapakModuleConfig: string) => Promise<T>,
 ): Promise<T[]> {
-  const packageTransformers = await Promise.all(
-    metapakModulesSequence.map((metapakModuleName) =>
-      Promise.all(
-        metapakModulesConfigs[metapakModuleName].map((metapakModuleConfig) =>
-          fn(metapakModuleName, metapakModuleConfig),
-        ),
-      ),
-    ),
-  );
+  const transformers: T[] = [];
 
-  return packageTransformers.reduce(
-    (combined, packageTransformer) => combined.concat(packageTransformer),
-    [],
-  );
+  for (const configName of metapakContext.configsSequence) {
+    for (const moduleName of metapakContext.modulesSequence) {
+      const transformer = await fn(moduleName, configName);
+      transformers.push(transformer);
+    }
+  }
+
+  return transformers;
 }
 
 export function buildDiff(newData: JsonValue, originalData: JsonValue): string {

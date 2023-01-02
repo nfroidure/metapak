@@ -4,25 +4,17 @@ import { isDeepStrictEqual } from 'util';
 import path from 'path';
 import { mapConfigsSequentially, identity, buildDiff } from '../libs/utils.js';
 import { printStackTrace } from 'yerror';
+import type { MetapakContext } from '../libs/utils.js';
 import type { ImporterService, LogService } from 'common-services';
-import type { PackageJSONTransformer } from '../libs/utils.js';
-import type { ResolveModuleService } from './resolveModule.js';
+import type {
+  PackageJSONTransformer,
+  MetapakPackageJson,
+} from '../libs/utils.js';
 import type { FSService } from './fs.js';
-import type { JsonObject, PackageJson } from 'type-fest';
-
-export type MetapakConfiguration<T = JsonObject> = {
-  configs: string[];
-  sequence: string[];
-  data: T;
-};
-export type MetapakPackageJson<T = JsonObject> = PackageJson & {
-  metapak?: MetapakConfiguration<T>;
-};
 
 export type BuildPackageConfService = (
-  packageConf: MetapakPackageJson,
-  metapakModulesSequence: string[],
-  metapakModulesConfigs: Record<string, string[]>,
+  packageConf: MetapakPackageJson<unknown, unknown>,
+  metapakContext: MetapakContext,
 ) => Promise<boolean>;
 
 const METAPAK_SCRIPT = 'metapak';
@@ -34,33 +26,31 @@ async function initBuildPackageConf({
   fs,
   importer,
   log,
-  resolveModule,
 }: {
   PROJECT_DIR: string;
   fs: Pick<FSService, 'writeFileAsync'>;
-  importer: ImporterService<{ default: PackageJSONTransformer }>;
+  importer: ImporterService<{
+    default: PackageJSONTransformer<unknown, unknown>;
+  }>;
   log: LogService;
-  resolveModule: ResolveModuleService;
 }): Promise<BuildPackageConfService> {
   return async (
-    packageConf: MetapakPackageJson,
-    metapakModulesSequence: string[],
-    metapakModulesConfigs: Record<string, string[]>,
+    packageConf: MetapakPackageJson<unknown, unknown>,
+    metapakContext: MetapakContext,
   ) => {
     const originalDependencies = Object.keys(packageConf.dependencies || {});
     const originalPackageConf = JSON.stringify(packageConf, null, 2);
 
     const packageTransformers = await mapConfigsSequentially(
-      metapakModulesSequence,
-      metapakModulesConfigs,
+      metapakContext,
       async (
         metapakModuleName: string,
-        metapakModuleConfig: string,
-      ): Promise<PackageJSONTransformer> => {
+        metapakConfigName: string,
+      ): Promise<PackageJSONTransformer<unknown, unknown>> => {
         const packageTransformPath = path.join(
-          resolveModule(metapakModuleName, packageConf),
-          'src',
-          metapakModuleConfig,
+          metapakContext.modulesConfigs[metapakModuleName].base,
+          metapakContext.modulesConfigs[metapakModuleName].srcDir,
+          metapakConfigName,
           'package.js',
         );
 
@@ -84,7 +74,7 @@ async function initBuildPackageConf({
       },
     );
 
-    let newPackageConf: MetapakPackageJson = packageConf;
+    let newPackageConf: MetapakPackageJson<unknown, unknown> = packageConf;
 
     // Adding the `metapak` postinstall script via an idempotent way
     newPackageConf.scripts = packageConf.scripts || {};

@@ -1,27 +1,30 @@
 import { describe, beforeEach, test, jest, expect } from '@jest/globals';
 import { Knifecycle, constant } from 'knifecycle';
 import initBuildPackageConf from './packageConf.js';
+import type { BuildPackageConfService } from './packageConf.js';
 import type { FSService } from './fs.js';
 import type { ImporterService, LogService } from 'common-services';
-import type { ResolveModuleService } from './resolveModule.js';
-import { PackageJSONTransformer } from '../libs/utils.js';
+import type {
+  MetapakPackageJson,
+  PackageJSONTransformer,
+} from '../libs/utils.js';
+import type { JsonObject } from 'type-fest';
 
 const METAPAK_SCRIPT = 'metapak';
 
 describe('buildPackageConf', () => {
-  let $;
   const writeFileAsync = jest.fn<FSService['writeFileAsync']>();
-  const importer =
-    jest.fn<ImporterService<{ default: PackageJSONTransformer }>>();
-  const resolveModule = jest.fn<ResolveModuleService>(
-    (moduleName) => `project/dir/node_modules/${moduleName}`,
-  );
+  const importer = jest.fn<
+    ImporterService<{
+      default: PackageJSONTransformer<JsonObject, JsonObject>;
+    }>
+  >();
   const log = jest.fn<LogService>();
+  let $: Knifecycle;
 
   beforeEach(() => {
     writeFileAsync.mockReset();
     importer.mockReset();
-    resolveModule.mockClear();
     log.mockReset();
 
     $ = new Knifecycle();
@@ -34,12 +37,16 @@ describe('buildPackageConf', () => {
       }),
     );
     $.register(constant('importer', importer));
-    $.register(constant('resolveModule', resolveModule));
     $.register(initBuildPackageConf);
   });
 
   test('should work with one module and one config', async () => {
-    const packageConf = {};
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
+    };
 
     importer.mockResolvedValueOnce({
       default: (packageConf) => {
@@ -49,14 +56,21 @@ describe('buildPackageConf', () => {
     });
     writeFileAsync.mockResolvedValueOnce(undefined);
 
-    const { buildPackageConf } = await $.run(['buildPackageConf']);
-    const result = await buildPackageConf(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageConf } = await $.run<{
+      buildPackageConf: BuildPackageConfService;
+    }>(['buildPackageConf']);
+    const result = await buildPackageConf(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       importerCalls: importer.mock.calls,
@@ -86,6 +100,12 @@ describe('buildPackageConf', () => {
           [
             "project/dir/package.json",
             "{
+        "metapak": {
+          "configs": [
+            "_common"
+          ],
+          "data": {}
+        },
         "scripts": {
           "metapak": "metapak"
         },
@@ -99,7 +119,11 @@ describe('buildPackageConf', () => {
   });
 
   test('should work with no tranformations', async () => {
-    const packageConf = {
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common'],
+        data: {},
+      },
       scripts: {
         metapak: METAPAK_SCRIPT,
       },
@@ -108,14 +132,21 @@ describe('buildPackageConf', () => {
     importer.mockRejectedValue(new Error('E_ERROR'));
     writeFileAsync.mockResolvedValue(undefined);
 
-    const { buildPackageConf } = await $.run(['buildPackageConf']);
-    const result = await buildPackageConf(
-      packageConf,
-      ['metapak-http-server'],
-      {
-        'metapak-http-server': ['_common'],
+    const { buildPackageConf } = await $.run<{
+      buildPackageConf: BuildPackageConfService;
+    }>(['buildPackageConf']);
+    const result = await buildPackageConf(packageConf, {
+      configsSequence: ['_common'],
+      modulesSequence: ['metapak-http-server'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
       },
-    );
+    });
 
     expect({
       importerCalls: importer.mock.calls,
@@ -142,7 +173,11 @@ describe('buildPackageConf', () => {
   });
 
   test('should work with several modules and configs', async () => {
-    const packageConf = {
+    const packageConf: MetapakPackageJson<JsonObject, JsonObject> = {
+      metapak: {
+        configs: ['_common', 'author'],
+        data: {},
+      },
       scripts: {
         metapak: METAPAK_SCRIPT,
       },
@@ -168,15 +203,27 @@ describe('buildPackageConf', () => {
     });
     writeFileAsync.mockResolvedValue(undefined);
 
-    const { buildPackageConf } = await $.run(['buildPackageConf']);
-    const result = await buildPackageConf(
-      packageConf,
-      ['metapak-http-server', 'metapak-schmilbik'],
-      {
-        'metapak-http-server': ['_common'],
-        'metapak-schmilbik': ['_common', 'author'],
+    const { buildPackageConf } = await $.run<{
+      buildPackageConf: BuildPackageConfService;
+    }>(['buildPackageConf']);
+    const result = await buildPackageConf(packageConf, {
+      configsSequence: ['_common', 'author'],
+      modulesSequence: ['metapak-http-server', 'metapak-schmilbik'],
+      modulesConfigs: {
+        'metapak-http-server': {
+          base: 'project/dir/node_modules/metapak-http-server',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common'],
+        },
+        'metapak-schmilbik': {
+          base: 'project/dir/node_modules/metapak-schmilbik',
+          srcDir: 'src',
+          assetsDir: 'src',
+          configs: ['_common', 'author'],
+        },
       },
-    );
+    });
 
     expect({
       importerCalls: importer.mock.calls,
@@ -193,6 +240,9 @@ describe('buildPackageConf', () => {
             "project/dir/node_modules/metapak-schmilbik/src/_common/package.js",
           ],
           [
+            "project/dir/node_modules/metapak-http-server/src/author/package.js",
+          ],
+          [
             "project/dir/node_modules/metapak-schmilbik/src/author/package.js",
           ],
         ],
@@ -207,7 +257,11 @@ describe('buildPackageConf', () => {
           ],
           [
             "debug",
-            "Package tranformation found at: project/dir/node_modules/metapak-schmilbik/src/author/package.js",
+            "Package tranformation found at: project/dir/node_modules/metapak-http-server/src/author/package.js",
+          ],
+          [
+            "debug",
+            "No package tranformation found at: project/dir/node_modules/metapak-schmilbik/src/author/package.js",
           ],
           [
             "debug",
@@ -220,6 +274,13 @@ describe('buildPackageConf', () => {
           [
             "project/dir/package.json",
             "{
+        "metapak": {
+          "configs": [
+            "_common",
+            "author"
+          ],
+          "data": {}
+        },
         "scripts": {
           "metapak": "metapak"
         },

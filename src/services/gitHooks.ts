@@ -2,35 +2,35 @@ import path from 'path';
 import { autoService } from 'knifecycle';
 import { mapConfigsSequentially, identity } from '../libs/utils.js';
 import { printStackTrace } from 'yerror';
+import type { MetapakPackageJson, MetapakContext } from '../libs/utils.js';
 import type { FSService } from './fs.js';
 import type { ImporterService, LogService } from 'common-services';
-import type { ResolveModuleService } from './resolveModule.js';
-import type { MetapakPackageJson } from './packageConf.js';
 
 export default autoService(initBuildPackageGitHooks);
 
-export type HooksHash = Record<
-  | 'applypatch-msg'
-  | 'post-update'
-  | 'pre-commit'
-  | 'pre-rebase'
-  | 'commit-msg'
-  | 'pre-applypatch'
-  | 'prepare-commit-msg'
-  | 'update'
-  | 'commit-msg'
-  | 'pre-commit'
-  | 'pre-push',
-  string[]
+export type HooksHash = Partial<
+  Record<
+    | 'applypatch-msg'
+    | 'post-update'
+    | 'pre-commit'
+    | 'pre-rebase'
+    | 'commit-msg'
+    | 'pre-applypatch'
+    | 'prepare-commit-msg'
+    | 'update'
+    | 'commit-msg'
+    | 'pre-commit'
+    | 'pre-push',
+    string[]
+  >
 >;
-export type GitHooksTransformer = (
+export type GitHooksTransformer<T, U> = (
   hooks: HooksHash,
-  packageConf: MetapakPackageJson,
+  packageConf: MetapakPackageJson<T, U>,
 ) => HooksHash;
 export type BuildPackageGitHooksService = (
-  packageConf: MetapakPackageJson,
-  metapakModulesSequence: string[],
-  metapakModulesConfigs: Record<string, string[]>,
+  packageConf: MetapakPackageJson<unknown, unknown>,
+  metapakContext: MetapakContext,
 ) => Promise<void>;
 
 async function initBuildPackageGitHooks({
@@ -41,7 +41,6 @@ async function initBuildPackageGitHooks({
   EOL,
   log,
   importer,
-  resolveModule,
 }: {
   ENV: Record<string, string>;
   PROJECT_DIR: string;
@@ -49,13 +48,11 @@ async function initBuildPackageGitHooks({
   fs: FSService;
   EOL: string;
   log: LogService;
-  importer: ImporterService<{ default: GitHooksTransformer }>;
-  resolveModule: ResolveModuleService;
+  importer: ImporterService<{ default: GitHooksTransformer<unknown, unknown> }>;
 }): Promise<BuildPackageGitHooksService> {
   return async (
-    packageConf: MetapakPackageJson,
-    metapakModulesSequence: string[],
-    metapakModulesConfigs: Record<string, string[]>,
+    packageConf: MetapakPackageJson<unknown, unknown>,
+    metapakContext: MetapakContext,
   ): Promise<void> => {
     // Avoiding CI since it does not make sense
     if (ENV.CI) {
@@ -69,16 +66,15 @@ async function initBuildPackageGitHooks({
     }
 
     const hooksBuilders = await mapConfigsSequentially(
-      metapakModulesSequence,
-      metapakModulesConfigs,
+      metapakContext,
       async (
         metapakModuleName: string,
-        metapakModuleConfig: string,
-      ): Promise<GitHooksTransformer> => {
+        metapakConfigName: string,
+      ): Promise<GitHooksTransformer<unknown, unknown>> => {
         const packageHooksPath = path.join(
-          resolveModule(metapakModuleName, packageConf),
-          'src',
-          metapakModuleConfig,
+          metapakContext.modulesConfigs[metapakModuleName].base,
+          metapakContext.modulesConfigs[metapakModuleName].srcDir,
+          metapakConfigName,
           'hooks.js',
         );
         try {
@@ -87,7 +83,7 @@ async function initBuildPackageGitHooks({
           log('debug', 'No hooks found at:', packageHooksPath);
           log('debug-stack', printStackTrace(err));
         }
-        return identity as GitHooksTransformer;
+        return identity as GitHooksTransformer<unknown, unknown>;
       },
     );
     const hooks = await hooksBuilders.reduce(

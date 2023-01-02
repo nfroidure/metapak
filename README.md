@@ -233,6 +233,11 @@ behavior by adding the following property to your Big Brother's projects:
 }
 ```
 
+**Note:** You can use a built project for your `metapak` module but in this
+case, you will have to use the `dist` folder instead of the `src` one to put
+your configs. Assets remain in the `src` one so do not forget to bundle the
+`src` folder into your final NPM module.
+
 ## Contributing
 
 To contribute to Metapak, simply clone this repository and run the tests. To

@@ -1,3 +1,13 @@
+## [4.0.6](https://github.com/nfroidure/metapak/compare/v4.0.5...v4.0.6) (2023-01-03)
+
+
+### Features
+
+* **build:** allow to use built metapak modules ([b614983](https://github.com/nfroidure/metapak/commit/b61498319e642d42fd840bf987bab0591c10d5f0))
+* **types:** add more typing and export it ([8011ef2](https://github.com/nfroidure/metapak/commit/8011ef2a34232eed377fa4e56ffcc5635e94e41e))
+
+
+
 ## [4.0.5](https://github.com/nfroidure/metapak/compare/v4.0.4...v4.0.5) (2023-01-01)
 
 

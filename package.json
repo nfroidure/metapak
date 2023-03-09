@@ -1,13 +1,4 @@
 {
-  "name": "metapak",
-  "version": "4.0.6",
-  "description": "Node modules authoring made easy.",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "bin": {
-    "metapak": "bin/metapak.js"
-  },
   "metapak": {
     "configs": [
       "main",
@@ -31,8 +22,17 @@
       ]
     }
   },
+  "name": "metapak",
+  "version": "4.0.6",
+  "description": "Node modules authoring made easy.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "metapak": "bin/metapak.js"
+  },
   "scripts": {
-    "build": "rimraf -f 'dist' && tsc --outDir dist",
+    "build": "rimraf 'dist' && tsc --outDir dist",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
     "cover": "npm run jest -- --coverage",
@@ -79,22 +79,22 @@
     "yerror": "^6.2.1"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.36.0",
-    "@typescript-eslint/parser": "^5.36.0",
-    "commitizen": "^4.2.5",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "commitizen": "^4.3.0",
     "conventional-changelog-cli": "^2.2.2",
     "coveralls": "^3.1.1",
     "cz-conventional-changelog": "^3.3.0",
-    "esbuild": "^0.15.6",
+    "esbuild": "^0.17.11",
     "esbuild-jest": "^0.5.0",
-    "eslint": "^8.23.0",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "jest": "^29.0.1",
-    "metapak-nfroidure": "12.3.0",
-    "prettier": "^2.7.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.8.2"
+    "jest": "^29.5.0",
+    "metapak-nfroidure": "13.1.1",
+    "prettier": "^2.8.4",
+    "rimraf": "^4.4.0",
+    "typescript": "^4.9.5"
   },
   "engines": {
     "node": ">=16.15.0"

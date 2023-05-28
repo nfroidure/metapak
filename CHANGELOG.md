@@ -1,3 +1,7 @@
+## [5.0.1](https://github.com/nfroidure/metapak/compare/v5.0.0...v5.0.1) (2023-05-28)
+
+
+
 # [5.0.0](https://github.com/nfroidure/metapak/compare/v4.1.0...v5.0.0) (2023-05-27)
 
 

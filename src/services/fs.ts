@@ -17,6 +17,7 @@ export type FSService = {
     data: Buffer,
     options?: WriteFileOptions,
   ) => Promise<void>;
+  constants: typeof fs.constants;
 };
 
 async function initFS({
@@ -26,23 +27,38 @@ async function initFS({
   programOptions: ProgramOptionsService;
   log: LogService;
 }): Promise<FSService> {
-  return Promise.resolve({
+  return {
     mkdirpAsync: async (path: string) => {
       if (programOptions.dryRun) {
-        log('warning', 'Create a folder:', path);
+        log('warning', '📂 - Create a folder:', path);
         return;
       }
-      if (programOptions.safe) {
-        throw new YError('E_UNEXPECTED_CHANGES', path);
-      }
-      await mkdirp(path);
+      await mkdirp(path, {
+        fs: {
+          mkdir: ((
+            ...args: [
+              path: string,
+              callback: (
+                err: NodeJS.ErrnoException | null,
+                path?: string,
+              ) => void,
+            ]
+          ) => {
+            if (programOptions.safe) {
+              throw new YError('E_UNEXPECTED_CHANGES', args[0]);
+            }
+            fs.mkdir(...args);
+          }) as typeof fs.mkdir,
+          stat: fs.stat,
+        },
+      });
     },
     readFileAsync: fs.promises.readFile,
     accessAsync: fs.promises.access,
     readdirAsync: fs.promises.readdir,
     unlinkAsync: async (path) => {
       if (programOptions.dryRun) {
-        log('warning', 'Delete a file:', path);
+        log('warning', '⌫ - Delete a file:', path);
         return;
       }
       if (programOptions.safe) {
@@ -52,7 +68,7 @@ async function initFS({
     },
     writeFileAsync: async (path: string, data: Buffer) => {
       if (programOptions.dryRun) {
-        log('warning', 'Modify a file:', path);
+        log('warning', '💾 - Modify a file:', path);
         return;
       }
       if (programOptions.safe) {
@@ -61,7 +77,7 @@ async function initFS({
       await fs.promises.writeFile(path, data);
     },
     constants: fs.constants,
-  });
+  };
 }
 
 export default name('fs', autoService(initFS));

@@ -70,7 +70,7 @@ async function initBuildPackageAssets({
       } catch (err) {
         log(
           'debug',
-          'No asset tranformation found at:',
+          '🤷 - No asset tranformation found at:',
           packageAssetsTransformerPath,
         );
         log('debug-stack', printStackTrace(err));
@@ -87,15 +87,7 @@ async function initBuildPackageAssets({
         if (assetsNames.some((asset) => '.gitignore' === asset)) {
           log(
             'warning',
-            '`.gitignore` assets may not work, use `_dot_` instead of a raw `.`',
-          );
-          log(
-            'warning',
-            'in your `assets` folder, metapak will care to rename them',
-          );
-          log(
-            'warning',
-            'correctly. See https://github.com/npm/npm/issues/15660',
+            '⚠️ - `.gitignore` assets may not work, use `_dot_` instead of a raw `.` in your `assets` folder, metapak will care to rename them correctly. See https://github.com/npm/npm/issues/15660',
           );
         }
         const assets: AssetFile[] = assetsNames.map((asset) => ({
@@ -105,7 +97,7 @@ async function initBuildPackageAssets({
         }));
         return { assets, transformer };
       } catch (err) {
-        log('debug', 'No assets found at:', packageAssetsDir);
+        log('debug', '🤷 - No assets found at:', packageAssetsDir);
         log('debug-stack', printStackTrace(err));
         return { assets: [], transformer };
       }
@@ -204,7 +196,7 @@ async function _processAsset(
       (await fs
         .readFileAsync(path.join(PROJECT_DIR, newFile.name))
         .catch((err) => {
-          log('debug', 'Asset not found:', path.join(dir, newFile.name));
+          log('debug', '🤷 - Asset not found:', path.join(dir, newFile.name));
           log('debug-stack', printStackTrace(err));
           return Buffer.from('');
         })) as Buffer
@@ -217,7 +209,7 @@ async function _processAsset(
 
   if ('' === newFile.data) {
     if (originalFile.data) {
-      log('debug', 'Deleting asset:', path.join(PROJECT_DIR, newFile.name));
+      log('debug', '⌫ - Deleting asset:', path.join(PROJECT_DIR, newFile.name));
       await fs.unlinkAsync(path.join(PROJECT_DIR, newFile.name));
 
       return true;
@@ -225,7 +217,7 @@ async function _processAsset(
     return false;
   }
 
-  log('debug', 'Saving asset:', path.join(PROJECT_DIR, newFile.name));
+  log('debug', '💾 - Saving asset:', path.join(PROJECT_DIR, newFile.name));
   await _ensureDirExists({ PROJECT_DIR, fs }, newFile);
   await fs.writeFileAsync(
     path.join(PROJECT_DIR, newFile.name),

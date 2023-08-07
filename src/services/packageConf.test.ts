@@ -87,11 +87,11 @@ describe('buildPackageConf', () => {
         "logCalls": [
           [
             "debug",
-            "Package tranformation found at: project/dir/node_modules/metapak-http-server/src/_common/package.js",
+            "✅ - Package tranformation found at: project/dir/node_modules/metapak-http-server/src/_common/package.js",
           ],
           [
             "debug",
-            "Saving the package:",
+            "💾 - Saving the package:",
             "project/dir/package.json",
           ],
         ],
@@ -163,7 +163,7 @@ describe('buildPackageConf', () => {
         "logCalls": [
           [
             "debug",
-            "No package tranformation found at: project/dir/node_modules/metapak-http-server/src/_common/package.js",
+            "🤷 - No package tranformation found at: project/dir/node_modules/metapak-http-server/src/_common/package.js",
           ],
         ],
         "result": false,
@@ -249,23 +249,23 @@ describe('buildPackageConf', () => {
         "logCalls": [
           [
             "debug",
-            "Package tranformation found at: project/dir/node_modules/metapak-http-server/src/_common/package.js",
+            "✅ - Package tranformation found at: project/dir/node_modules/metapak-http-server/src/_common/package.js",
           ],
           [
             "debug",
-            "Package tranformation found at: project/dir/node_modules/metapak-schmilbik/src/_common/package.js",
+            "✅ - Package tranformation found at: project/dir/node_modules/metapak-schmilbik/src/_common/package.js",
           ],
           [
             "debug",
-            "Package tranformation found at: project/dir/node_modules/metapak-http-server/src/author/package.js",
+            "✅ - Package tranformation found at: project/dir/node_modules/metapak-http-server/src/author/package.js",
           ],
           [
             "debug",
-            "No package tranformation found at: project/dir/node_modules/metapak-schmilbik/src/author/package.js",
+            "🤷 - No package tranformation found at: project/dir/node_modules/metapak-schmilbik/src/author/package.js",
           ],
           [
             "debug",
-            "Saving the package:",
+            "💾 - Saving the package:",
             "project/dir/package.json",
           ],
         ],

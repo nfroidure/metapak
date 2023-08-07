@@ -80,7 +80,7 @@ async function initBuildPackageGitHooks({
         try {
           return (await importer(packageHooksPath)).default;
         } catch (err) {
-          log('debug', 'No hooks found at:', packageHooksPath);
+          log('debug', '🤷 - No hooks found at:', packageHooksPath);
           log('debug-stack', printStackTrace(err));
         }
         return identity as GitHooksTransformer<unknown, unknown>;
@@ -108,7 +108,7 @@ async function initBuildPackageGitHooks({
         try {
           currentHookContent = (await fs.readFileAsync(hookPath)).toString();
         } catch (err) {
-          log('debug', 'No existing hook found:', hookPath);
+          log('debug', '🤷 - No existing hook found:', hookPath);
           log('debug-stack', printStackTrace(err));
         }
         if (currentHookContent !== hookContent) {

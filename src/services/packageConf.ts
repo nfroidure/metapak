@@ -59,14 +59,14 @@ async function initBuildPackageConf({
 
           log(
             'debug',
-            `Package tranformation found at: ${packageTransformPath}`,
+            `✅ - Package tranformation found at: ${packageTransformPath}`,
           );
 
           return transformer;
         } catch (err) {
           log(
             'debug',
-            `No package tranformation found at: ${packageTransformPath}`,
+            `🤷 - No package tranformation found at: ${packageTransformPath}`,
           );
           log('debug-stack', printStackTrace(err));
         }
@@ -91,7 +91,10 @@ async function initBuildPackageConf({
         .sort()
         .join() !== originalDependencies.sort().join()
     ) {
-      log('warning', 'Changing dependencies with metapak is not recommended!');
+      log(
+        'warning',
+        '⚠️ - Changing dependencies with metapak is not recommended!',
+      );
     }
     if (newPackageConf.dependencies) {
       newPackageConf.dependencies = sortKeys(newPackageConf.dependencies);
@@ -114,7 +117,11 @@ async function initBuildPackageConf({
 
     log('debug-stack', buildDiff(originalPackageConf, data));
 
-    log('debug', 'Saving the package:', path.join(PROJECT_DIR, 'package.json'));
+    log(
+      'debug',
+      '💾 - Saving the package:',
+      path.join(PROJECT_DIR, 'package.json'),
+    );
     await fs.writeFileAsync(
       path.join(PROJECT_DIR, 'package.json'),
       Buffer.from(data, 'utf-8'),

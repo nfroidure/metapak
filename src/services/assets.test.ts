@@ -132,7 +132,7 @@ describe('buildPackageAssets', () => {
           ],
           [
             "debug",
-            "Saving asset:",
+            "💾 - Saving asset:",
             "project/dir/lol",
           ],
         ],
@@ -231,7 +231,7 @@ describe('buildPackageAssets', () => {
           ],
           [
             "debug",
-            "Saving asset:",
+            "💾 - Saving asset:",
             "project/dir/.gitignore",
           ],
         ],
@@ -325,15 +325,7 @@ describe('buildPackageAssets', () => {
         "logCalls": [
           [
             "warning",
-            "\`.gitignore\` assets may not work, use \`_dot_\` instead of a raw \`.\`",
-          ],
-          [
-            "warning",
-            "in your \`assets\` folder, metapak will care to rename them",
-          ],
-          [
-            "warning",
-            "correctly. See https://github.com/npm/npm/issues/15660",
+            "⚠️ - \`.gitignore\` assets may not work, use \`_dot_\` instead of a raw \`.\` in your \`assets\` folder, metapak will care to rename them correctly. See https://github.com/npm/npm/issues/15660",
           ],
           [
             "debug",
@@ -342,7 +334,7 @@ describe('buildPackageAssets', () => {
           ],
           [
             "debug",
-            "Saving asset:",
+            "💾 - Saving asset:",
             "project/dir/.gitignore",
           ],
         ],
@@ -465,7 +457,7 @@ describe('buildPackageAssets', () => {
           ],
           [
             "debug",
-            "Saving asset:",
+            "💾 - Saving asset:",
             "project/dir/.gitignore",
           ],
         ],
@@ -565,7 +557,7 @@ describe('buildPackageAssets', () => {
           ],
           [
             "debug",
-            "Saving asset:",
+            "💾 - Saving asset:",
             "project/dir/lol/wadup",
           ],
         ],
@@ -669,7 +661,7 @@ describe('buildPackageAssets', () => {
           ],
           [
             "debug",
-            "Saving asset:",
+            "💾 - Saving asset:",
             "project/dir/notlol",
           ],
         ],
@@ -854,7 +846,7 @@ describe('buildPackageAssets', () => {
           ],
           [
             "debug",
-            "Deleting asset:",
+            "⌫ - Deleting asset:",
             "project/dir/lol",
           ],
         ],
@@ -949,7 +941,7 @@ describe('buildPackageAssets', () => {
           ],
           [
             "debug",
-            "Asset not found:",
+            "🤷 - Asset not found:",
             "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
           ],
         ],

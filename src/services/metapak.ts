@@ -70,11 +70,11 @@ async function initMetapak({
       );
 
       if (!metapakModulesSequence.length) {
-        log('debug', 'No metapak modules found.');
+        log('debug', '🤷 - No metapak modules found.');
       } else {
         log(
           'debug',
-          'Resolved the metapak modules sequence:',
+          '✅ - Resolved the metapak modules sequence:',
           metapakModulesSequence,
         );
       }
@@ -113,6 +113,7 @@ async function initMetapak({
         modulesSequence: metapakModulesSequence,
         configsSequence: metapakConfigsSequence,
       };
+      let packageConfBuild = false;
       let packageConfBuildResult = false;
       let iteration = 0;
 
@@ -121,6 +122,7 @@ async function initMetapak({
           packageConf,
           metapakContext,
         );
+        packageConfBuild = packageConfBuildResult || packageConfBuild;
         iteration++;
       } while (
         packageConfBuildResult &&
@@ -140,7 +142,7 @@ async function initMetapak({
       }
 
       const promises = [
-        Promise.resolve(packageConfBuildResult),
+        Promise.resolve(packageConfBuild),
         buildPackageAssets(packageConf, metapakContext),
         buildPackageGitHooks(packageConf, metapakContext),
       ];
@@ -161,14 +163,13 @@ async function initMetapak({
       }
       if (packageConfModified) {
         log(
-          'info',
-          '🚧 - The project package.json changed, you may want' +
-            ' to `npm install` again to install new dependencies.',
+          'warning',
+          '🚧 - Changed the `package.json` file, you may need to run `npm install` to get new dependencies.',
         );
       }
       if (assetsModified) {
         log(
-          'info',
+          'warning',
           '🚧 - Some assets were added to the project, you may want to stage them.',
         );
       }
@@ -226,7 +227,7 @@ function _reorderMetapakModulesNames(
     });
     log(
       'debug',
-      'Reordering metapak modules sequence.',
+      '💱 - Reordering metapak modules sequence.',
       packageConf.metapak.sequence,
     );
     return packageConf.metapak.sequence;

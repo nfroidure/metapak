@@ -114,7 +114,7 @@ describe('buildPackageGitHooks', () => {
     expect(log.mock.calls.filter(filterLogs)).toEqual([
       [
         'debug',
-        'No hooks found at:',
+        '🤷 - No hooks found at:',
         '/home/whoiam/project/dir/node_modules/metapak-fantasia/src/_common/hooks.js',
       ],
     ]);

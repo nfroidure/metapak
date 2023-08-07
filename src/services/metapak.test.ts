@@ -189,7 +189,7 @@ describe('metapak', () => {
         "logCalls": [
           [
             "debug",
-            "No metapak modules found.",
+            "🤷 - No metapak modules found.",
           ],
         ],
         "readFileAsyncCalls": [
@@ -964,7 +964,7 @@ describe('metapak', () => {
         "logCalls": [
           [
             "debug",
-            "Resolved the metapak modules sequence:",
+            "✅ - Resolved the metapak modules sequence:",
             [
               "metapak-http-service",
             ],
@@ -1175,7 +1175,7 @@ describe('metapak', () => {
         "logCalls": [
           [
             "debug",
-            "Resolved the metapak modules sequence:",
+            "✅ - Resolved the metapak modules sequence:",
             [
               "metapak-http-service",
             ],
@@ -1363,7 +1363,7 @@ describe('metapak', () => {
         "logCalls": [
           [
             "debug",
-            "Resolved the metapak modules sequence:",
+            "✅ - Resolved the metapak modules sequence:",
             [
               "metapak-http-service",
             ],
@@ -1563,7 +1563,7 @@ describe('metapak', () => {
         "logCalls": [
           [
             "debug",
-            "Resolved the metapak modules sequence:",
+            "✅ - Resolved the metapak modules sequence:",
             [
               "metapak-http-service",
             ],

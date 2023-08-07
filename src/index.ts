@@ -97,23 +97,23 @@ async function initGitHooksDir({ PROJECT_DIR, fs, log }) {
           : path.join(PROJECT_DIR, outputPath);
 
         if (err || !stdout) {
-          log('debug', 'Could not find hooks dir.', err ? err.stack : '');
+          log('debug', '🤷 - Could not find hooks dir.', err ? err.stack : '');
           log('debug', 'stdout:', stdout);
           log('debug', 'stderr:', stderr);
           resolve('');
           return;
         }
-        log('debug', 'Found hooks dir:', GIT_HOOKS_DIR);
+        log('debug', '✅ - Found hooks dir:', GIT_HOOKS_DIR);
 
         // Check the dir exists in order to avoid bugs in non-git
         // envs (docker images for instance)
         fs.accessAsync(GIT_HOOKS_DIR, fs.constants.W_OK)
           .then(() => {
-            log('debug', 'Hooks dir exists:', GIT_HOOKS_DIR);
+            log('debug', '✅ - Hooks dir exists:', GIT_HOOKS_DIR);
             resolve(GIT_HOOKS_DIR);
           })
           .catch((err2) => {
-            log('debug', 'Hooks dir does not exist:', GIT_HOOKS_DIR);
+            log('debug', '🤷 - Hooks dir does not exist:', GIT_HOOKS_DIR);
             log('stack', err2.stack);
             resolve('');
           });

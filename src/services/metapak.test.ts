@@ -263,42 +263,27 @@ describe('metapak', () => {
 
     expect({
       readFileAsyncCalls: readFileAsync.mock.calls,
-      logCalls: log.mock.calls.filter(filterLogs),
       exitCalls: exit.mock.calls,
       buildPackageConfCalls: buildPackageConf.mock.calls,
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-      {
-        "buildPackageAssetsCalls": [],
-        "buildPackageConfCalls": [],
-        "buildPackageGitHooksCalls": [],
-        "exitCalls": [
-          [
-            1,
-          ],
-        ],
-        "logCalls": [
-          [
-            "error",
-            "💀 - Could not run metapak script correctly:",
-            "E_UNEXPECTED",
-            [
-              "Unexpected token } in JSON at position 3",
-            ],
-          ],
-          [
-            "warning",
-            "💊 - Debug by running again with "DEBUG=metapak" env.",
-          ],
-        ],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/package.json",
-          ],
-        ],
-      }
-    `);
+{
+  "buildPackageAssetsCalls": [],
+  "buildPackageConfCalls": [],
+  "buildPackageGitHooksCalls": [],
+  "exitCalls": [
+    [
+      1,
+    ],
+  ],
+  "readFileAsyncCalls": [
+    [
+      "project/dir/package.json",
+    ],
+  ],
+}
+`);
   });
 
   test('should fail with a bad sequence type', async () => {

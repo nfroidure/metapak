@@ -209,7 +209,11 @@ async function _processAsset(
 
   if ('' === newFile.data) {
     if (originalFile.data) {
-      log('debug', '⌫ - Deleting asset:', path.join(PROJECT_DIR, newFile.name));
+      log(
+        'warning',
+        '⌫ - Deleting asset:',
+        path.join(PROJECT_DIR, newFile.name),
+      );
       await fs.unlinkAsync(path.join(PROJECT_DIR, newFile.name));
 
       return true;
@@ -217,8 +221,8 @@ async function _processAsset(
     return false;
   }
 
-  log('debug', '💾 - Saving asset:', path.join(PROJECT_DIR, newFile.name));
-  await _ensureDirExists({ PROJECT_DIR, fs }, newFile);
+  log('warning', '💾 - Saving asset:', path.join(PROJECT_DIR, newFile.name));
+  await _ensureDirExists({ PROJECT_DIR, fs, log }, newFile);
   await fs.writeFileAsync(
     path.join(PROJECT_DIR, newFile.name),
     Buffer.from(newFile.data || ''),
@@ -228,7 +232,11 @@ async function _processAsset(
 }
 
 async function _ensureDirExists(
-  { PROJECT_DIR, fs }: { PROJECT_DIR: string; fs: FSService },
+  {
+    PROJECT_DIR,
+    fs,
+    log,
+  }: { PROJECT_DIR: string; fs: FSService; log: LogService },
   newFile: AssetFile,
 ) {
   const dir = path.dirname(newFile.name);
@@ -236,5 +244,12 @@ async function _ensureDirExists(
   if ('.' === dir) {
     return;
   }
-  await fs.mkdirpAsync(path.join(PROJECT_DIR, dir));
+
+  try {
+    await fs.accessAsync(dir);
+  } catch (err) {
+    log('debug-stack', printStackTrace(err));
+    log('warning', `📁 - Creating a directory:`, dir);
+    await fs.mkdirpAsync(path.join(PROJECT_DIR, dir));
+  }
 }

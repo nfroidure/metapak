@@ -97,67 +97,67 @@ describe('buildPackageAssets', () => {
       logCalls: log.mock.calls.filter(filterLogs),
       result,
     }).toMatchInlineSnapshot(`
+{
+  "globCalls": [
+    [
+      "**/*",
       {
-        "globCalls": [
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-http-server/src/author/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-        ],
-        "importerCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
-          ],
-          [
-            "project/dir/node_modules/metapak-http-server/src/author/assets.js",
-          ],
-        ],
-        "logCalls": [
-          [
-            "debug",
-            "Processing asset:",
-            "project/dir/node_modules/metapak-http-server/src/author/assets/lol",
-          ],
-          [
-            "debug",
-            "💾 - Saving asset:",
-            "project/dir/lol",
-          ],
-        ],
-        "mkdirpAsyncCalls": [],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/author/assets/lol",
-          ],
-          [
-            "project/dir/lol",
-          ],
-        ],
-        "result": true,
-        "unlinkAsyncCalls": [],
-        "writeFileAsyncCalls": [
-          [
-            "project/dir/lol",
-            "{
-        "private": false
-      }",
-            undefined,
-          ],
-        ],
-      }
-    `);
+        "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+    [
+      "**/*",
+      {
+        "cwd": "project/dir/node_modules/metapak-http-server/src/author/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+  ],
+  "importerCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
+    ],
+    [
+      "project/dir/node_modules/metapak-http-server/src/author/assets.js",
+    ],
+  ],
+  "logCalls": [
+    [
+      "debug",
+      "Processing asset:",
+      "project/dir/node_modules/metapak-http-server/src/author/assets/lol",
+    ],
+    [
+      "warning",
+      "💾 - Saving asset:",
+      "project/dir/lol",
+    ],
+  ],
+  "mkdirpAsyncCalls": [],
+  "readFileAsyncCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/author/assets/lol",
+    ],
+    [
+      "project/dir/lol",
+    ],
+  ],
+  "result": true,
+  "unlinkAsyncCalls": [],
+  "writeFileAsyncCalls": [
+    [
+      "project/dir/lol",
+      "{
+  "private": false
+}",
+      undefined,
+    ],
+  ],
+}
+`);
   });
 
   test('should rename _dot_ prefixed files', async () => {
@@ -207,56 +207,56 @@ describe('buildPackageAssets', () => {
       logCalls: log.mock.calls.filter(filterLogs),
       result,
     }).toMatchInlineSnapshot(`
+{
+  "globCalls": [
+    [
+      "**/*",
       {
-        "globCalls": [
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-        ],
-        "importerCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
-          ],
-        ],
-        "logCalls": [
-          [
-            "debug",
-            "Processing asset:",
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/_dot_gitignore",
-          ],
-          [
-            "debug",
-            "💾 - Saving asset:",
-            "project/dir/.gitignore",
-          ],
-        ],
-        "mkdirpAsyncCalls": [],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/_dot_gitignore",
-          ],
-          [
-            "project/dir/.gitignore",
-          ],
-        ],
-        "result": true,
-        "unlinkAsyncCalls": [],
-        "writeFileAsyncCalls": [
-          [
-            "project/dir/.gitignore",
-            "{
-        "private": false
-      }",
-            undefined,
-          ],
-        ],
-      }
-    `);
+        "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+  ],
+  "importerCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
+    ],
+  ],
+  "logCalls": [
+    [
+      "debug",
+      "Processing asset:",
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/_dot_gitignore",
+    ],
+    [
+      "warning",
+      "💾 - Saving asset:",
+      "project/dir/.gitignore",
+    ],
+  ],
+  "mkdirpAsyncCalls": [],
+  "readFileAsyncCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/_dot_gitignore",
+    ],
+    [
+      "project/dir/.gitignore",
+    ],
+  ],
+  "result": true,
+  "unlinkAsyncCalls": [],
+  "writeFileAsyncCalls": [
+    [
+      "project/dir/.gitignore",
+      "{
+  "private": false
+}",
+      undefined,
+    ],
+  ],
+}
+`);
   });
 
   test('should warn on using .gitignore files', async () => {
@@ -306,60 +306,60 @@ describe('buildPackageAssets', () => {
       logCalls: log.mock.calls.filter(filterLogs),
       result,
     }).toMatchInlineSnapshot(`
+{
+  "globCalls": [
+    [
+      "**/*",
       {
-        "globCalls": [
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-        ],
-        "importerCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
-          ],
-        ],
-        "logCalls": [
-          [
-            "warning",
-            "⚠️ - \`.gitignore\` assets may not work, use \`_dot_\` instead of a raw \`.\` in your \`assets\` folder, metapak will care to rename them correctly. See https://github.com/npm/npm/issues/15660",
-          ],
-          [
-            "debug",
-            "Processing asset:",
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/.gitignore",
-          ],
-          [
-            "debug",
-            "💾 - Saving asset:",
-            "project/dir/.gitignore",
-          ],
-        ],
-        "mkdirpAsyncCalls": [],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/.gitignore",
-          ],
-          [
-            "project/dir/.gitignore",
-          ],
-        ],
-        "result": true,
-        "unlinkAsyncCalls": [],
-        "writeFileAsyncCalls": [
-          [
-            "project/dir/.gitignore",
-            "{
-        "private": false
-      }",
-            undefined,
-          ],
-        ],
-      }
-    `);
+        "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+  ],
+  "importerCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
+    ],
+  ],
+  "logCalls": [
+    [
+      "warning",
+      "⚠️ - \`.gitignore\` assets may not work, use \`_dot_\` instead of a raw \`.\` in your \`assets\` folder, metapak will care to rename them correctly. See https://github.com/npm/npm/issues/15660",
+    ],
+    [
+      "debug",
+      "Processing asset:",
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/.gitignore",
+    ],
+    [
+      "warning",
+      "💾 - Saving asset:",
+      "project/dir/.gitignore",
+    ],
+  ],
+  "mkdirpAsyncCalls": [],
+  "readFileAsyncCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/.gitignore",
+    ],
+    [
+      "project/dir/.gitignore",
+    ],
+  ],
+  "result": true,
+  "unlinkAsyncCalls": [],
+  "writeFileAsyncCalls": [
+    [
+      "project/dir/.gitignore",
+      "{
+  "private": false
+}",
+      undefined,
+    ],
+  ],
+}
+`);
   });
 
   test('should work whith several transformers', async () => {
@@ -422,68 +422,68 @@ describe('buildPackageAssets', () => {
       logCalls: log.mock.calls.filter(filterLogs),
       result,
     }).toMatchInlineSnapshot(`
+{
+  "globCalls": [
+    [
+      "**/*",
       {
-        "globCalls": [
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-module1/src/_common/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-module2/src/_common/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-        ],
-        "importerCalls": [
-          [
-            "project/dir/node_modules/metapak-module1/src/_common/assets.js",
-          ],
-          [
-            "project/dir/node_modules/metapak-module2/src/_common/assets.js",
-          ],
-        ],
-        "logCalls": [
-          [
-            "debug",
-            "Processing asset:",
-            "project/dir/node_modules/metapak-module1/src/_common/assets/_dot_gitignore",
-          ],
-          [
-            "debug",
-            "💾 - Saving asset:",
-            "project/dir/.gitignore",
-          ],
-        ],
-        "mkdirpAsyncCalls": [],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/node_modules/metapak-module1/src/_common/assets/_dot_gitignore",
-          ],
-          [
-            "project/dir/.gitignore",
-          ],
-        ],
-        "result": true,
-        "unlinkAsyncCalls": [],
-        "writeFileAsyncCalls": [
-          [
-            "project/dir/.gitignore",
-            ".git
-      node_modules
-      coverage
-      ",
-            undefined,
-          ],
-        ],
-      }
-    `);
+        "cwd": "project/dir/node_modules/metapak-module1/src/_common/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+    [
+      "**/*",
+      {
+        "cwd": "project/dir/node_modules/metapak-module2/src/_common/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+  ],
+  "importerCalls": [
+    [
+      "project/dir/node_modules/metapak-module1/src/_common/assets.js",
+    ],
+    [
+      "project/dir/node_modules/metapak-module2/src/_common/assets.js",
+    ],
+  ],
+  "logCalls": [
+    [
+      "debug",
+      "Processing asset:",
+      "project/dir/node_modules/metapak-module1/src/_common/assets/_dot_gitignore",
+    ],
+    [
+      "warning",
+      "💾 - Saving asset:",
+      "project/dir/.gitignore",
+    ],
+  ],
+  "mkdirpAsyncCalls": [],
+  "readFileAsyncCalls": [
+    [
+      "project/dir/node_modules/metapak-module1/src/_common/assets/_dot_gitignore",
+    ],
+    [
+      "project/dir/.gitignore",
+    ],
+  ],
+  "result": true,
+  "unlinkAsyncCalls": [],
+  "writeFileAsyncCalls": [
+    [
+      "project/dir/.gitignore",
+      ".git
+node_modules
+coverage
+",
+      undefined,
+    ],
+  ],
+}
+`);
   });
 
   test('should work whith directories', async () => {
@@ -533,60 +533,65 @@ describe('buildPackageAssets', () => {
       logCalls: log.mock.calls.filter(filterLogs),
       result,
     }).toMatchInlineSnapshot(`
+{
+  "globCalls": [
+    [
+      "**/*",
       {
-        "globCalls": [
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-        ],
-        "importerCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
-          ],
-        ],
-        "logCalls": [
-          [
-            "debug",
-            "Processing asset:",
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/lol/wadup",
-          ],
-          [
-            "debug",
-            "💾 - Saving asset:",
-            "project/dir/lol/wadup",
-          ],
-        ],
-        "mkdirpAsyncCalls": [
-          [
-            "project/dir/lol",
-          ],
-        ],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/lol/wadup",
-          ],
-          [
-            "project/dir/lol/wadup",
-          ],
-        ],
-        "result": true,
-        "unlinkAsyncCalls": [],
-        "writeFileAsyncCalls": [
-          [
-            "project/dir/lol/wadup",
-            "{
-        "private": false
-      }",
-            undefined,
-          ],
-        ],
-      }
-    `);
+        "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+  ],
+  "importerCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
+    ],
+  ],
+  "logCalls": [
+    [
+      "debug",
+      "Processing asset:",
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/lol/wadup",
+    ],
+    [
+      "warning",
+      "💾 - Saving asset:",
+      "project/dir/lol/wadup",
+    ],
+    [
+      "warning",
+      "📁 - Creating a directory:",
+      "lol",
+    ],
+  ],
+  "mkdirpAsyncCalls": [
+    [
+      "project/dir/lol",
+    ],
+  ],
+  "readFileAsyncCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/lol/wadup",
+    ],
+    [
+      "project/dir/lol/wadup",
+    ],
+  ],
+  "result": true,
+  "unlinkAsyncCalls": [],
+  "writeFileAsyncCalls": [
+    [
+      "project/dir/lol/wadup",
+      "{
+  "private": false
+}",
+      undefined,
+    ],
+  ],
+}
+`);
   });
 
   test('should allow to rename assets with async transformers', async () => {
@@ -637,56 +642,56 @@ describe('buildPackageAssets', () => {
       logCalls: log.mock.calls.filter(filterLogs),
       result,
     }).toMatchInlineSnapshot(`
+{
+  "globCalls": [
+    [
+      "**/*",
       {
-        "globCalls": [
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-        ],
-        "importerCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
-          ],
-        ],
-        "logCalls": [
-          [
-            "debug",
-            "Processing asset:",
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
-          ],
-          [
-            "debug",
-            "💾 - Saving asset:",
-            "project/dir/notlol",
-          ],
-        ],
-        "mkdirpAsyncCalls": [],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
-          ],
-          [
-            "project/dir/notlol",
-          ],
-        ],
-        "result": true,
-        "unlinkAsyncCalls": [],
-        "writeFileAsyncCalls": [
-          [
-            "project/dir/notlol",
-            "{
-        "private": false
-      }",
-            undefined,
-          ],
-        ],
-      }
-    `);
+        "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+  ],
+  "importerCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
+    ],
+  ],
+  "logCalls": [
+    [
+      "debug",
+      "Processing asset:",
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
+    ],
+    [
+      "warning",
+      "💾 - Saving asset:",
+      "project/dir/notlol",
+    ],
+  ],
+  "mkdirpAsyncCalls": [],
+  "readFileAsyncCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
+    ],
+    [
+      "project/dir/notlol",
+    ],
+  ],
+  "result": true,
+  "unlinkAsyncCalls": [],
+  "writeFileAsyncCalls": [
+    [
+      "project/dir/notlol",
+      "{
+  "private": false
+}",
+      undefined,
+    ],
+  ],
+}
+`);
   });
 
   test('should work when data did not change', async () => {
@@ -822,52 +827,52 @@ describe('buildPackageAssets', () => {
       logCalls: log.mock.calls.filter(filterLogs),
       result,
     }).toMatchInlineSnapshot(`
+{
+  "globCalls": [
+    [
+      "**/*",
       {
-        "globCalls": [
-          [
-            "**/*",
-            {
-              "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
-              "dot": true,
-              "nodir": true,
-            },
-          ],
-        ],
-        "importerCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
-          ],
-        ],
-        "logCalls": [
-          [
-            "debug",
-            "Processing asset:",
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
-          ],
-          [
-            "debug",
-            "⌫ - Deleting asset:",
-            "project/dir/lol",
-          ],
-        ],
-        "mkdirpAsyncCalls": [],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
-          ],
-          [
-            "project/dir/lol",
-          ],
-        ],
-        "result": true,
-        "unlinkAsyncCalls": [
-          [
-            "project/dir/lol",
-          ],
-        ],
-        "writeFileAsyncCalls": [],
-      }
-    `);
+        "cwd": "project/dir/node_modules/metapak-http-server/src/_common/assets",
+        "dot": true,
+        "nodir": true,
+      },
+    ],
+  ],
+  "importerCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets.js",
+    ],
+  ],
+  "logCalls": [
+    [
+      "debug",
+      "Processing asset:",
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
+    ],
+    [
+      "warning",
+      "⌫ - Deleting asset:",
+      "project/dir/lol",
+    ],
+  ],
+  "mkdirpAsyncCalls": [],
+  "readFileAsyncCalls": [
+    [
+      "project/dir/node_modules/metapak-http-server/src/_common/assets/lol",
+    ],
+    [
+      "project/dir/lol",
+    ],
+  ],
+  "result": true,
+  "unlinkAsyncCalls": [
+    [
+      "project/dir/lol",
+    ],
+  ],
+  "writeFileAsyncCalls": [],
+}
+`);
   });
 
   test('should not delete when data is empty and file is already  deleted', async () => {

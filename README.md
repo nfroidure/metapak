@@ -7,8 +7,8 @@
 # metapak
 > Node modules authoring made easy.
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/metapak/blob/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/nfroidure/metapak/badge.svg?branch=master)](https://coveralls.io/github/nfroidure/metapak?branch=master)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/metapak/blob/main/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/nfroidure/metapak/badge.svg?branch=main)](https://coveralls.io/github/nfroidure/metapak?branch=main)
 
 
 [//]: # (::contents:start)
@@ -253,4 +253,4 @@ node bin/metapak.js
 - [Nicolas Froidure](http://insertafter.com/en/index.html)
 
 # License
-[MIT](https://github.com/nfroidure/metapak/blob/master/LICENSE)
+[MIT](https://github.com/nfroidure/metapak/blob/main/LICENSE)

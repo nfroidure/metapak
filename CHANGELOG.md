@@ -1,3 +1,12 @@
+## [5.1.6](https://github.com/nfroidure/metapak/compare/v5.1.5...v5.1.6) (2023-08-16)
+
+
+### Bug Fixes
+
+* **types:** remove not necessary types packages ([1142dbf](https://github.com/nfroidure/metapak/commit/1142dbfba709264520a32688b93375f7922d646f))
+
+
+
 ## [5.1.5](https://github.com/nfroidure/metapak/compare/v5.1.4...v5.1.5) (2023-08-16)
 
 

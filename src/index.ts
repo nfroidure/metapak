@@ -7,7 +7,7 @@ import {
 import initDebug from 'debug';
 import os from 'os';
 import path from 'path';
-import glob from 'glob';
+import { glob } from 'glob';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import initFS from './services/fs.js';
@@ -15,7 +15,7 @@ import initMetapak from './services/metapak.js';
 import initBuildPackageConf from './services/packageConf.js';
 import initBuildPackageAssets from './services/assets.js';
 import initBuildPackageGitHooks from './services/gitHooks.js';
-import initProjectDir from './services/projectDir.js';
+import { initProjectDirService } from 'application-services';
 import initProgramOptions from './services/programOptions.js';
 import type { MetapakService } from './services/metapak.js';
 import type {
@@ -71,7 +71,7 @@ export async function prepareMetapak($ = new Knifecycle()) {
   $.register(initLogService);
   $.register(initImporterService);
   $.register(initResolveService);
-  $.register(name('PROJECT_DIR', initProjectDir));
+  $.register(name('PROJECT_DIR', initProjectDirService));
   $.register(name('GIT_HOOKS_DIR', autoService(initGitHooksDir)));
 
   $.register(initBuildPackageConf);

@@ -1,7 +1,7 @@
 import path from 'path';
 import { autoService } from 'knifecycle';
 import { mapConfigsSequentially, identity } from '../libs/utils.js';
-import { printStackTrace } from 'yerror';
+import { YError, printStackTrace } from 'yerror';
 import type { MetapakPackageJson, MetapakContext } from '../libs/utils.js';
 import type { FSService } from './fs.js';
 import type { ImporterService, LogService } from 'common-services';
@@ -81,7 +81,7 @@ async function initBuildPackageGitHooks({
           return (await importer(packageHooksPath)).default;
         } catch (err) {
           log('debug', '🤷 - No hooks found at:', packageHooksPath);
-          log('debug-stack', printStackTrace(err));
+          log('debug-stack', printStackTrace(err as YError));
         }
         return identity as GitHooksTransformer<unknown, unknown>;
       },
@@ -109,7 +109,7 @@ async function initBuildPackageGitHooks({
           currentHookContent = (await fs.readFileAsync(hookPath)).toString();
         } catch (err) {
           log('debug', '🤷 - No existing hook found:', hookPath);
-          log('debug-stack', printStackTrace(err));
+          log('debug-stack', printStackTrace(err as YError));
         }
         if (currentHookContent !== hookContent) {
           await fs.writeFileAsync(hookPath, Buffer.from(hookContent), {

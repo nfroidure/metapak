@@ -279,7 +279,7 @@ async function readMetapakModulesConfigs(
       buildExists = true;
     } catch (err) {
       log('debug', `🏗 - No build path found (${eventualBuildDir}).`);
-      log('debug-stack', printStackTrace(err));
+      log('debug-stack', printStackTrace(err as YError));
     }
 
     const srcDir = buildExists ? 'dist' : 'src';
@@ -293,7 +293,7 @@ async function readMetapakModulesConfigs(
         'error',
         `❌ - No configs found at "${fullSrcDir}" for the module "${metapakModuleName}".`,
       );
-      log('error-stack', printStackTrace(err));
+      log('error-stack', printStackTrace(err as YError));
       throw err;
     }
 

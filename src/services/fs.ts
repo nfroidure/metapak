@@ -1,7 +1,7 @@
 import { name, autoService } from 'knifecycle';
 import { YError } from 'yerror';
 import fs from 'fs';
-import mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import type { WriteFileOptions } from 'fs';
 import type { LogService } from 'common-services';
 import type { ProgramOptionsService } from './programOptions.js';

@@ -3,7 +3,7 @@ import sortKeys from 'sort-keys';
 import { isDeepStrictEqual } from 'util';
 import path from 'path';
 import { mapConfigsSequentially, identity, buildDiff } from '../libs/utils.js';
-import { printStackTrace } from 'yerror';
+import { YError, printStackTrace } from 'yerror';
 import type { MetapakContext } from '../libs/utils.js';
 import type { ImporterService, LogService } from 'common-services';
 import type {
@@ -68,7 +68,7 @@ async function initBuildPackageConf({
             'debug',
             `🤷 - No package tranformation found at: ${packageTransformPath}`,
           );
-          log('debug-stack', printStackTrace(err));
+          log('debug-stack', printStackTrace(err as YError));
         }
         return identity;
       },

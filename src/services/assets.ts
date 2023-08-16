@@ -1,9 +1,9 @@
 import { autoService } from 'knifecycle';
 import path from 'path';
 import { identityAsync, mapConfigsSequentially } from '../libs/utils.js';
-import { printStackTrace } from 'yerror';
+import { YError, printStackTrace } from 'yerror';
 import type { MetapakContext, MetapakPackageJson } from '../libs/utils.js';
-import type Glob from 'glob';
+import type { GlobOptions } from 'glob';
 import type { FSService } from './fs.js';
 import type { ImporterService, LogService } from 'common-services';
 
@@ -38,7 +38,7 @@ async function initBuildPackageAssets({
   PROJECT_DIR: string;
   fs: FSService;
   log: LogService;
-  glob: (pattern: string, options: Glob.IOptions) => Promise<string[]>;
+  glob: (pattern: string, options: GlobOptions) => Promise<string[]>;
   importer: ImporterService<{
     default: PackageAssetsTransformer<unknown, unknown>;
   }>;
@@ -73,7 +73,7 @@ async function initBuildPackageAssets({
           '🤷 - No asset tranformation found at:',
           packageAssetsTransformerPath,
         );
-        log('debug-stack', printStackTrace(err));
+        log('debug-stack', printStackTrace(err as YError));
         transformer = identityAsync;
       }
 
@@ -98,7 +98,7 @@ async function initBuildPackageAssets({
         return { assets, transformer };
       } catch (err) {
         log('debug', '🤷 - No assets found at:', packageAssetsDir);
-        log('debug-stack', printStackTrace(err));
+        log('debug-stack', printStackTrace(err as YError));
         return { assets: [], transformer };
       }
     })
@@ -197,7 +197,7 @@ async function _processAsset(
         .readFileAsync(path.join(PROJECT_DIR, newFile.name))
         .catch((err) => {
           log('debug', '🤷 - Asset not found:', path.join(dir, newFile.name));
-          log('debug-stack', printStackTrace(err));
+          log('debug-stack', printStackTrace(err as YError));
           return Buffer.from('');
         })) as Buffer
     ).toString(),
@@ -248,7 +248,7 @@ async function _ensureDirExists(
   try {
     await fs.accessAsync(dir);
   } catch (err) {
-    log('debug-stack', printStackTrace(err));
+    log('debug-stack', printStackTrace(err as YError));
     log('warning', `📁 - Creating a directory:`, dir);
     await fs.mkdirpAsync(path.join(PROJECT_DIR, dir));
   }

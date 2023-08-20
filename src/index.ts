@@ -8,7 +8,6 @@ import initDebug from 'debug';
 import os from 'os';
 import path from 'path';
 import { glob } from 'glob';
-import { promisify } from 'util';
 import { exec } from 'child_process';
 import initFS from './services/fs.js';
 import initMetapak from './services/metapak.js';
@@ -57,7 +56,7 @@ export async function prepareMetapak($ = new Knifecycle()) {
   $.register(constant('ENV', process.env));
   $.register(constant('exit', process.exit));
   $.register(constant('EOL', os.EOL));
-  $.register(constant('glob', promisify(glob)));
+  $.register(constant('glob', glob));
   $.register(
     constant('logger', {
       // eslint-disable-next-line

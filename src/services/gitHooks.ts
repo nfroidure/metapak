@@ -77,6 +77,7 @@ async function initBuildPackageGitHooks({
           metapakConfigName,
           'hooks.js',
         );
+
         try {
           return (await importer(packageHooksPath)).default;
         } catch (err) {

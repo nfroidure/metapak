@@ -122,10 +122,12 @@ async function initBuildPackageConf({
       '💾 - Saving the package:',
       path.join(PROJECT_DIR, 'package.json'),
     );
+
     await fs.writeFileAsync(
       path.join(PROJECT_DIR, 'package.json'),
       Buffer.from(data, 'utf-8'),
     );
+
     return true;
   };
 }

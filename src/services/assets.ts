@@ -47,7 +47,7 @@ async function initBuildPackageAssets({
     packageConf: MetapakPackageJson<unknown, unknown>,
     metapakContext: MetapakContext,
   ) => {
-    return mapConfigsSequentially<{
+    const assetsDirsGroups = await mapConfigsSequentially<{
       assets: AssetFile[];
       transformer: PackageAssetsTransformer<unknown, unknown>;
     }>(metapakContext, async (metapakModuleName, metapakConfigName) => {
@@ -101,50 +101,47 @@ async function initBuildPackageAssets({
         log('debug-stack', printStackTrace(err as YError));
         return { assets: [], transformer };
       }
-    })
-      .then((assetsDirsGroups) => {
-        return assetsDirsGroups.reduce(
-          (combined, { assets, transformer }) => ({
-            assets: combined.assets.concat(assets),
-            transformers: combined.transformers.concat(transformer),
-          }),
-          { assets: [], transformers: [] } as {
-            assets: AssetFile[];
-            transformers: PackageAssetsTransformer<unknown, unknown>[];
-          },
-        );
-      })
-      .then(({ assets, transformers }) => {
-        // Building the hash dedupes assets by picking them in the upper config
-        const assetsHash = assets.reduce((hash, { dir, name }) => {
-          hash[name] = { dir, name };
-          return hash;
-        }, {});
+    });
 
-        return Promise.all(
-          Object.keys(assetsHash).map(
-            _processAsset.bind(
-              null,
-              {
-                PROJECT_DIR,
-                log,
-                fs,
-              },
-              {
-                packageConf,
-                transformers,
-                assetsHash,
-              },
-            ),
-          ),
-        );
-      })
-      .then((results) => {
-        return results.reduce(
-          (assetsChanged, assetChanged) => assetsChanged || assetChanged,
-          false,
-        );
-      });
+    const { assets, transformers } = await assetsDirsGroups.reduce(
+      (combined, { assets, transformer }) => ({
+        assets: combined.assets.concat(assets),
+        transformers: combined.transformers.concat(transformer),
+      }),
+      { assets: [], transformers: [] } as {
+        assets: AssetFile[];
+        transformers: PackageAssetsTransformer<unknown, unknown>[];
+      },
+    );
+
+    // Building the hash dedupes assets by picking them in the upper config
+    const assetsHash = assets.reduce((hash, { dir, name }) => {
+      hash[name] = { dir, name };
+      return hash;
+    }, {});
+
+    const results = await Promise.all(
+      Object.keys(assetsHash).map(
+        _processAsset.bind(
+          null,
+          {
+            PROJECT_DIR,
+            log,
+            fs,
+          },
+          {
+            packageConf,
+            transformers,
+            assetsHash,
+          },
+        ),
+      ),
+    );
+
+    return results.reduce(
+      (assetsChanged, assetChanged) => assetsChanged || assetChanged,
+      false,
+    );
   };
 }
 

@@ -1,3 +1,12 @@
+## [5.1.7](https://github.com/nfroidure/metapak/compare/v5.1.6...v5.1.7) (2023-08-20)
+
+
+### Bug Fixes
+
+* **glob:** fix glob usage ([017e4cd](https://github.com/nfroidure/metapak/commit/017e4cd361d61f33a37d754859cff20cd2914c8f))
+
+
+
 ## [5.1.6](https://github.com/nfroidure/metapak/compare/v5.1.5...v5.1.6) (2023-08-16)
 
 

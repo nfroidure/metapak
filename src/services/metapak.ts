@@ -1,4 +1,5 @@
-import path from 'path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { printStackTrace, YError } from 'yerror';
 import { autoService } from 'knifecycle';
 import type {
@@ -42,9 +43,7 @@ async function initMetapak({
   return async function metapak() {
     try {
       const basePackageConf = JSON.parse(
-        (
-          await fs.readFileAsync(path.join(PROJECT_DIR, 'package.json'))
-        ).toString(),
+        (await fs.readFileAsync(join(PROJECT_DIR, 'package.json'))).toString(),
       );
 
       if (!('metapak' in basePackageConf)) {
@@ -258,9 +257,11 @@ async function readMetapakModulesConfigs(
     try {
       // Cover the case a metapak plugin runs itself
       if (metapakModuleName === packageConf.name) {
-        base = path.dirname(resolve(`${PROJECT_DIR}/package`));
+        base = PROJECT_DIR;
       } else {
-        base = path.dirname(resolve(`${metapakModuleName}/package`));
+        base = dirname(
+          fileURLToPath(resolve(`${metapakModuleName}/package.json`)),
+        );
       }
     } catch (err) {
       throw YError.wrap(
@@ -271,7 +272,7 @@ async function readMetapakModulesConfigs(
       );
     }
     const assetsDir = 'src';
-    const eventualBuildDir = path.join(base, 'dist');
+    const eventualBuildDir = join(base, 'dist');
     let buildExists = false;
 
     try {
@@ -283,7 +284,7 @@ async function readMetapakModulesConfigs(
     }
 
     const srcDir = buildExists ? 'dist' : 'src';
-    const fullSrcDir = path.join(base, srcDir);
+    const fullSrcDir = join(base, srcDir);
     let configs: string[] = [];
 
     try {

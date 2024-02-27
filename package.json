@@ -66,10 +66,10 @@
   },
   "homepage": "https://github.com/nfroidure/metapak#readme",
   "dependencies": {
-    "application-services": "^5.0.0",
+    "application-services": "^6.0.0",
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
-    "common-services": "^15.0.0",
+    "common-services": "^16.0.0",
     "debug": "^4.3.4",
     "diff": "^5.2.0",
     "glob": "^10.3.10",
@@ -94,13 +94,13 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "jest": "^29.7.0",
-    "metapak-nfroidure": "16.0.0",
+    "metapak-nfroidure": "17.0.0",
     "prettier": "^3.0.3",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   },
   "engines": {
-    "node": ">=18.16.0"
+    "node": ">=20.11.1"
   },
   "config": {
     "commitizen": {

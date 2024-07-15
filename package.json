@@ -24,7 +24,7 @@
     }
   },
   "name": "metapak",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Node modules authoring made easy.",
   "type": "module",
   "main": "dist/index.js",

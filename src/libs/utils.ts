@@ -12,12 +12,7 @@ export type MetapakPackageJson<T, U> = PackageJson & {
 } & U;
 export type MetapakModuleConfigs = Record<
   string,
-  {
-    base: string;
-    srcDir: string;
-    assetsDir: string;
-    configs: string[];
-  }
+  { base: string; srcDir: string; assetsDir: string; configs: string[] }
 >;
 export type MetapakContext = {
   modulesConfigs: MetapakModuleConfigs;
@@ -48,7 +43,7 @@ export async function mapConfigsSequentially<T>(
 }
 
 export function buildDiff(newData: JsonValue, originalData: JsonValue): string {
-  return diffJson(originalData, newData, {})
+  return diffJson(originalData as object, newData as object, {})
     .map((part) =>
       (part.added ? chalk.green : part.removed ? chalk.red : chalk.grey)(
         part.value,

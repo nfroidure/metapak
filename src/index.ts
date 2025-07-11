@@ -1,5 +1,10 @@
 import { Knifecycle, constant, autoService, name } from 'knifecycle';
-import { initLog, initImporter, initResolve } from 'common-services';
+import {
+  initLog,
+  initImporter,
+  initResolve,
+  type LogService,
+} from 'common-services';
 import initDebug from 'debug';
 import os from 'node:os';
 import { join, isAbsolute } from 'node:path';
@@ -7,21 +12,19 @@ import { env, exit } from 'node:process';
 import { glob } from 'glob';
 import { exec } from 'node:child_process';
 import initFS from './services/fs.js';
-import initMetapak from './services/metapak.js';
+import initMetapak, { type MetapakService } from './services/metapak.js';
 import initBuildPackageConf from './services/packageConf.js';
 import initBuildPackageAssets from './services/assets.js';
 import initBuildPackageGitHooks from './services/gitHooks.js';
 import { initProjectDir } from 'application-services';
 import initProgramOptions from './services/programOptions.js';
-import type { MetapakService } from './services/metapak.js';
-import type {
-  MetapakPackageJson,
-  PackageJSONTransformer,
+import {
+  type MetapakPackageJson,
+  type PackageJSONTransformer,
 } from './libs/utils.js';
-import type { PackageAssetsTransformer } from './services/assets.js';
-import type { GitHooksTransformer } from './services/gitHooks.js';
-import type { FSService } from './services/fs.js';
-import type { LogService } from 'common-services';
+import { type PackageAssetsTransformer } from './services/assets.js';
+import { type GitHooksTransformer } from './services/gitHooks.js';
+import { type FSService } from './services/fs.js';
 
 export type {
   MetapakPackageJson,
@@ -42,7 +45,6 @@ export async function runMetapak() {
 
     await metapak();
   } catch (err) {
-    // eslint-disable-next-line
     console.error(err);
     process.exit(1);
   }
@@ -57,11 +59,8 @@ export async function prepareMetapak($ = new Knifecycle()) {
   $.register(constant('glob', glob));
   $.register(
     constant('logger', {
-      // eslint-disable-next-line
       output: console.info.bind(console),
-      // eslint-disable-next-line
       error: console.error.bind(console),
-      // eslint-disable-next-line
       debug: initDebug('metapak'),
     }),
   );

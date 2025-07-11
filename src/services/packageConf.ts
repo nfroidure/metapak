@@ -4,13 +4,13 @@ import { isDeepStrictEqual } from 'util';
 import path from 'path';
 import { mapConfigsSequentially, identity, buildDiff } from '../libs/utils.js';
 import { YError, printStackTrace } from 'yerror';
-import type { MetapakContext } from '../libs/utils.js';
-import type { ImporterService, LogService } from 'common-services';
-import type {
-  PackageJSONTransformer,
-  MetapakPackageJson,
+import { type MetapakContext } from '../libs/utils.js';
+import { type ImporterService, type LogService } from 'common-services';
+import {
+  type PackageJSONTransformer,
+  type MetapakPackageJson,
 } from '../libs/utils.js';
-import type { FSService } from './fs.js';
+import { type FSService } from './fs.js';
 
 export type BuildPackageConfService = (
   packageConf: MetapakPackageJson<unknown, unknown>,

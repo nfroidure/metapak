@@ -73,37 +73,36 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-      {
-        "buildPackageAssetsCalls": [],
-        "buildPackageConfCalls": [],
-        "buildPackageGitHooksCalls": [],
-        "exitCalls": [
-          [
-            1,
-          ],
-        ],
-        "logCalls": [
-          [
-            "error",
-            "❌ - Metapak config not found in the project "package.json" file.",
-          ],
-          [
-            "error",
-            "💀 - Could not run metapak script correctly:",
-            "E_NO_METAPAK_CONFIG",
-            [],
-          ],
-          [
-            "warning",
-            "💊 - Debug by running again with "DEBUG=metapak" env.",
-          ],
-        ],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/package.json",
-          ],
-        ],
-      }
+     {
+       "buildPackageAssetsCalls": [],
+       "buildPackageConfCalls": [],
+       "buildPackageGitHooksCalls": [],
+       "exitCalls": [
+         [
+           1,
+         ],
+       ],
+       "logCalls": [
+         [
+           "error",
+           "❌ - Metapak config not found in the project "package.json" file.",
+         ],
+         [
+           "error",
+           "💀 - Could not run metapak script correctly:",
+           "E_NO_METAPAK_CONFIG",
+         ],
+         [
+           "warning",
+           "💊 - Debug by running again with "DEBUG=metapak" env.",
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
     `);
   });
 
@@ -220,33 +219,32 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-      {
-        "buildPackageAssetsCalls": [],
-        "buildPackageConfCalls": [],
-        "buildPackageGitHooksCalls": [],
-        "exitCalls": [
-          [
-            1,
-          ],
-        ],
-        "logCalls": [
-          [
-            "error",
-            "💀 - Could not run metapak script correctly:",
-            "E_AOUCH",
-            [],
-          ],
-          [
-            "warning",
-            "💊 - Debug by running again with "DEBUG=metapak" env.",
-          ],
-        ],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/package.json",
-          ],
-        ],
-      }
+     {
+       "buildPackageAssetsCalls": [],
+       "buildPackageConfCalls": [],
+       "buildPackageGitHooksCalls": [],
+       "exitCalls": [
+         [
+           1,
+         ],
+       ],
+       "logCalls": [
+         [
+           "error",
+           "💀 - Could not run metapak script correctly:",
+           "E_AOUCH",
+         ],
+         [
+           "warning",
+           "💊 - Debug by running again with "DEBUG=metapak" env.",
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
     `);
   });
 
@@ -268,22 +266,22 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-{
-  "buildPackageAssetsCalls": [],
-  "buildPackageConfCalls": [],
-  "buildPackageGitHooksCalls": [],
-  "exitCalls": [
-    [
-      1,
-    ],
-  ],
-  "readFileAsyncCalls": [
-    [
-      "project/dir/package.json",
-    ],
-  ],
-}
-`);
+     {
+       "buildPackageAssetsCalls": [],
+       "buildPackageConfCalls": [],
+       "buildPackageGitHooksCalls": [],
+       "exitCalls": [
+         [
+           1,
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
+    `);
   });
 
   test('should fail with a bad sequence type', async () => {
@@ -313,36 +311,32 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-      {
-        "buildPackageAssetsCalls": [],
-        "buildPackageConfCalls": [],
-        "buildPackageGitHooksCalls": [],
-        "exitCalls": [
-          [
-            1,
-          ],
-        ],
-        "logCalls": [
-          [
-            "error",
-            "💀 - Could not run metapak script correctly:",
-            "E_BAD_SEQUENCE_TYPE",
-            [
-              "string",
-              "unexisting_module",
-            ],
-          ],
-          [
-            "warning",
-            "💊 - Debug by running again with "DEBUG=metapak" env.",
-          ],
-        ],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/package.json",
-          ],
-        ],
-      }
+     {
+       "buildPackageAssetsCalls": [],
+       "buildPackageConfCalls": [],
+       "buildPackageGitHooksCalls": [],
+       "exitCalls": [
+         [
+           1,
+         ],
+       ],
+       "logCalls": [
+         [
+           "error",
+           "💀 - Could not run metapak script correctly:",
+           "E_BAD_SEQUENCE_TYPE",
+         ],
+         [
+           "warning",
+           "💊 - Debug by running again with "DEBUG=metapak" env.",
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
     `);
   });
 
@@ -375,35 +369,32 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-      {
-        "buildPackageAssetsCalls": [],
-        "buildPackageConfCalls": [],
-        "buildPackageGitHooksCalls": [],
-        "exitCalls": [
-          [
-            1,
-          ],
-        ],
-        "logCalls": [
-          [
-            "error",
-            "💀 - Could not run metapak script correctly:",
-            "E_BAD_SEQUENCE_ITEM",
-            [
-              "unexisting_module",
-            ],
-          ],
-          [
-            "warning",
-            "💊 - Debug by running again with "DEBUG=metapak" env.",
-          ],
-        ],
-        "readFileAsyncCalls": [
-          [
-            "project/dir/package.json",
-          ],
-        ],
-      }
+     {
+       "buildPackageAssetsCalls": [],
+       "buildPackageConfCalls": [],
+       "buildPackageGitHooksCalls": [],
+       "exitCalls": [
+         [
+           1,
+         ],
+       ],
+       "logCalls": [
+         [
+           "error",
+           "💀 - Could not run metapak script correctly:",
+           "E_BAD_SEQUENCE_ITEM",
+         ],
+         [
+           "warning",
+           "💊 - Debug by running again with "DEBUG=metapak" env.",
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
     `);
   });
 
@@ -459,542 +450,538 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-{
-  "buildPackageAssetsCalls": [],
-  "buildPackageConfCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "buildPackageGitHooksCalls": [],
-  "exitCalls": [
-    [
-      1,
-    ],
-  ],
-  "logCalls": [
-    [
-      "debug",
-      "✅ - Resolved the metapak modules sequence:",
-      [
-        "metapak-http-service",
-      ],
-    ],
-    [
-      "debug",
-      "📥 - Built config for "metapak-http-service:",
-      {
-        "assetsDir": "src",
-        "base": "/home/whoami/project/node_modules/meta-http-service",
-        "configs": [
-          "_common",
-          "private",
-        ],
-        "srcDir": "dist",
-      },
-    ],
-    [
-      "error",
-      "🤷 - Reached the maximum allowed iterations. It means metapak keeps changing the repository and never reach a stable state. Probably that some operations made are not idempotent.",
-    ],
-    [
-      "error",
-      "💀 - Could not run metapak script correctly:",
-      "E_MAX_ITERATIONS",
-      [
-        15,
-        15,
-      ],
-    ],
-    [
-      "warning",
-      "💊 - Debug by running again with "DEBUG=metapak" env.",
-    ],
-  ],
-  "readFileAsyncCalls": [
-    [
-      "project/dir/package.json",
-    ],
-  ],
-}
-`);
+     {
+       "buildPackageAssetsCalls": [],
+       "buildPackageConfCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "buildPackageGitHooksCalls": [],
+       "exitCalls": [
+         [
+           1,
+         ],
+       ],
+       "logCalls": [
+         [
+           "debug",
+           "✅ - Resolved the metapak modules sequence:",
+           [
+             "metapak-http-service",
+           ],
+         ],
+         [
+           "debug",
+           "📥 - Built config for "metapak-http-service:",
+           {
+             "assetsDir": "src",
+             "base": "/home/whoami/project/node_modules/meta-http-service",
+             "configs": [
+               "_common",
+               "private",
+             ],
+             "srcDir": "dist",
+           },
+         ],
+         [
+           "error",
+           "🤷 - Reached the maximum allowed iterations. It means metapak keeps changing the repository and never reach a stable state. Probably that some operations made are not idempotent.",
+         ],
+         [
+           "error",
+           "💀 - Could not run metapak script correctly:",
+           "E_MAX_ITERATIONS",
+         ],
+         [
+           "warning",
+           "💊 - Debug by running again with "DEBUG=metapak" env.",
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
+    `);
   });
 
   test('should work with one module and several configs', async () => {
@@ -1049,149 +1036,149 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-{
-  "buildPackageAssetsCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "_common",
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "_common",
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "buildPackageConfCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "_common",
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "_common",
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "buildPackageGitHooksCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "_common",
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "_common",
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "exitCalls": [
-    [
-      0,
-    ],
-  ],
-  "logCalls": [
-    [
-      "debug",
-      "✅ - Resolved the metapak modules sequence:",
-      [
-        "metapak-http-service",
-      ],
-    ],
-    [
-      "debug",
-      "📥 - Built config for "metapak-http-service:",
-      {
-        "assetsDir": "src",
-        "base": "/home/whoami/project/node_modules/meta-http-service",
-        "configs": [
-          "_common",
-          "private",
-        ],
-        "srcDir": "dist",
-      },
-    ],
-  ],
-  "readFileAsyncCalls": [
-    [
-      "project/dir/package.json",
-    ],
-  ],
-}
-`);
+     {
+       "buildPackageAssetsCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "_common",
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "_common",
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "buildPackageConfCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "_common",
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "_common",
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "buildPackageGitHooksCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "_common",
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "_common",
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "exitCalls": [
+         [
+           0,
+         ],
+       ],
+       "logCalls": [
+         [
+           "debug",
+           "✅ - Resolved the metapak modules sequence:",
+           [
+             "metapak-http-service",
+           ],
+         ],
+         [
+           "debug",
+           "📥 - Built config for "metapak-http-service:",
+           {
+             "assetsDir": "src",
+             "base": "/home/whoami/project/node_modules/meta-http-service",
+             "configs": [
+               "_common",
+               "private",
+             ],
+             "srcDir": "dist",
+           },
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
+    `);
   });
 
   test('should work with one module and one config', async () => {
@@ -1246,143 +1233,143 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-{
-  "buildPackageAssetsCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "buildPackageConfCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "buildPackageGitHooksCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "private",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "exitCalls": [
-    [
-      0,
-    ],
-  ],
-  "logCalls": [
-    [
-      "debug",
-      "✅ - Resolved the metapak modules sequence:",
-      [
-        "metapak-http-service",
-      ],
-    ],
-    [
-      "debug",
-      "📥 - Built config for "metapak-http-service:",
-      {
-        "assetsDir": "src",
-        "base": "/home/whoami/project/node_modules/meta-http-service",
-        "configs": [
-          "_common",
-          "private",
-        ],
-        "srcDir": "dist",
-      },
-    ],
-  ],
-  "readFileAsyncCalls": [
-    [
-      "project/dir/package.json",
-    ],
-  ],
-}
-`);
+     {
+       "buildPackageAssetsCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "buildPackageConfCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "buildPackageGitHooksCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "private",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "exitCalls": [
+         [
+           0,
+         ],
+       ],
+       "logCalls": [
+         [
+           "debug",
+           "✅ - Resolved the metapak modules sequence:",
+           [
+             "metapak-http-service",
+           ],
+         ],
+         [
+           "debug",
+           "📥 - Built config for "metapak-http-service:",
+           {
+             "assetsDir": "src",
+             "base": "/home/whoami/project/node_modules/meta-http-service",
+             "configs": [
+               "_common",
+               "private",
+             ],
+             "srcDir": "dist",
+           },
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
+    `);
   });
 
   test('should work with one module and several overriden configs', async () => {
@@ -1437,157 +1424,157 @@ describe('metapak', () => {
       buildPackageAssetsCalls: buildPackageAssets.mock.calls,
       buildPackageGitHooksCalls: buildPackageGitHooks.mock.calls,
     }).toMatchInlineSnapshot(`
-{
-  "buildPackageAssetsCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-            "bisous",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-          "bisous",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "bisous",
-              "private",
-              "coucou",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "buildPackageConfCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-            "bisous",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-          "bisous",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "bisous",
-              "private",
-              "coucou",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "buildPackageGitHooksCalls": [
-    [
-      {
-        "devDependencies": {
-          "metapak-http-service": "1.0.0",
-        },
-        "metapak": {
-          "configs": [
-            "private",
-            "bisous",
-          ],
-          "data": {},
-        },
-      },
-      {
-        "configsSequence": [
-          "private",
-          "bisous",
-        ],
-        "modulesConfigs": {
-          "metapak-http-service": {
-            "assetsDir": "src",
-            "base": "/home/whoami/project/node_modules/meta-http-service",
-            "configs": [
-              "_common",
-              "bisous",
-              "private",
-              "coucou",
-            ],
-            "srcDir": "dist",
-          },
-        },
-        "modulesSequence": [
-          "metapak-http-service",
-        ],
-      },
-    ],
-  ],
-  "exitCalls": [
-    [
-      0,
-    ],
-  ],
-  "logCalls": [
-    [
-      "debug",
-      "✅ - Resolved the metapak modules sequence:",
-      [
-        "metapak-http-service",
-      ],
-    ],
-    [
-      "debug",
-      "📥 - Built config for "metapak-http-service:",
-      {
-        "assetsDir": "src",
-        "base": "/home/whoami/project/node_modules/meta-http-service",
-        "configs": [
-          "_common",
-          "bisous",
-          "private",
-          "coucou",
-        ],
-        "srcDir": "dist",
-      },
-    ],
-  ],
-  "readFileAsyncCalls": [
-    [
-      "project/dir/package.json",
-    ],
-  ],
-}
-`);
+     {
+       "buildPackageAssetsCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+                 "bisous",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+               "bisous",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "bisous",
+                   "private",
+                   "coucou",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "buildPackageConfCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+                 "bisous",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+               "bisous",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "bisous",
+                   "private",
+                   "coucou",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "buildPackageGitHooksCalls": [
+         [
+           {
+             "devDependencies": {
+               "metapak-http-service": "1.0.0",
+             },
+             "metapak": {
+               "configs": [
+                 "private",
+                 "bisous",
+               ],
+               "data": {},
+             },
+           },
+           {
+             "configsSequence": [
+               "private",
+               "bisous",
+             ],
+             "modulesConfigs": {
+               "metapak-http-service": {
+                 "assetsDir": "src",
+                 "base": "/home/whoami/project/node_modules/meta-http-service",
+                 "configs": [
+                   "_common",
+                   "bisous",
+                   "private",
+                   "coucou",
+                 ],
+                 "srcDir": "dist",
+               },
+             },
+             "modulesSequence": [
+               "metapak-http-service",
+             ],
+           },
+         ],
+       ],
+       "exitCalls": [
+         [
+           0,
+         ],
+       ],
+       "logCalls": [
+         [
+           "debug",
+           "✅ - Resolved the metapak modules sequence:",
+           [
+             "metapak-http-service",
+           ],
+         ],
+         [
+           "debug",
+           "📥 - Built config for "metapak-http-service:",
+           {
+             "assetsDir": "src",
+             "base": "/home/whoami/project/node_modules/meta-http-service",
+             "configs": [
+               "_common",
+               "bisous",
+               "private",
+               "coucou",
+             ],
+             "srcDir": "dist",
+           },
+         ],
+       ],
+       "readFileAsyncCalls": [
+         [
+           "project/dir/package.json",
+         ],
+       ],
+     }
+    `);
   });
 });
 

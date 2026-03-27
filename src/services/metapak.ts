@@ -133,11 +133,10 @@ async function initMetapak({
           'error',
           `🤷 - Reached the maximum allowed iterations. It means metapak keeps changing the repository and never reach a stable state. Probably that some operations made are not idempotent.`,
         );
-        throw new YError(
-          'E_MAX_ITERATIONS',
+        throw new YError('E_MAX_ITERATIONS', [
           iteration,
           MAX_PACKAGE_BUILD_ITERATIONS,
-        );
+        ]);
       }
 
       const promises = [
@@ -180,10 +179,9 @@ async function initMetapak({
         'error',
         '💀 - Could not run metapak script correctly:',
         castedErr.code,
-        castedErr.params,
       );
-      log('warning', '💊 - Debug by running again with "DEBUG=metapak" env.');
       log('error-stack', printStackTrace(castedErr));
+      log('warning', '💊 - Debug by running again with "DEBUG=metapak" env.');
       exit(1);
     }
   };
@@ -215,13 +213,13 @@ function _reorderMetapakModulesNames(
     if (!(packageConf.metapak.sequence instanceof Array)) {
       throw new YError(
         'E_BAD_SEQUENCE_TYPE',
-        typeof packageConf.metapak.sequence,
-        packageConf.metapak.sequence,
+        [typeof packageConf.metapak.sequence,
+        packageConf.metapak.sequence],
       );
     }
     packageConf.metapak.sequence.forEach((moduleName) => {
       if (!metapakModulesNames.includes(moduleName)) {
-        throw new YError('E_BAD_SEQUENCE_ITEM', moduleName);
+        throw new YError('E_BAD_SEQUENCE_ITEM', [moduleName]);
       }
     });
     log(
@@ -252,7 +250,7 @@ async function readMetapakModulesConfigs(
   const moduleConfigs: MetapakModuleConfigs = {};
 
   for (const metapakModuleName of metapakModulesSequence) {
-    let base = '';
+    let base;
 
     try {
       // Cover the case a metapak plugin runs itself
@@ -266,9 +264,9 @@ async function readMetapakModulesConfigs(
     } catch (err) {
       throw YError.wrap(
         err as Error,
-        'E_MODULE_NOT_FOUND',
+        'E_MODULE_NOT_FOUND',[
         metapakModuleName,
-        packageConf.name,
+        packageConf.name],
       );
     }
     const assetsDir = 'src';
@@ -285,7 +283,7 @@ async function readMetapakModulesConfigs(
 
     const srcDir = buildExists ? 'dist' : 'src';
     const fullSrcDir = join(base, srcDir);
-    let configs: string[] = [];
+    let configs: string[];
 
     try {
       configs = await fs.readdirAsync(fullSrcDir);

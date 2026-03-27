@@ -1,14 +1,14 @@
 import { describe, beforeEach, test, jest, expect } from '@jest/globals';
 import { Knifecycle, constant } from 'knifecycle';
 import initBuildPackageAssets from './assets.js';
-import type {
-  BuildPackageAssetsService,
-  PackageAssetsTransformer,
+import {
+  type BuildPackageAssetsService,
+  type PackageAssetsTransformer,
 } from './assets.js';
-import type { ImporterService, LogService } from 'common-services';
-import type { FSService } from './fs.js';
-import type { MetapakPackageJson } from '../libs/utils.js';
-import type { JsonObject } from 'type-fest';
+import { type ImporterService, type LogService } from 'common-services';
+import { type FSService } from './fs.js';
+import { type MetapakPackageJson } from '../libs/utils.js';
+import { type JsonObject } from 'type-fest';
 
 describe('buildPackageAssets', () => {
   const readFileAsync = jest.fn<FSService['readFileAsync']>();

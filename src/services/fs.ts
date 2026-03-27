@@ -2,14 +2,14 @@ import { name, autoService } from 'knifecycle';
 import { YError } from 'yerror';
 import fs from 'fs';
 import { mkdirp } from 'mkdirp';
-import type { WriteFileOptions } from 'fs';
-import type { LogService } from 'common-services';
-import type { ProgramOptionsService } from './programOptions.js';
+import { type WriteFileOptions } from 'fs';
+import { type LogService } from 'common-services';
+import { type ProgramOptionsService } from './programOptions.js';
 
-export type FSService = {
+export interface FSService {
   mkdirpAsync: (path: string) => Promise<void>;
   readFileAsync: (path: string) => Promise<Buffer>;
-  accessAsync: (path: string) => Promise<void>;
+  accessAsync: (path: string, mode?: number) => Promise<void>;
   readdirAsync: (path: string) => Promise<string[]>;
   unlinkAsync: (path: string) => Promise<void>;
   writeFileAsync: (
@@ -18,7 +18,7 @@ export type FSService = {
     options?: WriteFileOptions,
   ) => Promise<void>;
   constants: typeof fs.constants;
-};
+}
 
 async function initFS({
   programOptions,
@@ -45,7 +45,7 @@ async function initFS({
             ]
           ) => {
             if (programOptions.safe) {
-              throw new YError('E_UNEXPECTED_CHANGES', args[0]);
+              throw new YError('E_UNEXPECTED_CHANGES', [args[0]]);
             }
             fs.mkdir(...args);
           }) as typeof fs.mkdir,
@@ -62,7 +62,7 @@ async function initFS({
         return;
       }
       if (programOptions.safe) {
-        throw new YError('E_UNEXPECTED_CHANGES', path);
+        throw new YError('E_UNEXPECTED_CHANGES', [path]);
       }
       await fs.promises.unlink(path);
     },
@@ -72,7 +72,7 @@ async function initFS({
         return;
       }
       if (programOptions.safe) {
-        throw new YError('E_UNEXPECTED_CHANGES', path);
+        throw new YError('E_UNEXPECTED_CHANGES', [path]);
       }
       await fs.promises.writeFile(path, data);
     },

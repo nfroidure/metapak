@@ -2,11 +2,9 @@ import path from 'path';
 import { autoService } from 'knifecycle';
 import { mapConfigsSequentially, identity } from '../libs/utils.js';
 import { YError, printStackTrace } from 'yerror';
-import type { MetapakPackageJson, MetapakContext } from '../libs/utils.js';
-import type { FSService } from './fs.js';
-import type { ImporterService, LogService } from 'common-services';
-
-export default autoService(initBuildPackageGitHooks);
+import { type MetapakPackageJson, type MetapakContext } from '../libs/utils.js';
+import { type FSService } from './fs.js';
+import { type ImporterService, type LogService } from 'common-services';
 
 export type HooksHash = Partial<
   Record<
@@ -101,7 +99,7 @@ async function initBuildPackageGitHooks({
           EOL +
           '# Your changes would be loose on the next npm install run.' +
           EOL +
-          hooks[hookName].join(';' + EOL);
+          (hooks[hookName as keyof HooksHash] || []).join(';' + EOL);
         const hookPath = path.join(GIT_HOOKS_DIR, hookName);
 
         let currentHookContent = '';
@@ -121,3 +119,5 @@ async function initBuildPackageGitHooks({
     );
   };
 }
+
+export default autoService(initBuildPackageGitHooks);

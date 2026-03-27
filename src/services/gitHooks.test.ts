@@ -1,12 +1,12 @@
 import { describe, beforeEach, test, jest, expect } from '@jest/globals';
 import { Knifecycle, constant } from 'knifecycle';
 import initBuildPackageGitHooks from './gitHooks.js';
-import type {
-  GitHooksTransformer,
-  BuildPackageGitHooksService,
+import {
+  type GitHooksTransformer,
+  type BuildPackageGitHooksService,
 } from './gitHooks.js';
-import type { ImporterService, LogService } from 'common-services';
-import type { FSService } from './fs.js';
+import { type ImporterService, LogService } from 'common-services';
+import { type FSService } from './fs.js';
 
 describe('buildPackageGitHooks', () => {
   const writeFileAsync = jest.fn<FSService['writeFileAsync']>();

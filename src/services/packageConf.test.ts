@@ -1,14 +1,14 @@
 import { describe, beforeEach, test, jest, expect } from '@jest/globals';
 import { Knifecycle, constant } from 'knifecycle';
 import initBuildPackageConf from './packageConf.js';
-import type { BuildPackageConfService } from './packageConf.js';
-import type { FSService } from './fs.js';
-import type { ImporterService, LogService } from 'common-services';
-import type {
-  MetapakPackageJson,
-  PackageJSONTransformer,
+import { type BuildPackageConfService } from './packageConf.js';
+import { type FSService } from './fs.js';
+import { type ImporterService, LogService } from 'common-services';
+import {
+  type MetapakPackageJson,
+  type PackageJSONTransformer,
 } from '../libs/utils.js';
-import type { JsonObject } from 'type-fest';
+import { type JsonObject } from 'type-fest';
 
 const METAPAK_SCRIPT = 'metapak';
 

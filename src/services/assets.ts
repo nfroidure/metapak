@@ -2,20 +2,20 @@ import { autoService } from 'knifecycle';
 import path from 'path';
 import { identityAsync, mapConfigsSequentially } from '../libs/utils.js';
 import { YError, printStackTrace } from 'yerror';
-import type { MetapakContext, MetapakPackageJson } from '../libs/utils.js';
-import type { GlobOptions } from 'glob';
-import type { FSService } from './fs.js';
-import type { ImporterService, LogService } from 'common-services';
+import { type MetapakContext, type MetapakPackageJson } from '../libs/utils.js';
+import { type GlobOptions } from 'glob';
+import { type FSService } from './fs.js';
+import { type ImporterService, type LogService } from 'common-services';
 
 export type BuildPackageAssetsService = (
   packageConf: MetapakPackageJson<unknown, unknown>,
   metapakContext: MetapakContext,
 ) => Promise<void>;
-export type AssetFile = {
+export interface AssetFile {
   dir: string;
   name: string;
-  data: string;
-};
+  data?: string;
+}
 export type PackageAssetsTransformer<T, U> = (
   file: AssetFile,
   packageConf: MetapakPackageJson<T, U>,
@@ -118,7 +118,7 @@ async function initBuildPackageAssets({
     const assetsHash = assets.reduce((hash, { dir, name }) => {
       hash[name] = { dir, name };
       return hash;
-    }, {});
+    }, {} as Record<string, AssetFile>);
 
     const results = await Promise.all(
       Object.keys(assetsHash).map(

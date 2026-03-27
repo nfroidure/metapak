@@ -1,12 +1,12 @@
 import chalk from 'chalk';
 import { diffJson } from 'diff';
-import type { JsonValue, JsonObject, PackageJson } from 'type-fest';
+import { type JsonValue, type JsonObject, type PackageJson } from 'type-fest';
 
-export type MetapakConfiguration<T = JsonObject> = {
+export interface MetapakConfiguration<T = JsonObject> {
   configs: string[];
   sequence?: string[];
   data: T;
-};
+}
 export type MetapakPackageJson<T, U> = PackageJson & {
   metapak: MetapakConfiguration<T>;
 } & U;
@@ -14,11 +14,11 @@ export type MetapakModuleConfigs = Record<
   string,
   { base: string; srcDir: string; assetsDir: string; configs: string[] }
 >;
-export type MetapakContext = {
+export interface MetapakContext {
   modulesConfigs: MetapakModuleConfigs;
   modulesSequence: string[];
   configsSequence: string[];
-};
+}
 export type PackageJSONTransformer<T, U> = (
   packageJSON: MetapakPackageJson<T, U>,
 ) => MetapakPackageJson<T, U>;

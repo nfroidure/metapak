@@ -25,6 +25,7 @@ import {
 import { type PackageAssetsTransformer } from './services/assets.js';
 import { type GitHooksTransformer } from './services/gitHooks.js';
 import { type FSService } from './services/fs.js';
+import { printStackTrace } from 'yerror';
 
 export type {
   MetapakPackageJson,
@@ -79,7 +80,11 @@ export async function prepareMetapak($ = new Knifecycle()) {
   return $;
 }
 
-async function initGitHooksDir({ PROJECT_DIR, fs, log }) {
+async function initGitHooksDir({ PROJECT_DIR, fs, log }: {
+  PROJECT_DIR: string,
+  fs: FSService,
+  log: LogService
+}) {
   return new Promise((resolve) => {
     exec(
       'git rev-parse --git-dir',
@@ -93,7 +98,8 @@ async function initGitHooksDir({ PROJECT_DIR, fs, log }) {
           : join(PROJECT_DIR, outputPath);
 
         if (err || !stdout) {
-          log('debug', '🤷 - Could not find hooks dir.', err ? err.stack : '');
+          log('debug', '🤷 - Could not find hooks dir.');
+          log('debug-stack', printStackTrace(err as Error));
           log('debug', 'stdout:', stdout);
           log('debug', 'stderr:', stderr);
           resolve('');
@@ -110,7 +116,7 @@ async function initGitHooksDir({ PROJECT_DIR, fs, log }) {
           })
           .catch((err2) => {
             log('debug', '🤷 - Hooks dir does not exist:', GIT_HOOKS_DIR);
-            log('stack', err2.stack);
+            log('debug-stack', printStackTrace(err2 as Error));
             resolve('');
           });
       },

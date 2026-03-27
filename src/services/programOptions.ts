@@ -3,11 +3,11 @@ import path from 'path';
 import { program } from 'commander';
 import { autoService } from 'knifecycle';
 
-export type ProgramOptionsService = {
+export interface ProgramOptionsService {
   safe?: boolean;
   dryRun?: boolean;
   base: string;
-};
+}
 
 async function initProgramOptions(): Promise<ProgramOptionsService> {
   return program

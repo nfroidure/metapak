@@ -115,10 +115,13 @@ async function initBuildPackageAssets({
     );
 
     // Building the hash dedupes assets by picking them in the upper config
-    const assetsHash = assets.reduce((hash, { dir, name }) => {
-      hash[name] = { dir, name };
-      return hash;
-    }, {} as Record<string, AssetFile>);
+    const assetsHash = assets.reduce(
+      (hash, { dir, name }) => {
+        hash[name] = { dir, name };
+        return hash;
+      },
+      {} as Record<string, AssetFile>,
+    );
 
     const results = await Promise.all(
       Object.keys(assetsHash).map(

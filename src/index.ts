@@ -80,10 +80,14 @@ export async function prepareMetapak($ = new Knifecycle()) {
   return $;
 }
 
-async function initGitHooksDir({ PROJECT_DIR, fs, log }: {
-  PROJECT_DIR: string,
-  fs: FSService,
-  log: LogService
+async function initGitHooksDir({
+  PROJECT_DIR,
+  fs,
+  log,
+}: {
+  PROJECT_DIR: string;
+  fs: FSService;
+  log: LogService;
 }) {
   return new Promise((resolve) => {
     exec(

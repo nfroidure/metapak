@@ -211,11 +211,10 @@ function _reorderMetapakModulesNames(
 ) {
   if (packageConf.metapak && packageConf.metapak.sequence) {
     if (!(packageConf.metapak.sequence instanceof Array)) {
-      throw new YError(
-        'E_BAD_SEQUENCE_TYPE',
-        [typeof packageConf.metapak.sequence,
-        packageConf.metapak.sequence],
-      );
+      throw new YError('E_BAD_SEQUENCE_TYPE', [
+        typeof packageConf.metapak.sequence,
+        packageConf.metapak.sequence,
+      ]);
     }
     packageConf.metapak.sequence.forEach((moduleName) => {
       if (!metapakModulesNames.includes(moduleName)) {
@@ -262,12 +261,10 @@ async function readMetapakModulesConfigs(
         );
       }
     } catch (err) {
-      throw YError.wrap(
-        err as Error,
-        'E_MODULE_NOT_FOUND',[
+      throw YError.wrap(err as Error, 'E_MODULE_NOT_FOUND', [
         metapakModuleName,
-        packageConf.name],
-      );
+        packageConf.name,
+      ]);
     }
     const assetsDir = 'src';
     const eventualBuildDir = join(base, 'dist');
